@@ -67,7 +67,7 @@ Content-Type: application/json
 
 ## 🔁 Common Support Scenarios
 
-
+`TODO`: We currently do not have a list of common support scenarios, but we will update this section in the future.
 
 ---
 
@@ -77,13 +77,5 @@ Content-Type: application/json
 - Bundle request/response samples with error reports
 - Be specific about the time and context of the issue
 - Avoid sharing sensitive data unless requested via secure channels
-
----
-
-## 🔗 Related Topics
-
-- [Authentication & Authorization](./Authentication.md)
-- [Error Handling & Fault Responses](./ErrorHandling.md)
-- [Logo Library Overview](./LogoLibraryOverview.md)
 
 ---
