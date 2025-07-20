@@ -1,0 +1,56 @@
+meta {
+  name: Create Artwork Tag
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: 
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateArtworkTag($input: CreateArtworkTagInput!) {
+    createArtworkTag(input: $input) {
+      artworkTag {
+        color
+        id
+        name
+      }
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on ImpersonationRequiredException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "color": "FFAABB",
+      "name": "Test Tag"
+    }
+  }
+}
