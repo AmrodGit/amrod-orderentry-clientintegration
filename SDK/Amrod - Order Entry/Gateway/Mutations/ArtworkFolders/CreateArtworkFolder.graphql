@@ -1,0 +1,50 @@
+﻿mutation CreateArtworkFolder($input: CreateArtworkFolderInput!) {
+  createArtworkFolder(input: $input) {
+    errors {
+      __typename
+      ... on ConflictException {
+        code
+        errorDetail
+        message
+      }
+      ... on ImpersonationRequiredException {
+        code
+        errorDetail
+        message
+      }
+      ... on InputValidationException {
+        code
+        errorDetail
+        message
+        parameterName
+      }
+    }
+    artworkFolderDetails {
+      canDelete
+      canEdit
+      canMove
+      canShare
+      id
+      internalId
+      name
+      path
+      owner {
+        contact {
+          code
+          emailAddress
+        }
+      }
+      security {
+        access
+        contact {
+          code
+          emailAddress
+        }
+        customer {
+          code
+          name
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2938 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type UpdateXdpDataEntryPayload {
+  errors: [UpdateXdpDataEntryError!]
+  resultPayloadType: ResultPayloadType
+}
+
+input CustomerFilterInput {
+  and: [CustomerFilterInput!]
+  or: [CustomerFilterInput!]
+  code: ProductStringOperationFilterInput
+  name: ProductStringOperationFilterInput
+}
+
+"Input type for updating an artwork."
+input UpdateArtworkInput {
+  "The description of the artwork."
+  description: String
+  "The identifier of the artwork."
+  id: ID!
+  "The name of the artwork."
+  name: String
+}
+
+"Represents a size group."
+type SizeGroup implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The size group code."
+  code: String
+  "The creation date and time of the size group."
+  created: DateTime!
+  "The unique identifier for the size group."
+  id: ID!
+  "The size group identifier."
+  internalId: Int!
+  "The last modified date and time of the size group."
+  modified: DateTime!
+  "The size group name."
+  name: String
+  "The sort index for the size group."
+  sortIndex: Int!
+  "The source identifier for the size group."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents the cost details for a product."
+type Cost {
+  "The average landed cost."
+  averageLandedCost: Decimal
+  "The creation date and time."
+  created: DateTime!
+  "The Free On Board (FOB) cost."
+  fob: Decimal
+  "The tier identifier."
+  internalId: Int!
+  "The last landed cost."
+  lastLandedCost: Decimal
+  "The last modified date and time."
+  modified: DateTime!
+  "The region associated with the tier."
+  region: Region!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp."
+  timestamp: Long!
+}
+
+"Input type for sharing of a Folder."
+input RevokeSharedFolderInput {
+  "The Identifier of the Folder object."
+  folderId: ID!
+}
+
+"Represents an artwork tag."
+type ArtworkTag {
+  "The artwork tag color."
+  color: String!
+  "The unique identifier for the artwork tag."
+  id: ID!
+  "The artwork tag name."
+  name: String!
+}
+
+"Represents the stock level of a product."
+type StockIncomingLevel {
+  "Incoming Estimated Time of Arrival."
+  eta: Date!
+  "Incoming Stock Level."
+  incoming: Int!
+  "The last modified date and time of the incoming level."
+  modified: DateTime!
+}
+
+"Represents a port."
+type Port implements Node {
+  "Indicates whether the port is active or not."
+  active: Boolean!
+  "The checksum for change tracking."
+  checksum: String
+  "The port code."
+  code: String
+  "The creation date and time of the port."
+  created: DateTime!
+  "The unique identifier for the port."
+  id: ID!
+  "The port identifier."
+  internalId: Int!
+  "The last modified date and time of the port."
+  modified: DateTime!
+  "The port name."
+  name: String
+  "The region associated with the port."
+  region: Region
+  "The source identifier for the port."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Input type for updating an artwork tag."
+input UpdateArtworkTagInput {
+  "The color of the artwork tag in hex format (e.g., \"FF5733\")."
+  color: String!
+  "The identifier of the artwork tag."
+  id: ID!
+  "The name of the artwork tag."
+  name: String
+}
+
+"Represents a color method."
+type ColorMethod implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The color method code."
+  code: String
+  "The creation date and time of the color method."
+  created: DateTime!
+  "The unique identifier for the color method."
+  id: ID!
+  "The color method identifier."
+  internalId: Int!
+  "The last modified date and time of the color method."
+  modified: DateTime!
+  "The color method name."
+  name: String
+  "The sort index for the color method."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+type CreateArtworkTagPayload {
+  artworkTag: ArtworkTag
+  errors: [CreateArtworkTagError!]
+}
+
+"Represents a logo library owner customer."
+type OwnerCustomer {
+  "The customer code."
+  code: String!
+  "The customer name."
+  name: String!
+}
+
+"Input type for sharing of a artwork."
+input RevokeSharedArtworkInput {
+  "The Identifier of the artwork object."
+  artworkId: ID!
+}
+
+"Represents a logo library owner."
+type Owner {
+  "The associated customer contact."
+  contact: OwnerContact!
+  "The associated customer."
+  customer: OwnerCustomer!
+}
+
+"Represents a logo."
+type ArtworkDetails implements Node {
+  "Specifies whether the artwork can be deleted."
+  canDelete: Boolean!
+  "Specifies whether the artwork can be edited."
+  canEdit: Boolean!
+  "Specifies whether the artwork can be moved."
+  canMove: Boolean!
+  "Specifies whether the artwork can be shared."
+  canShare: Boolean!
+  "The checksum for change tracking."
+  checksum: String!
+  "The creation date and time of the artwork."
+  created: DateTime!
+  "The artwork description."
+  description: String
+  "The artwork file extension."
+  extension: String!
+  "The unique identifier for the artwork."
+  id: ID!
+  "The artwork identifier."
+  internalId: Long!
+  "The artwork file mimetype."
+  mimeType: String!
+  "The artwork name."
+  name: String!
+  "Specifies the ownership details of the artwork."
+  owner: Owner!
+  "The artwork file storage path."
+  path: String!
+  "The artwork sharing permissions."
+  security: SharingSecurity
+  "The artwork filesize."
+  size: Long!
+  "The display file size of the artwork file."
+  sizeFormatted: String!
+  "The artwork status."
+  status: ArtworkStatus!
+  "The tags associated with the artwork."
+  tags: [ArtworkTag!]!
+  "The artwork file thumbnail URL."
+  thumbnailUrl: URL
+  "Specifies the artwork type."
+  type: ArtworkType!
+  "The artwork file URL."
+  url: URL!
+}
+
+"An edge in a connection."
+type SalesPersonsByRegionEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SalesPerson!
+}
+
+union DeleteArtworkFolderError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+input XdpTransactionTypeOperationFilterInput {
+  eq: XdpTransactionType
+  neq: XdpTransactionType
+  in: [XdpTransactionType!]
+  nin: [XdpTransactionType!]
+}
+
+"Represents an exception that is thrown when a requested resource or record cannot be found."
+type NotFoundException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+"Input type for sharing of a artwork."
+input ShareArtworkInput {
+  "The Identifier of the artwork object."
+  artworkId: ID!
+  "List of Contact Ids to removed share access."
+  contactIdsRevoke: [UUID!]!
+  "List of Contact Ids to share with."
+  contactIdsShare: [UUID!]!
+  "List of Customer Codes to remove share access."
+  customerCodesRevoke: [String!]!
+  "List of Customer Code to share with."
+  customerCodesShare: [String!]!
+  "The Access  granted to the shared artwork."
+  sharedAccess: SecurityType
+}
+
+"Represents a currency."
+type Currency implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The currency code."
+  code: String
+  "The conversion factor used for currency exchange."
+  conversionFactor: Decimal!
+  "The creation date and time of the currency."
+  created: DateTime!
+  "The display format for the currency."
+  displayFormat: String
+  "The unique identifier for the currency."
+  id: ID!
+  "The currency identifier."
+  internalId: Int!
+  "Indicates whether this currency is the master currency."
+  isMaster: Boolean!
+  "The last modified date and time of the currency."
+  modified: DateTime!
+  "The currency name."
+  name: String
+  "The number of decimal places for the currency."
+  precision: Byte!
+  "The sort index for the currency."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The symbol representing the currency."
+  symbol: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"An edge in a connection."
+type StockLevelsDeltaEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: StockLevel!
+}
+
+"Represents a logo."
+type Logo {
+  "The checksum for change tracking."
+  checksum: String
+  "The logo code."
+  code: String
+  "The creation date and time of the logo."
+  created: DateTime!
+  "The unique identifier for the logo."
+  id: Int!
+  "The logo identifier."
+  internalId: Int!
+  "The last modified date and time of the logo."
+  modified: DateTime!
+  "The logo name."
+  name: String
+  "The source identifier for the logo."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The type associated with the logo."
+  type: EnumLookup
+  "The logo URI."
+  uri: String
+}
+
+"Represents a customer group."
+type CustomerGroup {
+  "The master associated with the customer."
+  customers: [Customer!]!
+  "The Customer Group Unique Code."
+  groupCode: String!
+  "The Customer Group Name."
+  groupName: String!
+}
+
+"Represents a sales person."
+type SalesPerson implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The sales person code."
+  code: String!
+  "The creation date and time of the sales person."
+  created: DateTime!
+  "The customers associated with the sales person."
+  customers("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): CustomersConnection
+  "The sales person direct number."
+  directNumber: String
+  "The sales person first name."
+  firstname: String!
+  "The unique identifier for the sales person."
+  id: ID!
+  "The sales person identifier."
+  internalId: Int!
+  "The sales person last name."
+  lastname: String!
+  "The last modified date and time of the sales person."
+  modified: DateTime!
+  "The sales person primary email."
+  primaryEmail: String!
+  "The region associated with the sales person."
+  region: Region
+  "The sales person secondary email."
+  secondaryEmail: String
+  "The source identifier for the sales person."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"An edge in a connection."
+type SuppliersEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Supplier!
+}
+
+"A connection to a list of items."
+type StockLevelsConnection {
+  "A list of edges."
+  edges: [StockLevelsEdge!]
+  "A flattened list of the nodes."
+  nodes: [StockLevel!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"Represents a tier."
+type Tier implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The tier code."
+  code: String
+  "The creation date and time of the tier."
+  created: DateTime!
+  "The unique identifier for the tier."
+  id: ID!
+  "The tier identifier."
+  internalId: Int!
+  "The last modified date and time of the tier."
+  modified: DateTime!
+  "The tier name."
+  name: String
+  "The region associated with the tier."
+  region: Region
+  "The sort index for the tier."
+  sortIndex: Int!
+  "The source identifier for the tier."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+input XdpDataFilterInput {
+  and: [XdpDataFilterInput!]
+  or: [XdpDataFilterInput!]
+  ReceivedQuantity: FloatOperationFilterInput
+  UsedQuantity: FloatOperationFilterInput
+  quantity: FloatOperationFilterInput
+  itemCode: XdpStringOperationFilterInput
+  mrn: XdpStringOperationFilterInput
+  lineNumber: IntOperationFilterInput
+  poNumber: XdpStringOperationFilterInput
+}
+
+"Provides query methods for retrieving XDP data and transactions with support for paging and filtering."
+type Query {
+  "Retrieves artwork by its unique identifier.\n\n\n**Returns:**\nThe artwork if found; otherwise, null."
+  artworkById("The unique identifier of the artwork." id: ID!): ArtworkDetails
+  "Retrieves an artwork file type by its code.\n\n\n**Returns:**\nThe artwork file type with the specified code, or null if not found."
+  artworkFileTypeByCode("The code of the artwork file type." code: String!): ArtworkFileType
+  "Retrieves an artwork file type by its identifier.\n\n\n**Returns:**\nThe artwork file type with the specified identifier, or null if not found."
+  artworkFileTypeById("The identifier of the artwork file type." id: ID!): ArtworkFileType
+  "Retrieves all artwork file types.\n\n\n**Returns:**\nA collection of all artwork file types."
+  artworkFileTypes: [ArtworkFileType!]!
+  "Retrieves an artwork folder by its unique identifier.\n\n\n**Returns:**\nThe folder if found; otherwise, null."
+  artworkFolderById("The unique identifier of the folder." id: ID!): ArtworkFolderDetails
+  "Retrieves the contents of an artwork folder. Includes the contents of shared folders.\n\n\n**Returns:**\nThe contents of the specified artwork folder. Includes the contents of shared folders."
+  artworkFolderContents("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "The folder path." folderPath: String! "Returns the last _n_ elements from the list." last: Int): ArtworkFolderContentsConnection
+  "Retrieves a list of artwork folders owned by and shared with the impersonated customer contact.\n\n\n**Returns:**\nThe list of folders owned by and shared with the impersonated customer contact."
+  artworkFolders: [ArtworkFolderDetails!]!
+  "Queries artwork details based on specified criteria, including IDs, name, description, storage path, file\nextensions, statuses, tags, and types.\n\n\n**Returns:**\nA paginated connection of ArtworkDetails objects that match the specified criteria."
+  artworkQuery("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "The description of the artwork to filter by. If null, no description filtering is applied." description: String "An array of file extensions to filter the artwork by. If null, no extension filtering is applied." extensions: [String!] "Returns the first _n_ elements from the list." first: Int "A list of artwork IDs to filter the query. If null, all IDs are considered." ids: [ID!] "Returns the last _n_ elements from the list." last: Int "The name of the artwork to filter by. If null, no name filtering is applied." name: String "An array of artwork query statuses to filter by. If null, only active statuses are considered." statuses: [ArtworkQueryStatus!] "The storage path of the artwork to filter by. If null, no storage path filtering is applied." storagePath: String "An array of tags to filter the artwork by. If null, no tag filtering is applied." tags: [String!] "An array of artwork types to filter by. If null, all types are considered." types: [ArtworkType!]): ArtworkQueryConnection
+  "Retrieves detailed information about artworks based on their unique identifiers.\n\n\n**Returns:**\nA collection of ArtworkDetails objects representing the details of the requested artworks."
+  artworksByIds("A list of unique artwork IDs to retrieve. Must contain positive values and cannot exceed 50 items." ids: [ID!]!): [ArtworkDetails!]!
+  "Retrieves an artwork tag by its unique identifier.\n\n\n**Returns:**\nThe artwork tag if found; otherwise, null."
+  artworkTagById("The unique identifier of the artwork tag." id: ID!): ArtworkTagDetails
+  "Retrieves a list of artwork tags owned by and shared with the impersonated customer contact.\n\n\n**Returns:**\nThe list of artwork tags owned by and shared with the impersonated customer contact."
+  artworkTags: [ArtworkTagDetails!]!
+  "Searches for products by name, sold as code and style code.\n\n\n**Returns:**\nProducts that match the search term."
+  autocompleteProduct("The search term to use." searchTerm: String!): [AutocompleteProduct!]!
+  "Searches for product variants by code, name and SKU.\n\n\n**Returns:**\nProduct variants that match the search term."
+  autocompleteVariant("The search term to use." searchTerm: String!): [AutocompleteVariant!]!
+  "Retrieves a behavior by its code.\n\n\n**Returns:**\nThe behavior with the specified code, or null if not found."
+  behaviorByCode("The code of the behavior." code: String!): Behavior
+  "Retrieves a behavior by its identifier.\n\n\n**Returns:**\nThe behavior with the specified identifier, or null if not found."
+  behaviorById("The identifier of the behavior." id: ID!): Behavior
+  "Retrieves all behaviors.\n\n\n**Returns:**\nA collection of all behaviors."
+  behaviors: [Behavior!]!
+  "Retrieves a branding method by its code.\n\n\n**Returns:**\nThe branding method with the specified code, or null if not found."
+  brandingMethodByCode("The code of the branding method." code: String!): BrandingMethod
+  "Retrieves a branding method by its identifier.\n\n\n**Returns:**\nThe branding method with the specified identifier, or null if not found."
+  brandingMethodById("The identifier of the branding method." id: ID!): BrandingMethod
+  "Retrieves all branding methods.\n\n\n**Returns:**\nA collection of all branding methods."
+  brandingMethods: [BrandingMethod!]!
+  "Retrieves a branding service by its code.\n\n\n**Returns:**\nThe branding service with the specified code, or null if not found."
+  brandingServiceByCode("The code of the branding service." code: String!): BrandingService
+  "Retrieves a branding service by its identifier.\n\n\n**Returns:**\nThe branding service with the specified identifier, or null if not found."
+  brandingServiceById("The identifier of the branding service." id: ID!): BrandingService
+  "Retrieves all branding services.\n\n\n**Returns:**\nA collection of all branding services."
+  brandingServices: [BrandingService!]!
+  "Retrieves a color method by its code.\n\n\n**Returns:**\nThe color method with the specified code, or null if not found."
+  colorMethodByCode("The code of the color method." code: String!): ColorMethod
+  "Retrieves a color method by its identifier.\n\n\n**Returns:**\nThe color method with the specified identifier, or null if not found."
+  colorMethodById("The identifier of the color method." id: ID!): ColorMethod
+  "Retrieves all color methods.\n\n\n**Returns:**\nA collection of all color methods."
+  colorMethods: [ColorMethod!]!
+  "Retrieves all currencies.\n\n\n**Returns:**\nA collection of all currencies."
+  currencies: [PaymentTerm!]!
+  "Retrieves a currency by its code.\n\n\n**Returns:**\nThe currency with the specified code, or null if not found."
+  currencyByCode("The code of the currency." code: String!): Currency
+  "Retrieves a currency by its identifier.\n\n\n**Returns:**\nThe currency with the specified identifier, or null if not found."
+  currencyById("The identifier of the currency." id: ID!): Currency
+  "Retrieves a customer by their unique code.\n\n\n**Returns:**\nThe customer with the specified code, or null if not found."
+  customerByCode("The unique code of the customer." code: String!): Customer
+  "Retrieves a customer by their unique identifier.\n\n\n**Returns:**\nThe customer with the specified identifier, or null if not found."
+  customerById("The unique identifier of the customer." id: ID!): Customer
+  "Retrieves a customer contact by its code \/ customer combination.\n\n\n**Returns:**\nThe customer contact if found; otherwise, null."
+  customerContactByCodeAndCustomerCode("The code of the contact." code: UUID! "The customer code." customerCode: String!): CustomerContact
+  "Retrieves a customer contact by its code \/ customer combination.\n\n\n**Returns:**\nThe customer contact if found; otherwise, null."
+  customerContactByCodeAndCustomerId("The code of the contact." code: UUID! "The customer's unique identifier." customerId: ID!): CustomerContact
+  "Retrieves a customer contact by its email address.\n\n\n**Returns:**\nThe customer contact if found; otherwise, null."
+  customerContactByEmail("The email address of the contact." email: String!): CustomerContact
+  "Retrieves a customer contact by its unique identifier.\n\n\n**Returns:**\nThe customer contact if found; otherwise, null."
+  customerContactById("The unique identifier of the contact." id: ID!): CustomerContact
+  "Retrieves a paginated list of customer contacts.\n\n\n**Returns:**\nA paginated list of customer contacts."
+  customerContacts("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: ContactFilterInput): CustomerContactsConnection
+  "Retrieves a CustomerGroup by its unique code.\n\n\n**Returns:**\nA CustomerGroup if found."
+  customerGroup("The CustomerGroup code." customerGroupCode: String!): CustomerGroup
+  "Retrieves a CustomerGroup by a child customer code.\n\n\n**Returns:**\nA Customer Group if found."
+  customerGroupByCustomerCode("The customer code." customerCode: String!): CustomerGroup
+  "Retrieves a CustomerGroup by a child customer identifier.\n\n\n**Returns:**\nA Customer Group if found."
+  customerGroupByCustomerId("The customer Id." customerId: Int!): CustomerGroup
+  "Queries customers and contacts within a customer group based on a search query.\n\n\n**Returns:**\nA Customer Group Query result containing Customer Group Information including matching customers and contacts within the customer group."
+  customerGroupQuery("A child customer code." childCustomerCode: String "The customer group code." customerGroupCode: String "Search criteria on fields, Customer: Code, Name; Contact: emailAddress, firstname, lastname, fullname" query: String!): CustomerGroupQueryResult
+  "Retrieves a paginated list of customers with optional filtering.\n\n\n**Returns:**\nA paginated list of customers."
+  customers("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int "The region identifier to filter customers by." region: ID "The sales person identifier to filter customers by." salesPerson: ID "The tier identifier to filter customers by." tier: ID where: CustomerFilterInput): CustomersConnection
+  "Retrieves all date detail records.\n\n\n**Returns:**\nA collection of all date detail records."
+  dateDetails: [DateDetails!]!
+  "Retrieves a date details record by its identifier.\n\n\n**Returns:**\nThe date details record with the specified identifier, or null if not found."
+  dateDetailsById("The identifier of the date details record." id: ID!): DateDetails
+  "Retrieves an enum lookup by its code.\n\n\n**Returns:**\nThe enum lookup with the specified code, or null if not found."
+  enumLookupByCode("The code of the enum lookup." code: String!): EnumLookup
+  "Retrieves an enum lookup by its identifier.\n\n\n**Returns:**\nThe enum lookup with the specified identifier, or null if not found."
+  enumLookupById("The identifier of the enum lookup." id: ID!): EnumLookup
+  "Retrieves all enum lookups.\n\n\n**Returns:**\nA collection of all enum lookups."
+  enumLookups: [EnumLookup!]!
+  "Retrieves a gender by its code.\n\n\n**Returns:**\nThe gender with the specified code, or null if not found."
+  genderByCode("The code of the gender." code: String!): Gender
+  "Retrieves a gender by its identifier.\n\n\n**Returns:**\nThe gender with the specified identifier, or null if not found."
+  genderById("The identifier of the gender." id: ID!): Gender
+  "Retrieves all genders.\n\n\n**Returns:**\nA collection of all genders."
+  genders: [Gender!]!
+  "Retrieves a manufacturing region by its code.\n\n\n**Returns:**\nThe manufacturing region with the specified code, or null if not found."
+  manufacturingRegionByCode("The code of the manufacturing region." code: String!): ManufacturingRegion
+  "Retrieves a manufacturing region by its identifier.\n\n\n**Returns:**\nThe manufacturing region with the specified identifier, or null if not found."
+  manufacturingRegionById("The identifier of the manufacturing region." id: ID!): ManufacturingRegion
+  "Retrieves all manufacturing regions.\n\n\n**Returns:**\nA collection of all manufacturing regions."
+  manufacturingRegions: [ManufacturingRegion!]!
+  "Fetches an object given its ID."
+  node("ID of the object." id: ID!): Node
+  "Lookup nodes by a list of IDs."
+  nodes("The list of node IDs." ids: [ID!]!): [Node]!
+  "Retrieves a payment term by its identifier.\n\n\n**Returns:**\nThe payment term with the specified identifier, or null if not found."
+  paymentTermById("The identifier of the payment term." id: ID!): PaymentTerm
+  "Retrieves a port by its code.\n\n\n**Returns:**\nThe port with the specified code, or null if not found."
+  portByCode("The code of the port." code: String!): Port
+  "Retrieves a port by its identifier.\n\n\n**Returns:**\nThe port with the specified identifier, or null if not found."
+  portById("The identifier of the port." id: ID!): Port
+  "Retrieves all ports.\n\n\n**Returns:**\nA collection of all ports."
+  ports: [Port!]!
+  "Retrieves a product brand by its code.\n\n\n**Returns:**\nThe product brand with the specified code, or null if not found."
+  productBrandByCode("The code of the product brand." code: String!): ProductBrand
+  "Retrieves a product brand by its identifier.\n\n\n**Returns:**\nThe product brand with the specified identifier, or null if not found."
+  productBrandById("The identifier of the product brand." id: ID!): ProductBrand
+  "Retrieves all product brands.\n\n\n**Returns:**\nA collection of all product brands."
+  productBrands: [ProductBrand!]!
+  "Retrieves a product by its identifier.\n\n\n**Returns:**\nThe product with the specified identifier, or null if not found."
+  productById("The identifier of the product." id: ID!): Product
+  "Retrieves a product by its sold-as code.\n\n\n**Returns:**\nThe product with the specified sold-as code, or null if not found."
+  productBySoldAsCode("The sold-as code of the product." soldAsCode: String!): Product
+  "Retrieves a product by its style code.\n\n\n**Returns:**\nThe product with the specified style code, or null if not found."
+  productByStyleCode("The style code of the product." styleCode: String!): Product
+  "Retrieves all product categories.\n\n\n**Returns:**\nA collection of all product categories."
+  productCategories: [ProductCategory!]!
+  "Retrieves a product category by its code.\n\n\n**Returns:**\nThe product category with the specified code, or null if not found."
+  productCategoryByCode("The code of the product category." code: String!): ProductCategory
+  "Retrieves a product category by its identifier.\n\n\n**Returns:**\nThe product category with the specified identifier, or null if not found."
+  productCategoryById("The identifier of the product category." id: ID!): ProductCategory
+  "Retrieves a product class by its code.\n\n\n**Returns:**\nThe product class with the specified code, or null if not found."
+  productClassByCode("The code of the product class." code: String!): ProductClass
+  "Retrieves a product class by its identifier.\n\n\n**Returns:**\nThe product class with the specified identifier, or null if not found."
+  productClassById("The identifier of the product class." id: ID!): ProductClass
+  "Retrieves all product classes.\n\n\n**Returns:**\nA collection of all product classes."
+  productClasses: [ProductClass!]!
+  "Retrieves a product division by its code.\n\n\n**Returns:**\nThe product division with the specified code, or null if not found."
+  productDivisionByCode("The code of the product division." code: String!): ProductDivision
+  "Retrieves a product division by its identifier.\n\n\n**Returns:**\nThe product division with the specified identifier, or null if not found."
+  productDivisionById("The identifier of the product division." id: ID!): ProductDivision
+  "Retrieves all product divisions.\n\n\n**Returns:**\nA collection of all product divisions."
+  productDivisions: [ProductDivision!]!
+  "Retrieves a product item group by its code.\n\n\n**Returns:**\nThe product item group with the specified code, or null if not found."
+  productItemGroupByCode("The code of the product item group." code: String!): ProductItemGroup
+  "Retrieves a product item group by its identifier.\n\n\n**Returns:**\nThe product item group with the specified identifier, or null if not found."
+  productItemGroupById("The identifier of the product item group." id: ID!): ProductItemGroup
+  "Retrieves all product item groups.\n\n\n**Returns:**\nA collection of all product item groups."
+  productItemGroups: [ProductItemGroup!]!
+  "Retrieves a paginated list of products, optionally filtered by product category, code or name.\n\n\n**Returns:**\nA paginated list of products."
+  products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int "The optional product category identifier to filter by." productCategory: ID where: ProductFilterInput): ProductsConnection
+  "Retrieves a promotion by its code.\n\n\n**Returns:**\nThe promotion with the specified code, or null if not found."
+  promotionByCode("The code of the promotion." code: String!): Promotion
+  "Retrieves a promotion by its identifier.\n\n\n**Returns:**\nThe promotion with the specified identifier, or null if not found."
+  promotionById("The identifier of the promotion." id: ID!): Promotion
+  "Retrieves all promotions.\n\n\n**Returns:**\nA collection of all promotions."
+  promotions: [Promotion!]!
+  "Retrieves a region by its code.\n\n\n**Returns:**\nThe region with the specified code, or null if not found."
+  regionByCode("The code of the region." code: String!): Region
+  "Retrieves a region by its identifier.\n\n\n**Returns:**\nThe region with the specified identifier, or null if not found."
+  regionById("The identifier of the region." id: ID!): Region
+  "Retrieves all regions.\n\n\n**Returns:**\nA collection of all regions."
+  regions: [Region!]!
+  "Retrieves a sales channel by its code.\n\n\n**Returns:**\nThe sales channel with the specified code, or null if not found."
+  salesChannelByCode("The code of the sales channel." code: String!): SalesChannel
+  "Retrieves a sales channel by its identifier.\n\n\n**Returns:**\nThe sales channel with the specified identifier, or null if not found."
+  salesChannelById("The identifier of the sales channel." id: ID!): SalesChannel
+  "Retrieves all sales channels.\n\n\n**Returns:**\nA collection of all sales channels."
+  salesChannels: [SalesChannel!]!
+  "Retrieves a sales history record by its identifier.\n\n\n**Returns:**\nThe sales history record with the specified identifier, or null if not found."
+  salesHistoryById("The identifier of the sales history record." id: ID!): SalesHistory
+  "Retrieves sales history for a product by its SKU.\n\n\n**Returns:**\nThe sales history of the product with the specified sold-as code."
+  salesHistoryByProductSku("The SKU of the product." productSku: String!): SalesHistory
+  "Retrieves sales history for a product by its sold-as code.\n\n\n**Returns:**\nThe sales history of the product with the specified sold-as code."
+  salesHistoryByProductSoldAsCode("The sold-as code of the product." soldAsCode: String!): [SalesHistory!]!
+  "Retrieves a sales person by their code.\n\n\n**Returns:**\nThe sales person with the specified code, or null if not found."
+  salesPersonByCode("The code of the sales person." code: String!): SalesPerson
+  "Retrieves a sales person by their ID.\n\n\n**Returns:**\nThe sales person with the specified ID, or null if not found."
+  salesPersonById("The ID of the sales person." id: ID!): SalesPerson
+  "Retrieves a paginated list of sales persons.\n\n\n**Returns:**\nA paginated list of sales persons."
+  salesPersons("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): SalesPersonsConnection
+  "Retrieves a paginated list of sales persons by region.\n\n\n**Returns:**\nA paginated list of sales persons in the specified region."
+  salesPersonsByRegion("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int "The ID of the region." regionId: Int!): SalesPersonsByRegionConnection
+  "Retrieves a segment color by its code.\n\n\n**Returns:**\nThe segment color with the specified code, or null if not found."
+  segmentColorByCode("The code of the segment color." code: String!): SegmentColor
+  "Retrieves a segment color by its identifier.\n\n\n**Returns:**\nThe segment color with the specified identifier, or null if not found."
+  segmentColorById("The identifier of the segment color." id: ID!): SegmentColor
+  "Retrieves all segment colors.\n\n\n**Returns:**\nA collection of all segment colors."
+  segmentColors: [SegmentColor!]!
+  "Retrieves a segment size by its code.\n\n\n**Returns:**\nThe segment size with the specified code, or null if not found."
+  segmentSizeByCode("The code of the segment size." code: String!): SegmentSize
+  "Retrieves a segment size by its identifier.\n\n\n**Returns:**\nThe segment size with the specified identifier, or null if not found."
+  segmentSizeById("The identifier of the segment size." id: ID!): SegmentSize
+  "Retrieves all segment sizes.\n\n\n**Returns:**\nA collection of all segment sizes."
+  segmentSizes: [SegmentSize!]!
+  "Retrieves a size group by its code.\n\n\n**Returns:**\nThe size group with the specified code, or null if not found."
+  sizeGroupByCode("The code of the size group." code: String!): SizeGroup
+  "Retrieves a size group by its identifier.\n\n\n**Returns:**\nThe size group with the specified identifier, or null if not found."
+  sizeGroupById("The identifier of the size group." id: ID!): SizeGroup
+  "Retrieves all size groups.\n\n\n**Returns:**\nA collection of all size groups."
+  sizeGroups: [SizeGroup!]!
+  "Retrieves a stock class by its code.\n\n\n**Returns:**\nThe stock class with the specified code, or null if not found."
+  stockClassByCode("The code of the stock class." code: String!): StockClass
+  "Retrieves a stock class by its identifier.\n\n\n**Returns:**\nThe stock class with the specified identifier, or null if not found."
+  stockClassById("The identifier of the stock class." id: ID!): StockClass
+  "Retrieves all stock classes.\n\n\n**Returns:**\nA collection of all stock classes."
+  stockClasss: [StockClass!]!
+  "Gets the stock level by ID.\n\n\n**Returns:**\nThe stock level."
+  stockLevelById("The stock level ID." id: ID!): StockLevel
+  "Gets the stock level by item code.\n\n\n**Returns:**\nThe stock level."
+  stockLevelByItemCode("The item code." itemCode: String!): StockLevel
+  "Gets the stock level by SKU code.\n\n\n**Returns:**\nThe stock level."
+  stockLevelBySkuCode("The SKU code." skuCode: String!): StockLevel
+  "Gets the stock level by sold as and color code.\n\n\n**Returns:**\nThe stock level."
+  stockLevelBySoldAsAndColorCode("The color segment code." colorSegmentCode: String! "The sold as code." soldAsCode: String!): StockLevel
+  "Gets the stock level by sold as code.\n\n\n**Returns:**\nThe stock level."
+  stockLevelBySoldAsCode("The sold as code." soldAsCode: String!): StockLevel
+  "Gets the stock level by style and color code.\n\n\n**Returns:**\nThe stock level."
+  stockLevelByStyleAndColorCode("The color segment code." colorSegmentCode: String! "The style code." styleCode: String!): StockLevel
+  "Gets the stock level by style code.\n\n\n**Returns:**\nThe stock level."
+  stockLevelByStyleCode("The style code." styleCode: String!): StockLevel
+  "Gets the current index of stock level deltas.\n\n\n**Returns:**\nThe stock level delta index."
+  stockLevelDeltaIndex: StockLevelDeltaIndex!
+  "Gets a paginated list of stock levels.\n\n\n**Returns:**\nA paginated list of stock levels."
+  stockLevels("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): StockLevelsConnection
+  "Gets a paginated list of stock levels that have changed since a given timestamp.\n\n\n**Returns:**\nA paginated list of stock levels that have changed."
+  stockLevelsDelta("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "The timestamp to filter changes from." fromTimestamp: Long! "Returns the last _n_ elements from the list." last: Int): StockLevelsDeltaConnection
+  "Retrieves a supplier by their code.\n\n\n**Returns:**\nThe supplier with the specified code, or null if not found."
+  supplierByCode("The code of the supplier." code: String!): Supplier
+  "Retrieves a supplier by their identifier.\n\n\n**Returns:**\nThe supplier with the specified identifier, or null if not found."
+  supplierById("The identifier of the supplier." id: ID!): Supplier
+  "Retrieves a supplier contact by their email.\n\n\n**Returns:**\nThe supplier contact with the specified email, or null if not found."
+  supplierContactByEmail("The email of the supplier contact." email: String!): SupplierContact
+  "Retrieves a supplier contact by their identifier.\n\n\n**Returns:**\nThe supplier contact with the specified identifier, or null if not found."
+  supplierContactById("The identifier of the supplier contact." id: ID!): SupplierContact
+  "Retrieves a paginated collection of suppliers.\n\n\n**Returns:**\nA paginated collection of suppliers."
+  suppliers("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: SupplierFilterInput): SuppliersConnection
+  "Retrieves a tier by its identifier.\n\n\n**Returns:**\nThe tier with the specified identifier, or null if not found."
+  tierById("The identifier of the tier." id: ID!): Tier
+  "Retrieves a tier by its region code.\n\n\n**Returns:**\nThe tier associated with the specified region code, or null if not found."
+  tierByRegion("The code of the region." code: String!): Tier
+  "Retrieves all tiers.\n\n\n**Returns:**\nA collection of all tiers."
+  tiers: [Tier!]!
+  "Retrieves tiers by their region identifier.\n\n\n**Returns:**\nA collection of tiers associated with the specified region identifier."
+  tiersByRegion("The identifier of the region." regionId: Int!): [Tier!]!
+  "Retrieves tiers by their region code.\n\n\n**Returns:**\nA collection of tiers associated with the specified region code."
+  tiersByRegionCode("The code of the region." regionCode: String!): [Tier!]!
+  "Retrieves a unit of measure by its code.\n\n\n**Returns:**\nThe unit of measure with the specified code, or null if not found."
+  unitOfMeasureByCode("The code of the unit of measure." code: String!): UnitOfMeasure
+  "Retrieves a unit of measure by its identifier.\n\n\n**Returns:**\nThe unit of measure with the specified identifier, or null if not found."
+  unitOfMeasureById("The identifier of the unit of measure." id: ID!): UnitOfMeasure
+  "Retrieves all units of measurement.\n\n\n**Returns:**\nA collection of all units of measurement."
+  unitsOfMeasurement: [UnitOfMeasure!]!
+  "Retrieves a variant by its code.\n\n\n**Returns:**\nThe variant with the specified code, or null if not found."
+  variantByCode("The code of the variant." code: String!): Variant
+  "Retrieves a variant by its identifier.\n\n\n**Returns:**\nThe variant with the specified identifier, or null if not found."
+  variantById("The identifier of the variant." id: ID!): Variant
+  "Retrieves a variant by its SKU.\n\n\n**Returns:**\nThe variant with the specified SKU, or null if not found."
+  variantBySku("The SKU of the variant." sku: String!): Variant
+  "Retrieves a paginated and filterable list of product variants based on the specified criteria.\n\n\n**Returns:**\nA Connection`1 containing the paginated list of Variant objects that match the\nspecified criteria."
+  variants("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "An optional flag indicating whether to filter for new variants. If true, only new variants are\n            included; if false, only non-new variants are included; if null, no filtering\n            is applied." isNew: Boolean "Returns the last _n_ elements from the list." last: Int "The ID of the product category to filter variants by. Can be null to include variants from all\n            categories." productCategory: ID "An optional search query to filter variants by name or other attributes. Can be null to include\n            all variants." query: String where: VariantFilterInput): VariantsConnection
+  "Retrieves XDP data for the specified identifier.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains the XDP data as a model object, or null if no data is found for the specified identifier."
+  xdpData("The unique identifier of the XDP data to retrieve." id: ID!): XdpData
+  "Retrieves a paginated and filterable collection of XDP data.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains a Connection`1 of XdpData, representing the paginated and filtered XDP data."
+  xdpDatas("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: XdpDataFilterInput): XdpDatasConnection
+  "Retrieves an XDP transaction by its unique identifier.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains the XDP transaction as an XdpTransaction object, or null if no transaction is found with the specified identifier."
+  xdpTransaction("The unique identifier of the XDP transaction to retrieve." id: ID!): XdpTransaction
+  "Retrieves a paginated and filterable list of XDP transactions.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains a connection object that includes the\npaginated list of XDP transactions and associated metadata."
+  xdpTransactions("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: XdpTransactionFilterInput): XdpTransactionsConnection
+}
+
+union CreateArtworkFolderError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+  id: ID!
+}
+
+union RevokeSharedArtworkError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"Represents an artwork file type."
+type ArtworkFileType implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The artwork file type code."
+  code: String
+  "The creation date and time of the artwork file type."
+  created: DateTime!
+  "The unique identifier for the artwork file type."
+  id: ID!
+  "The artwork file type identifier."
+  internalId: Int!
+  "The MIME type of the artwork file."
+  mimeType: String
+  "The last modified date and time of the artwork file type."
+  modified: DateTime!
+  "The artwork file type name."
+  name: String
+  "The sort index for the artwork file type."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+type TagArtworkPayload {
+  errors: [TagArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"A connection to a list of items."
+type ContactsConnection {
+  "A list of edges."
+  edges: [ContactsEdge!]
+  "A flattened list of the nodes."
+  nodes: [SupplierContact!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"Represents a payment term style."
+type PaymentTerm implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The code or the payment term."
+  code: String!
+  "The creation date and time of the payment term."
+  created: DateTime!
+  "The unique identifier for the payment term."
+  id: ID!
+  "Gets the internal identifier of the payment term.\n\n\n**Returns:**\nThe internal identifier of the payment term."
+  internalId: Int!
+  "The last modified date and time of the payment term."
+  modified: DateTime!
+  "The name of the payment term."
+  name: String!
+  "The region associated with the payment term."
+  region: Region
+  "The source identifier for the payment term."
+  sourceIdentifier: String
+  "The timestamp for the payment term."
+  timestamp: Long!
+}
+
+"An edge in a connection."
+type VariantsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Variant!
+}
+
+type DeleteArtworkTagPayload {
+  errors: [DeleteArtworkTagError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a stock class."
+type StockClass implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The stock class code."
+  code: String
+  "The creation date and time of the stock class."
+  created: DateTime!
+  "The unique identifier for the stock class."
+  id: ID!
+  "The stock class identifier."
+  internalId: Int!
+  "Indicates whether the stock class is continuing or not."
+  isContinuing: Boolean!
+  "The last modified date and time of the stock class."
+  modified: DateTime!
+  "The stock class name."
+  name: String
+  "The sort index for the stock class."
+  sortIndex: Int!
+  "The source identifier for the stock class."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents an exception that is thrown when a bad request is sent, typically due to malformed or incorrect data."
+type BadRequestException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+"Represents an enumeration lookup."
+type EnumLookup implements Node {
+  "The code for the enumeration lookup."
+  code: String!
+  "The description of the enumeration lookup."
+  description: String!
+  "The unique identifier for the enumeration lookup."
+  id: ID!
+  "The enum lookup identifier."
+  internalId: Int!
+  "The value of the enumeration lookup."
+  value: String!
+  "The numeric value associated with this instance."
+  valueNumeric: Int!
+}
+
+"Represents a web color."
+type WebColor {
+  "The checksum for change tracking."
+  checksum: String
+  "The web color code."
+  code: String
+  "The web color hexadecimal code."
+  colorHex: String
+  "The creation date and time of the web color."
+  created: DateTime!
+  "The unique identifier for the web color."
+  id: Int!
+  "The web color identifier."
+  internalId: Int!
+  "The last modified date and time of the web color."
+  modified: DateTime!
+  "The web color name."
+  name: String
+  "The sort index for the web color."
+  sortIndex: Int!
+  "The source identifier for the web color."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"A connection to a list of items."
+type XdpDatasConnection {
+  "A list of edges."
+  edges: [XdpDatasEdge!]
+  "A flattened list of the nodes."
+  nodes: [XdpData!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"A connection to a list of items."
+type CustomersConnection {
+  "A list of edges."
+  edges: [CustomersEdge!]
+  "A flattened list of the nodes."
+  nodes: [Customer!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"Represents a transaction in the XDP (Ex Duty Paid) system, containing details such as type, quantity, and processing status."
+type XdpTransaction implements Node {
+  "The date and time when the transaction was created."
+  created: DateTime!
+  flags: Int!
+  "The unique identifier for the transaction."
+  id: ID!
+  "A value indicating whether the confirmation process was successful."
+  isConfirmSuccess: Boolean!
+  "The launch number associated with the operation."
+  launchNum: String
+  "The quantity associated with the transaction."
+  quantity: Float!
+  "The reason associated with the current operation or state."
+  reason: String!
+  sequence: Int
+  "The type of the transaction."
+  type: XdpTransactionType!
+  "Retrieves XDP data associated with the specified transaction.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains the XDP data as an XdpData object, or null if no data is found."
+  xdpData: XdpData
+  "The date and time when the XDP process was completed. Null if the process has not been completed yet."
+  xdpProcessedDate: DateTime
+}
+
+"Represents the input data required to update an XDP data entry."
+input UpdateXdpDataEntryInput {
+  "The code of the item associated with the XDP data entry. Cannot be null or empty."
+  itemCode: String!
+  "The line number within the MRN that corresponds to the XDP data entry. Must be a non-negative integer."
+  mrnLineNumber: Int!
+  "The Movement Reference Number (MRN)associated with the XDP data entry. Cannot be null or empty."
+  mrnNumber: String!
+  "The purchase order number associated with the XDP data entry. Can be null if no purchase order is linked."
+  poNumber: String
+  "The quantity of the item to be updated in the XDP data entry. Must be a positive value."
+  quantity: Float!
+  "The unique identifier of the XDP data entry to be updated. Must be a positive value."
+  xdpDataEntryId: ID!
+}
+
+type RevokeAllSharesPayload {
+  errors: [RevokeAllSharesError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Input type for creating a new artwork."
+input CreateArtworkInput {
+  "The description of the artwork."
+  description: String
+  "The extension of the artwork."
+  extension: String!
+  "The Folder of the artwork."
+  folder: ID
+  "The mime type of the artwork."
+  mimeType: String!
+  "The name of the artwork."
+  name: String!
+  "The Type Identifier of the artwork."
+  type: ArtworkType!
+}
+
+"Represents a supplier."
+type Supplier implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The supplier code."
+  code: String!
+  "The contacts associated with the supplier."
+  contacts("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): ContactsConnection
+  "The creation date and time of the supplier."
+  created: DateTime!
+  "The supplier's trading currency."
+  currency: Currency
+  "The email address of the supplier."
+  email: String
+  "The unique identifier for the supplier."
+  id: ID!
+  "The supplier identifier."
+  internalId: Int!
+  "Indicates whether the supplier is local."
+  isLocal: Boolean!
+  "The last modified date and time of the supplier."
+  modified: DateTime!
+  "The supplier name."
+  name: String!
+  "The supplier phone number."
+  phone: String
+  "The preferences associated with the supplier."
+  preferences: [SupplierPreference!]!
+  "The source identifier for the supplier."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The supplier website URL."
+  websiteUrl: String
+}
+
+union CommitArtworkError = ImpersonationRequiredException | InputValidationException | ConflictException | BadRequestException
+
+"An edge in a connection."
+type ChildrenEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Customer!
+}
+
+"An edge in a connection."
+type ProductsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Product!
+}
+
+"Represents the packaging details of a product."
+type Packaging {
+  "The conversion quantity for the packaging."
+  conversionQuantity: Int!
+  "The creation date and time of the packaging."
+  created: DateTime!
+  "The Unit of Measure associated with the Packaging Unit."
+  dimUnitOfMeasure: UnitOfMeasure
+  "The height of the packaging."
+  height: Float!
+  "The tier identifier."
+  internalId: Int!
+  "The length of the packaging."
+  length: Float!
+  "The last modified date and time of the packaging."
+  modified: DateTime!
+  "The Type of Packaging (Eaches, Cartons, Pallets)."
+  packagingType: EnumLookup
+  "The source identifier for the packaging."
+  sourceIdentifier: String
+  "The timestamp for the packaging."
+  timestamp: Long!
+  "The weight of the packaging."
+  weight: Float!
+  "The Unit of Measure associated with the Packaging Unit's Weight."
+  weightDimUnitOfMeasure: UnitOfMeasure
+  "The width of the packaging."
+  width: Float!
+}
+
+union CreateArtworkError = ImpersonationRequiredException | InputValidationException | BadRequestException | ConflictException
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input ContactFilterInput {
+  and: [ContactFilterInput!]
+  or: [ContactFilterInput!]
+  firstName: ProductStringOperationFilterInput
+  lastName: ProductStringOperationFilterInput
+  emailAddress: ProductStringOperationFilterInput
+  fullName: ProductStringOperationFilterInput
+}
+
+"Represents a product brand."
+type ProductBrand implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The product brand code."
+  code: String
+  "The creation date and time of the product brand."
+  created: DateTime!
+  "The unique identifier for the product brand."
+  id: ID!
+  "The product brand identifier."
+  internalId: Int!
+  "The logo associated with the product brand."
+  logo: Logo
+  "The last modified date and time of the product brand."
+  modified: DateTime!
+  "The product brand name."
+  name: String
+  "The sort index for the product brand."
+  sortIndex: Int!
+  "The source identifier for the product brand."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a product item group."
+type ProductItemGroup implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The product item group code."
+  code: String
+  "The creation date and time of the product item group."
+  created: DateTime!
+  "The unique identifier for the product item group."
+  id: ID!
+  "The product item group identifier."
+  internalId: Int!
+  "The last modified date and time of the product item group."
+  modified: DateTime!
+  "The product item group name."
+  name: String
+  "The sort index for the product item group."
+  sortIndex: Int!
+  "The source identifier for the product item group."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type KeyValuePairOfStringAndString {
+  key: String!
+  value: String!
+}
+
+type EnableGlobalSharingPayload {
+  errors: [EnableGlobalSharingError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"A connection to a list of items."
+type SuppliersConnection {
+  "A list of edges."
+  edges: [SuppliersEdge!]
+  "A flattened list of the nodes."
+  nodes: [Supplier!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"Represents a contact."
+type CustomerContact implements Node {
+  "The branch name of the contact."
+  branchName: String
+  "The checksum for the contact."
+  checksum: String
+  "The unique code for the contact."
+  code: UUID!
+  "The date and time when the contact was created."
+  created: DateTime!
+  "The customer associated with the contact."
+  customer: Customer
+  "The email address of the contact."
+  emailAddress: String
+  "The first name of the contact."
+  firstName: String
+  "The full name of the contact."
+  fullName: String
+  "The gender of the contact."
+  gender: String
+  "The unique identifier for the contact."
+  id: ID!
+  "The contact identifier."
+  internalId: Int!
+  "Gets or sets a value indicating whether the contact is a master contact."
+  isMastercontact: Boolean!
+  "Gets or sets a value indicating whether the contact is a website user."
+  isWebSiteUser: Boolean!
+  "The job role of the contact."
+  jobRole: String
+  "The last name of the contact."
+  lastName: String
+  "The mobile number of the contact."
+  mobileNumber: String
+  "The date and time when the contact was last modified."
+  modified: DateTime!
+  "The source identifier for the contact."
+  sourceIdentifier: String!
+  "The status associated with the contact."
+  status: EnumLookup
+  "Gets or sets a value indicating whether the contact is a sync user."
+  syncUser: Boolean!
+  "The telephone number of the contact."
+  telephoneNumber: String
+  "The timestamp for the contact."
+  timestamp: Long!
+  "The date and time when the website was last modified."
+  websiteLastModified: DateTime
+}
+
+"Represents a product division."
+type ProductDivision implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The product division code."
+  code: String
+  "The creation date and time of the product division."
+  created: DateTime!
+  "The unique identifier for the product division."
+  id: ID!
+  "The product division identifier."
+  internalId: Int!
+  "The last modified date and time of the product division."
+  modified: DateTime!
+  "The product division name."
+  name: String
+  "The sort index for the product division."
+  sortIndex: Int!
+  "The source identifier for the product division."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type CreateArtworkPayload {
+  artworkSession: ArtworkSession
+  errors: [CreateArtworkError!]
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input XdpDateTimeNullOperationFilterInput {
+  and: [XdpDateTimeNullOperationFilterInput!]
+  or: [XdpDateTimeNullOperationFilterInput!]
+  eq: DateTime
+  neq: DateTime
+}
+
+scalar UUID
+
+"An edge in a connection."
+type CustomerContactsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: CustomerContact!
+}
+
+"An edge in a connection."
+type SalesPersonsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SalesPerson!
+}
+
+"Provides mutation operations for managing XDP data entries and transactions."
+type Mutation {
+  "Commits a new artwork .\n\n\n**Returns:**\nA string indicating success or failure."
+  commitArtwork("The input data for committing the artwork." input: CommitArtworkInput!): CommitArtworkPayload!
+  "Creates a new artwork.\n\n\n**Returns:**\nThe artwork that was created of a list of exceptions."
+  createArtwork("The input data for creating the artwork." input: CreateArtworkInput!): CreateArtworkPayload!
+  "Creates a new folder.\n\n\n**Returns:**\nThe folder that was created of a list of exceptions."
+  createArtworkFolder("The input data for creating the folder." input: CreateArtworkFolderInput!): CreateArtworkFolderPayload!
+  "Creates a new artwork tag.\n\n\n**Returns:**\nThe artwork tag that was created of a list of exceptions."
+  createArtworkTag("The input data for creating the artwork tag." input: CreateArtworkTagInput!): CreateArtworkTagPayload!
+  "Creates a new XDP data entry based on the provided input.\n\n\n**Returns:**\nA FieldResult`1 containing the created XdpData object if successful,  or a collection\nof errors if the input validation fails."
+  createXdpDataEntry("The input data required to create the XDP entry, including item code, MRN number, MRN line number, and other\n            optional fields." input: CreateXdpDataEntryInput!): CreateXdpDataEntryPayload!
+  "Deletes an artwork.\n\n\n**Returns:**\nA string indicating success or failure."
+  deleteArtwork("The input data for deleting the artwork." input: DeleteArtworkInput!): DeleteArtworkPayload!
+  "Deletes a folder.\n\n\n**Returns:**\nThe folder that was created of a list of exceptions."
+  deleteArtworkFolder("The input data for deleting the folder." input: DeleteArtworkFolderInput!): DeleteArtworkFolderPayload!
+  "Deletes an artwork tag.\n\n\n**Returns:**\nA string indicating success or failure."
+  deleteArtworkTag("The input data for creating the artwork tag." input: DeleteArtworkTagInput!): DeleteArtworkTagPayload!
+  "Deletes an XDP data entry identified by the specified ID.\n\n\n**Returns:**\nA FieldResult`1 containing the result of the operation. If the operation is successful, the result\nwill contain no errors. If validation or processing errors occur, the result will include the relevant errors."
+  deleteXdpDataEntry("The input containing the ID of the XDP data entry to delete. The XdpDataEntryId must be greater than 0." input: DeleteXdpDataEntryInput!): DeleteXdpDataEntryPayload!
+  "Disables Global Sharing.\n\n\n**Returns:**\nThe Folder that was shared with a list of exceptions."
+  disableGlobalSharing: DisableGlobalSharingPayload!
+  "Enables Global Sharing.\n\n\n**Returns:**\nThe Folder that was shared with a list of exceptions."
+  enableGlobalSharing("The input data for global sharing." input: EnableGlobalSharingInput!): EnableGlobalSharingPayload!
+  "Move a folder.\n\n\n**Returns:**\nThe folder that was created of a list of exceptions."
+  moveArtworkFolder("The input data for moving the folder." input: MoveArtworkFolderInput!): MoveArtworkFolderPayload!
+  "Processes an XDP transaction using the specified service and input parameters.\n\n\n**Returns:**\nA FieldResult`1 containing the result of the operation. If the operation is successful, the result\nwill be empty. If there are validation errors or conflicts, the result will contain the corresponding errors."
+  processXdpTransaction("The input data required to process the transaction. The XdpTransactionId\n            must be greater than 0." input: ProcessXdpTransactionInput!): ProcessXdpTransactionPayload!
+  "Renames a folder.\n\n\n**Returns:**\nThe folder that was created of a list of exceptions."
+  renameArtworkFolder("The input data for renaming the folder." input: RenameArtworkFolderInput!): RenameArtworkFolderPayload!
+  "Revokes all sharing.\n\n\n**Returns:**\nThe Folder that was shared with a list of exceptions."
+  revokeAllShares: RevokeAllSharesPayload!
+  "Revokes shares of an artwork object.\n\n\n**Returns:**\nThe artwork that had it's share revoked shared with a list of exceptions."
+  revokeSharedArtwork("The input data for revoking the sharing of an artwork." input: RevokeSharedArtworkInput!): RevokeSharedArtworkPayload!
+  "Revokes shares of an Folder object.\n\n\n**Returns:**\nThe Folder that had it's share revoked shared with a list of exceptions."
+  revokeSharedFolder("The input data for revoking the sharing of an Folder." input: RevokeSharedFolderInput!): RevokeSharedFolderPayload!
+  "Shares an artwork object.\n\n\n**Returns:**\nThe artwork that was shared with a list of exceptions."
+  shareArtwork("The input data for sharing the artwork." input: ShareArtworkInput!): ShareArtworkPayload!
+  "Shares an Folder object.\n\n\n**Returns:**\nThe Folder that was shared with a list of exceptions."
+  shareFolder("The input data for sharing the Folder." input: ShareFolderInput!): ShareFolderPayload!
+  "Links an artwork tag to an artwork object.\n\n\n**Returns:**\nA string indicating success or failure."
+  tagArtwork("The input data for linking the artwork tag." input: TagArtworkInput!): TagArtworkPayload!
+  "Updates an artwork.\n\n\n**Returns:**\nA string indicating success or failure."
+  updateArtwork("The input data for updating the artwork." input: UpdateArtworkInput!): UpdateArtworkPayload!
+  "Updates an artwork tag.\n\n\n**Returns:**\nA string indicating success or failure."
+  updateArtworkTag("The input data for updating the artwork tag." input: UpdateArtworkTagInput!): UpdateArtworkTagPayload!
+  "Updates an XDP data entry by its identifier.\n\n\n**Returns:**\nA FieldResult`1 containing the result of the operation. If the operation is successful, the result\nwill be empty. If there are validation errors or conflicts, the result will contain the corresponding errors."
+  updateXdpDataEntry("The input containing the details of the XDP data entry to update. The XdpDataEntryId must be greater than 0." input: UpdateXdpDataEntryInput!): UpdateXdpDataEntryPayload!
+}
+
+enum ArtworkStatus {
+  ACTIVE
+  ARCHIVE
+  DELETED
+  PENDING
+  REJECTED
+  PENDING_ACTIVE
+}
+
+"Represents a product category."
+type ProductCategory implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The child categories associated with the product category."
+  childCategories: [ProductCategory!]!
+  "The category code."
+  code: String
+  "The creation date and time of the product category."
+  created: DateTime!
+  "The unique identifier for the product category."
+  id: ID!
+  "The product category identifier."
+  internalId: Int!
+  "The last modified date and time of the product category."
+  modified: DateTime!
+  "The product category name."
+  name: String
+  "The parent category associated with the product category."
+  parentCategory: ProductCategory
+  "The path of the product category.\n\n\n**Returns:**\nThe path of the product category."
+  path: String!
+  "The product class associated with the product category."
+  productClass: ProductClass
+  "The sort index for the product category."
+  sortIndex: Int!
+  "The source identifier for the product category."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents the e-commerce details of a product, including metadata such as timestamps,  web-friendly name, and\ndescription."
+type ProductECommerceDetail {
+  "Retrieves the behavior associated with the specified product e-commerce detail.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains the behavior associated with the\nspecified product e-commerce detail."
+  behavior: Behavior!
+  "The date and time when the entity was created."
+  created: DateTime!
+  "The web friendly description of the Product."
+  description: String
+  "The tag identifier."
+  internalId: Int!
+  "The date and time when the entity was last modified."
+  modified: DateTime!
+  "The web friendly name of the Product."
+  name: String
+  "Retrieves the promotion details for the specified product.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains the promotion details associated with\nthe specified product."
+  promotion: Promotion!
+  "Retrieves the segment color associated with the specified product.\n\n\n**Returns:**\nA CancellationToken) object representing the segment color associated with the product,  or null if the product does not have an associated segment color."
+  segmentColor: SegmentColor
+  "The timestamp for the product web preferences."
+  timestamp: Long!
+}
+
+"Represents a gender."
+type Gender implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The gender code."
+  code: String
+  "The creation date and time of the gender."
+  created: DateTime!
+  "The unique identifier for the gender."
+  id: ID!
+  "The gender identifier."
+  internalId: Int!
+  "The last modified date and time of the gender."
+  modified: DateTime!
+  "The gender name."
+  name: String
+  "The sort index for the gender."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"Represents a session for uploading artwork, including metadata and upload configuration."
+type ArtworkSession {
+  "The collection of headers associated with the request or response."
+  headers: [KeyValuePairOfStringAndString!]
+  "The unique identifier for the entity."
+  id: ID!
+  "The URI to which the upload operation will be directed."
+  uploadUri: URL!
+}
+
+enum SecurityType {
+  READ_ONLY
+  READ_WRITE
+}
+
+"The `Byte` scalar type represents non-fractional whole numeric values. Byte can represent values between 0 and 255."
+scalar Byte
+
+"Represents an exception that is thrown when an action requires impersonation, but the required impersonation header\nis missing or invalid."
+type ImpersonationRequiredException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+type UpdateArtworkPayload {
+  errors: [UpdateArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"An edge in a connection."
+type CustomersEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Customer!
+}
+
+union DisableGlobalSharingError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"A connection to a list of items."
+type ProductsConnection {
+  "A list of edges."
+  edges: [ProductsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Product!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+type DisableGlobalSharingPayload {
+  errors: [DisableGlobalSharingError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a supplier contact."
+type SupplierContact implements Node {
+  "The creation date and time of the supplier contact."
+  created: DateTime!
+  "The supplier contact email address."
+  email: String
+  "The unique identifier for the supplier contact."
+  id: ID!
+  "The supplier contact identifier."
+  internalId: Int!
+  "The last modified date and time of the supplier contact."
+  modified: DateTime!
+  "The supplier contact name."
+  name: String
+  "The supplier contact phone number."
+  phone: String
+  "The source identifier for the supplier contact."
+  sourceIdentifier: String
+  "The supplier associated with the supplier contact."
+  supplier: Supplier
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+union CreateXdpDataEntryError = ConflictException | BadRequestException
+
+"Represents the stock level of a product."
+type StockLevel implements Node {
+  "The available stock quantity."
+  available: Int!
+  "The product variant Code."
+  code: String
+  "The unique identifier for the stock level."
+  id: ID!
+  "Retrieves the incoming levels for the parent stock level.\n\n\n**Returns:**\nA List of Incoming Stock Levels."
+  incomingLevels: [StockIncomingLevel!]!
+  "The reserved stock quantity on incoming stock levels."
+  incomingReserved: Int!
+  "The stock level identifier."
+  internalId: Int!
+  "The inventory level of bonded stock."
+  inventoryBonded: Int!
+  "The inventory level of free stock."
+  inventoryFree: Int!
+  "The date and time when the stock level was last modified."
+  modified: DateTime!
+  "The reserved stock quantity."
+  reserved: Int!
+  "The product segmented color code."
+  segmentColorCode: String
+  "The product variant sku."
+  sku: String
+  "The product sold as code."
+  soldAsCode: String
+  "The source identifier."
+  sourceIdentifier: String!
+  "The stock level type code."
+  stockLevelType: StockLevelTypeEnum!
+  "The product style code."
+  styleCode: String
+  "The timestamp of the stock level."
+  timestamp: Long!
+  "Retrieves the level for all variants of the Parent product stock level.\n\n\n**Returns:**\nA List of Variant stock levels."
+  variants: [StockLevel!]!
+}
+
+"Represents the preferences and attributes of a product in relation to warehouse handling."
+type ProductWarehousePreference {
+  "Gets or sets a value indicating whether the item is conveyorable."
+  isConveyorable: Boolean!
+  "Gets or sets a value indicating whether the item is classified as dangerous goods."
+  isDangerousGoods: Boolean!
+  "Gets or sets a value indicating whether the item is considered high value."
+  isHighValue: Boolean!
+}
+
+type CreateXdpDataEntryPayload {
+  errors: [CreateXdpDataEntryError!]
+  xdpData: XdpData
+}
+
+"Represents a segment color."
+type SegmentColor implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The segment color code."
+  code: String
+  "The creation date and time of the segment color."
+  created: DateTime!
+  "The unique identifier for the segment color."
+  id: ID!
+  "The URI of the segment color image."
+  imageUri: String
+  "The segment color identifier."
+  internalId: Int!
+  "The last modified date and time of the segment color."
+  modified: DateTime!
+  "The segment color name."
+  name: String
+  "The sort index for the segment color."
+  sortIndex: Int!
+  "The source identifier for the segment color."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The web color associated with the segment color."
+  webColor: WebColor
+}
+
+"Represents an exception that is thrown when a conflict occurs, such as when a record with matching information\nalready exists, preventing the operation from being processed."
+type ConflictException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+"Input type for moving a folder."
+input MoveArtworkFolderInput {
+  "The identifier of the folder."
+  id: ID!
+  "The new parent folder identifier."
+  parentId: ID!
+}
+
+"Represents the result of a customer group query."
+type CustomerGroupQueryResult {
+  "Gets or sets the contacts in the customer group."
+  contacts: [CustomerContact!]
+  "Gets or sets the customer group."
+  customerGroup: CustomerGroup!
+  "Gets or sets the customers in the customer group."
+  customers: [Customer!]
+}
+
+"Represents a customer."
+type Customer implements Node {
+  "The account clerk for the customer."
+  accountsClerk: String
+  "The account contact for the customer."
+  accountsContact: String!
+  "The account contact email for the customer."
+  accountsContactEmail: String!
+  "The addresses associated with the customer."
+  addresses: [Address!]!
+  "The checksum for change tracking."
+  checksum: String
+  "The master associated with the customer."
+  children("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): ChildrenConnection
+  "The Customer code."
+  code: String!
+  "The company registration number for the customer."
+  companyRegistrationNumber: String
+  "The contact number for the customer."
+  contactNumber: String
+  "The creation date and time of the customer."
+  created: DateTime!
+  "The credit limit for the customer."
+  creditLimit: Decimal!
+  "The contacts associated with the customer."
+  customerContacts: [CustomerContact!]!
+  "The customer group for the customer."
+  customerGroup: String
+  "The customer group name for the customer."
+  customerGroupName: String
+  "The unique identifier for the customer."
+  id: ID!
+  "The customer identifier."
+  internalId: Int!
+  "The master associated with the customer."
+  master: Customer
+  "The last modified date and time of the customer."
+  modified: DateTime!
+  "The customer name."
+  name: String!
+  "The payment term associated with the customer."
+  paymentTerm: PaymentTerm
+  "The region associated with the customer."
+  region: Region
+  "The sales area associated with the customer."
+  salesArea: SalesArea
+  "The sales person associated with the customer."
+  salesPerson: SalesPerson
+  "The source identifier for the contact."
+  sourceIdentifier: String!
+  "The status associated with the customer."
+  status: EnumLookup
+  "The tax number for the customer."
+  taxNumber: String
+  "The tax status associated with the customer."
+  taxStatus: EnumLookup
+  "The tier associated with the customer."
+  tier: Tier
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The vat deferment number for the customer."
+  vatDefermentNumber: String
+}
+
+"Represents a branding service."
+type BrandingService implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The branding service code."
+  code: String
+  "The creation date and time of the branding service."
+  created: DateTime!
+  "The unique identifier for the branding service."
+  id: ID!
+  "The branding service identifier."
+  internalId: Int!
+  "The last modified date and time of the branding service."
+  modified: DateTime!
+  "The branding service name."
+  name: String
+  "The sort index for the branding service."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+union ShareFolderError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"A connection to a list of items."
+type CustomerContactsConnection {
+  "A list of edges."
+  edges: [CustomerContactsEdge!]
+  "A flattened list of the nodes."
+  nodes: [CustomerContact!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+union MoveArtworkFolderError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"Input type for renaming a folder."
+input DeleteArtworkFolderInput {
+  "The identifier of the folder."
+  id: ID!
+}
+
+input VariantFilterInput {
+  and: [VariantFilterInput!]
+  or: [VariantFilterInput!]
+  sku: ProductStringOperationFilterInput
+  code: ProductStringOperationFilterInput
+}
+
+"Represents an artwork tag."
+type ArtworkTagDetails implements Node {
+  "Specifies whether the artwork tag can be edited."
+  canEdit: Boolean!
+  "The artwork tag color."
+  color: String!
+  "The unique identifier for the artwork tag."
+  id: ID!
+  "The artwork tag name."
+  name: String!
+  "Specifies the ownership details of the artwork tag."
+  owner: Owner!
+}
+
+input SupplierFilterInput {
+  and: [SupplierFilterInput!]
+  or: [SupplierFilterInput!]
+  code: SupplierStringOperationFilterInput
+  name: SupplierStringOperationFilterInput
+  isLocal: BooleanOperationFilterInput
+}
+
+union RenameArtworkFolderError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"Input type for committing a new artwork."
+input CommitArtworkInput {
+  "The identifier of the artwork."
+  id: ID!
+  "Gets the collection of tag identifiers associated with the entity."
+  tagIds: [ID]
+}
+
+"Input type to enable global sharing."
+input EnableGlobalSharingInput {
+  "The value to see if sharing needs to be force enabled."
+  forceEnable: Boolean
+  "The securityType for the global sharing record."
+  securityType: SecurityType!
+}
+
+"Represents a product class."
+type ProductClass implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The child product classes associated with the product class."
+  childProductClasses: [ProductClass!]!
+  "The product class code."
+  code: String
+  "The creation date and time of the product class."
+  created: DateTime!
+  "The unique identifier for the product class."
+  id: ID!
+  "The product class identifier."
+  internalId: Int!
+  "The last modified date and time of the product class."
+  modified: DateTime!
+  "The product class name."
+  name: String
+  "The parent product class associated with the product class."
+  parentProductClass: ProductClass
+  "The path of the product class.\n\n\n**Returns:**\nThe path of the product class."
+  path: String!
+  "The product categories associated with the product class."
+  productCategories: [ProductCategory!]!
+  "The sort index for the product class."
+  sortIndex: Int!
+  "The source identifier for the product class."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"An edge in a connection."
+type XdpTransactionsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: XdpTransaction!
+}
+
+"Represents an exception that is thrown when input validation fails for a specific parameter."
+type InputValidationException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+  "Gets the name of the parameter that failed validation."
+  parameterName: String!
+}
+
+"Represents a address."
+type Address {
+  "The address code."
+  code: String
+  "The sales person identifier."
+  internalId: Int!
+  "The line 1 for the address."
+  line1: String
+  "The line 2 for the address."
+  line2: String
+  "The line 3 for the address."
+  line3: String
+  "The line 4 for the address."
+  line4: String
+  "The line 5 for the address."
+  line5: String
+  "The address type."
+  type: Int!
+}
+
+"A connection to a list of items."
+type ArtworkFolderContentsConnection {
+  "A list of edges."
+  edges: [ArtworkFolderContentsEdge!]
+  "A flattened list of the nodes."
+  nodes: [ArtworkDetails!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"Input type for sharing of a Folder."
+input ShareFolderInput {
+  "List of Contact Ids to removed share access."
+  contactIdsRevoke: [UUID!]!
+  "List of Contact Ids to share with."
+  contactIdsShare: [UUID!]!
+  "List of Customer Codes to remove share access."
+  customerCodesRevoke: [String!]!
+  "List of Customer Code to share with."
+  customerCodesShare: [String!]!
+  "The Identifier of the Folder object."
+  folderId: ID!
+  "The Access  granted to the shared folder."
+  sharedAccess: SecurityType
+}
+
+union ProcessXdpTransactionError = ConflictException | BadRequestException
+
+"Input type for deleting an artwork object."
+input DeleteArtworkInput {
+  "The identifier of the artwork."
+  id: ID!
+}
+
+"A connection to a list of items."
+type SalesPersonsByRegionConnection {
+  "A list of edges."
+  edges: [SalesPersonsByRegionEdge!]
+  "A flattened list of the nodes."
+  nodes: [SalesPerson!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+union EnableGlobalSharingError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"Represents the warehouse preferences for a specific product variant."
+type VariantWarehousePreference {
+  "Gets or sets a value indicating whether the entity is active."
+  active: Boolean
+  "Gets or sets the name of the company associated with the entity."
+  company: String
+  "Gets or sets a value indicating whether the item is conveyorable."
+  isConveyorable: Boolean
+  "Gets or sets a value indicating whether the item is classified as dangerous goods."
+  isDangerousGoods: Boolean
+  "Gets or sets a value indicating whether the item is considered high value."
+  isHighValue: Boolean
+}
+
+union TagArtworkError = ImpersonationRequiredException | InputValidationException | NotFoundException | BadRequestException
+
+"An edge in a connection."
+type StockLevelsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: StockLevel!
+}
+
+union ShareArtworkError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"Represents the input required to delete an XDP data entry."
+input DeleteXdpDataEntryInput {
+  "The unique identifier for an XdpData entry."
+  xdpDataEntryId: ID!
+}
+
+"Represents a product style."
+type Product implements Node {
+  "The creation date and time of the product."
+  created: DateTime!
+  "Retrieves the default e-commerce details for a specified product.\n\n\n**Returns:**\nA ProductECommerceDetail object representing the e-commerce details of the product,  or null if no preferences are available."
+  defaultECommerceDetail: ProductECommerceDetail
+  "Retrieves the e-commerce details for a product based on the specified color segment.\n\n\n**Returns:**\nA ProductECommerceDetail object containing the e-commerce details for the product and color segment,\nor null if no matching details are found."
+  eCommerceDetailByColor("The code of the color segment. If provided, it is used to filter the e-commerce details. Can be null if segmentColorId is specified." segmentColorCode: String "The identifier of the color segment. If provided, it is used to filter the e-commerce details. Can be null if\n            segmentColorCode is specified." segmentColorId: ID): ProductECommerceDetail
+  "The unique identifier for the product."
+  id: ID!
+  "Gets the internal identifier of the product.\n\n\n**Returns:**\nThe internal identifier of the product."
+  internalId: Int!
+  "The introduction date of the product."
+  introductionDate: Date
+  "Gets or sets a value indicating whether the product is active."
+  isActive: Boolean!
+  "Gets or sets a value indicating whether the product is made to order."
+  isMadeToOrder: Boolean!
+  "Gets or sets a value indicating whether the product is physical."
+  isPhysical: Boolean!
+  "The last modified date and time of the product."
+  modified: DateTime!
+  "The name of the product."
+  name: String!
+  "Retrieves the brand information for a specified product.\n\n\n**Returns:**\nA CancellationToken) object representing the brand of the product, or null if the product\ndoes not have a brand."
+  productBrand: ProductBrand
+  "Gets the product category of the product.\n\n\n**Returns:**\nThe product category of the product."
+  productCategory: ProductCategory!
+  "Gets the product class of the product.\n\n\n**Returns:**\nThe product class of the product."
+  productClass: ProductClass!
+  "Retrieves the product division associated with the specified product.\n\n\n**Returns:**\nA CancellationToken) object representing the division associated with the product,  or null if no division is found."
+  productDivision: ProductDivision
+  "Gets the sales history associated with the product.\n\n\n**Returns:**\nA collection of sales history associated with the product."
+  salesHistory: [SalesHistory!]!
+  "The sold-as style code of the product."
+  soldAsStyleCode: String!
+  "The source identifier for the product."
+  sourceIdentifier: String
+  "Gets the stock class of the product.\n\n\n**Returns:**\nThe stock class of the product."
+  stockClass: StockClass!
+  "Gets the stock level of the product.\n\n\n**Returns:**\nThe stock level of the product."
+  stockLevel: StockLevel
+  "The style code of the product."
+  styleCode: String!
+  "The timestamp for the product."
+  timestamp: Long!
+  "Gets the variants associated with the product.\n\n\n**Returns:**\nA collection of variants associated with the product."
+  variants: [Variant!]!
+  "Retrieves the warehouse preference for the specified product.\n\n\n**Returns:**\nA ProductWarehousePreference object representing the warehouse preference for the product,  or null if no preference is found."
+  warehousePreferences: ProductWarehousePreference
+}
+
+"A connection to a list of items."
+type VariantsConnection {
+  "A list of edges."
+  edges: [VariantsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Variant!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+type RevokeSharedArtworkPayload {
+  errors: [RevokeSharedArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a variant of a product style."
+type AutocompleteVariant {
+  "The code for the variant."
+  code: String!
+  "The product variant image URL."
+  imageUrl: String!
+  "The name of the product."
+  name: String!
+  "The SKU (Stock Keeping Unit) for the variant."
+  sku: String!
+  "The sold-as style code of the product."
+  soldAsCode: String!
+  "The style code of the product."
+  styleCode: String!
+}
+
+union UpdateArtworkError = ImpersonationRequiredException | InputValidationException | ConflictException | BadRequestException | NotFoundException
+
+"Input type for creating a new folder."
+input CreateArtworkFolderInput {
+  "The name of the folder."
+  name: String!
+  "The parent folder identifier, if one exists."
+  parentId: ID
+}
+
+union RevokeAllSharesError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+type DeleteXdpDataEntryPayload {
+  errors: [DeleteXdpDataEntryError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a sales area style."
+type SalesArea {
+  "The checksum for change tracking."
+  checksum: String
+  "The name of the sales area."
+  code: String!
+  "The creation date and time of the sales area."
+  created: DateTime!
+  "Gets the internal identifier of the sales area.\n\n\n**Returns:**\nThe internal identifier of the sales area."
+  internalId: Int!
+  "The last modified date and time of the sales area."
+  modified: DateTime!
+  "The name of the sales area."
+  name: String!
+  "The region associated with the sales area."
+  region: Region
+  "The source identifier for the sales area."
+  sourceIdentifier: String
+  "The timestamp for the sales area."
+  timestamp: Long!
+}
+
+"Input type for creating a new artwork tag."
+input CreateArtworkTagInput {
+  "The color of the artwork tag in hex format (e.g., \"FF5733\").\nNOTE: The '#' is not required"
+  color: String!
+  "The name of the artwork tag."
+  name: String!
+}
+
+"An edge in a connection."
+type ArtworkQueryEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ArtworkDetails!
+}
+
+"Represents a variant of a product style."
+type Variant implements Node {
+  "The code for the variant."
+  code: String!
+  "Gets the cost associated with the variant.\n\n\n**Returns:**\nThe cost associated with the variant, or null if not found."
+  cost: Cost
+  "The creation date and time of the variant."
+  created: DateTime!
+  "Retrieves the default warehouse preferences for a given product variant.\n\n\n**Returns:**\nA VariantWarehousePreference object representing the warehouse preferences for the specified variant.\nIf no preferences are explicitly defined for the variant, a new instance with default values is returned."
+  defaultWarehousePreferences: VariantWarehousePreference
+  "The unique identifier for the variant."
+  id: ID!
+  "Gets the internal identifier of the variant.\n\n\n**Returns:**\nThe internal identifier of the variant."
+  internalId: Int!
+  "Gets or sets a value indicating whether the variant is active."
+  isActive: Boolean!
+  "Indication if the variant is continuing or not."
+  isContinuing: Boolean!
+  "Checks if the variant is new. New is defined as having a landed date within the last 365 days."
+  isNew: Boolean!
+  "Variant's first landed date at the Woodmead facility."
+  landedDate: Date
+  "The minimum order quantity for the variant."
+  minimumOrderQuantity: Int
+  "The last modified date and time of the variant."
+  modified: DateTime!
+  "Gets the packaging associated with the variant.\n\n\n**Returns:**\nThe packaging associated with the variant."
+  packaging: [Packaging!]!
+  "Gets the packaging associated with the variant by packaging type.\n\n\n**Returns:**\nThe packaging associated with the variant and type, or null if not found."
+  packagingByType("The type of packaging requested." packagingType: String!): Packaging
+  "Gets the product associated with the variant.\n\n\n**Returns:**\nThe product associated with the variant."
+  product: Product!
+  "Gets the sales history associated with the variant.\n\n\n**Returns:**\nA collection of sales history associated with the variant."
+  salesHistory: SalesHistory
+  "Gets the segment color associated with the variant.\n\n\n**Returns:**\nThe segment color associated with the variant, or null if not found."
+  segmentColor: SegmentColor
+  "Gets the segment size associated with the variant.\n\n\n**Returns:**\nThe segment size associated with the variant, or null if not found."
+  segmentSize: SegmentSize
+  "The SKU (Stock Keeping Unit) for the variant."
+  sku: String!
+  "The source identifier for the variant."
+  sourceIdentifier: String
+  "Gets the stock class of the product.\n\n\n**Returns:**\nThe stock class of the variant."
+  stockClass: StockClass!
+  "The stock class identifier associated with the variant."
+  stockClassId: Int!
+  "Gets the stock level associated with the variant.\n\n\n**Returns:**\nThe stock level associated with the variant, or null if not found."
+  stockLevel: StockLevel
+  "The timestamp for the variant."
+  timestamp: Long!
+  "Retrieves the warehouse preferences for a given product variant and division.\n\n\n**Returns:**\nA VariantWarehousePreference object containing the warehouse preferences for the specified variant\nand division. If no preferences are found, a default preference object is returned."
+  warehousePreferences("The division code to use when retrieving preferences. If null or whitespace, a default value of \"Amrod\" is used." division: String!): VariantWarehousePreference
+}
+
+enum ResultTypeStatus {
+  OK
+}
+
+"Input type for linking an artwork tag."
+input TagArtworkInput {
+  "The identifier of the artwork."
+  artworkId: ID!
+  "Gets the list of tag identifiers associated with the entity."
+  tagIds: [ID!]!
+}
+
+enum XdpTransactionType {
+  RECEIPT
+  PICK
+  VOC
+}
+
+enum StockLevelTypeEnum {
+  STYLE
+  COLOR
+  VARIANT
+  UNKNOWN
+}
+
+input XdpTransactionFilterInput {
+  and: [XdpTransactionFilterInput!]
+  or: [XdpTransactionFilterInput!]
+  isConfirmSuccess: BooleanOperationFilterInput
+  quantity: FloatOperationFilterInput
+  launchNum: XdpStringOperationFilterInput
+  xdpData: XdpDataFilterInput
+  type: XdpTransactionTypeOperationFilterInput
+  xdpProcessedDate: XdpDateTimeNullOperationFilterInput
+}
+
+interface Error {
+  message: String!
+}
+
+union DeleteArtworkTagError = ImpersonationRequiredException | InputValidationException | ConflictException | NotFoundException
+
+type ProcessXdpTransactionPayload {
+  errors: [ProcessXdpTransactionError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents the permissions for a shared resource."
+type SharingSecurity {
+  "The resource access level."
+  access: SharingSecurityAccess!
+  "The customer contact that the resource is shared with."
+  contact: OwnerContact!
+  "The customer that the resource is shared with."
+  customer: OwnerCustomer!
+}
+
+type MoveArtworkFolderPayload {
+  errors: [MoveArtworkFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a behavior."
+type Behavior implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The behavior code."
+  code: String!
+  "The creation date and time of the behavior."
+  created: DateTime!
+  "The unique identifier for the behavior."
+  id: ID!
+  "The behavior identifier."
+  internalId: Int!
+  "The last modified date and time of the behavior."
+  modified: DateTime!
+  "The behavior name."
+  name: String
+  "The sort index for the behavior."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"A connection to a list of items."
+type ChildrenConnection {
+  "A list of edges."
+  edges: [ChildrenEdge!]
+  "A flattened list of the nodes."
+  nodes: [Customer!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+type CreateArtworkFolderPayload {
+  artworkFolderDetails: ArtworkFolderDetails
+  errors: [CreateArtworkFolderError!]
+}
+
+"Payload type for success status of request."
+type ResultPayloadType {
+  result: ResultTypeStatus!
+}
+
+"Input type for renaming a folder."
+input RenameArtworkFolderInput {
+  "The identifier of the folder."
+  id: ID!
+  "The new name of the folder."
+  name: String!
+}
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal
+
+input IntOperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+type ShareFolderPayload {
+  errors: [ShareFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents data associated with an XDP (Ex Duty Paid) record, including details such as item code,\nquantities, and related identifiers."
+type XdpData implements Node {
+  "The unique identifier for the XdpData instance."
+  id: ID!
+  "The unique code that identifies the item."
+  itemCode: String!
+  "The line number associated with the current context."
+  lineNumber: Int!
+  "The Movement Reference Number (MRN)."
+  mrn: String!
+  "The purchase order number associated with the transaction."
+  poNumber: String
+  "The quantity of the item."
+  quantity: Float!
+  "The quantity of items that have been received."
+  receivedQuantity: Float!
+  "The quantity that has been used."
+  usedQuantity: Float!
+  "Retrieves a paginated and filterable list of XDP transactions associated with the specified XDP data.\n\n\n**Returns:**\nA task that represents the asynchronous operation. The task result contains a Connection`1 of XdpTransaction objects, representing the paginated and filterable list of transactions."
+  xdpTransactions("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: XdpTransactionFilterInput): XdpTransactionsConnection
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+union DeleteXdpDataEntryError = ConflictException | BadRequestException
+
+"An edge in a connection."
+type XdpDatasEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: XdpData!
+}
+
+"An edge in a connection."
+type ContactsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SupplierContact!
+}
+
+"Represents a manufacturing region."
+type ManufacturingRegion implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The manufacturing region code."
+  code: String
+  "The creation date and time of the manufacturing region."
+  created: DateTime!
+  "The unique identifier for the manufacturing region."
+  id: ID!
+  "The manufacturing region identifier."
+  internalId: Int!
+  "The logo associated with the manufacturing region."
+  logo: Logo
+  "The last modified date and time of the manufacturing region."
+  modified: DateTime!
+  "The name of the manufacturing region."
+  name: String
+  "The region associated with the manufacturing region."
+  region: Region
+  "The sort index for the manufacturing region."
+  sortIndex: Int!
+  "The source identifier for the manufacturing region."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type CommitArtworkPayload {
+  errors: [CommitArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"A connection to a list of items."
+type ArtworkQueryConnection {
+  "A list of edges."
+  edges: [ArtworkQueryEdge!]
+  "A flattened list of the nodes."
+  nodes: [ArtworkDetails!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+input ProductFilterInput {
+  and: [ProductFilterInput!]
+  or: [ProductFilterInput!]
+  soldAsStyleCode: ProductStringOperationFilterInput
+  styleCode: ProductStringOperationFilterInput
+  name: ProductStringOperationFilterInput
+}
+
+"Represents date details."
+type DateDetails implements Node {
+  "Indicates the current day of the year."
+  currentDay: Short
+  "Indicates the current month of the year."
+  currentMonth: Short
+  "Indicates the current quarter of the year."
+  currentQuarter: Short
+  "Indicates the current week of the year."
+  currentWeek: Short
+  "Indicates the current year."
+  currentYear: Short
+  "The actual date."
+  date: Date
+  "The date two years ago from this date."
+  date2YearsBack: Date
+  "The date three years ago from this date."
+  date3YearsBack: Date
+  "The date one year ago from this date."
+  dateLastYear: Date
+  "The day of the month."
+  day: Byte
+  "The day of the year."
+  dayOfYear: Short
+  "The suffix for the day (e.g., \"st\", \"nd\", \"rd\")."
+  daySuffix: String
+  "The number of the day of the week within the month."
+  dowInMonth: Byte
+  "The financial month for the date."
+  financialMonth: Int
+  "The financial quarter for the date."
+  financialQuarter: Int
+  "The financial year for the date."
+  financialYear: Int
+  "The first date of the month."
+  firstDateOfMonth: Date
+  "The first date of the quarter."
+  firstDateOfQuater: Date
+  "The first date of the week."
+  firstDateOfWeek: Date
+  "The first date of the year."
+  firstDateOfYear: Date
+  "The name of the holiday (if applicable)."
+  holidayName: String
+  "Unique identifier for the date."
+  id: ID!
+  "Gets the internal identifier of the date details record."
+  internalId: Int!
+  "Indicates if the date is a holiday."
+  isHoliday: Boolean
+  "Indicates if the date falls on a weekend."
+  isWeekend: Boolean
+  "The last date of the month."
+  lastDateOfMonth: Date
+  "The last date of the quarter."
+  lastDateOfQuater: Date
+  "The last date of the week."
+  lastDateOfWeek: Date
+  "The last date of the year."
+  lastDateOfYear: Date
+  "The month and year in \"MMYYYY\" format."
+  mmyyyy: String
+  "The month of the year."
+  month: Byte
+  "The full name of the month (e.g., \"January\")."
+  monthName: String
+  "The first letter of the month name (e.g., \"J\")."
+  monthName_FirstLetter: String
+  "The abbreviated name of the month (e.g., \"Jan\")."
+  monthName_Short: String
+  "The month name and year in \"Month YYYY\" format."
+  monthNameYYYY: String
+  "The month and year in \"Month YYYY\" format (e.g., \"January 2025\")."
+  monthYear: String
+  "The quarter of the year (1-4)."
+  quarter: Byte
+  "The name of the quarter (e.g., \"Q1\")."
+  quarterName: String
+  "Any special day designation for the date."
+  specialDays: String
+  "The number representing the day of the week (0 = Sunday, 1 = Monday, etc.)."
+  weekday: Byte
+  "The weekday of the same date last year."
+  weekDayLastYear: String
+  "The full name of the weekday (e.g., \"Monday\")."
+  weekDayName: String
+  "The first letter of the weekday name (e.g., \"M\")."
+  weekDayName_FirstLetter: String
+  "The abbreviated name of the weekday (e.g., \"Mon\")."
+  weekDayName_Short: String
+  "The week number of the month."
+  weekOfMonth: Byte
+  "The week number of the year."
+  weekOfYear: Byte
+  "The year."
+  year: Int
+  "The year and month in \"YYYYMM\" format."
+  yyyymm: String
+}
+
+"Represents a product."
+type AutocompleteProduct {
+  "The product image URL."
+  imageUrl: String!
+  "The name of the product."
+  name: String!
+  "The sold-as style code of the product."
+  soldAsCode: String!
+  "The style code of the product."
+  styleCode: String!
+}
+
+enum SharingSecurityAccess {
+  READ
+  READ_WRITE
+}
+
+"Represents a delta of changes in stock levels."
+type StockLevelDeltaIndex {
+  "The last modified date of the stock level."
+  modified: DateTime!
+  "The timestamp of the latest change in stock level.\nUse this in the next call to delta to get the latest changes."
+  timestamp: Long!
+}
+
+"The `Date` scalar represents an ISO-8601 compliant date type."
+scalar Date
+
+"Information about pagination in a connection."
+type PageInfo {
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+}
+
+type DeleteArtworkFolderPayload {
+  errors: [DeleteArtworkFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents the input data required to create an XDP data entry."
+input CreateXdpDataEntryInput {
+  "The unique code identifying the item. This value cannot be null or empty."
+  itemCode: String!
+  "The line number within the MRN that corresponds to the item. Must be a non-negative integer."
+  mrnLineNumber: Int!
+  "The material receipt note (MRN) number associated with the item. This value cannot be null or empty."
+  mrnNumber: String!
+  "The purchase order number associated with the item. This value is optional and can be null."
+  poNumber: String
+  "The quantity of the item to be recorded. Must be a positive value."
+  quantity: Float!
+}
+
+"Represents a promotion."
+type Promotion implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The promotion code."
+  code: String
+  "The creation date and time of the promotion."
+  created: DateTime!
+  "The unique identifier for the promotion."
+  id: ID!
+  "The promotion identifier."
+  internalId: Int!
+  "The last modified date and time of the promotion."
+  modified: DateTime!
+  "The promotion name."
+  name: String
+  "The sort index for the promotion."
+  sortIndex: Int!
+  "The source identifier for the promotion."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a sales history record."
+type SalesHistory implements Node {
+  "The unique identifier for the sales history record."
+  id: ID!
+  "Gets the internal identifier of the sales history."
+  internalId: Int!
+  "The last modified date and time of the sales history record."
+  modified: DateTime!
+  "Gets the sales quantity for the last 12 months.\n\n\n**Returns:**\nThe sales quantity for the last 12 months."
+  salesQuantity_12Months: Int!
+  "Gets the sales quantity for the last 3 months.\n\n\n**Returns:**\nThe sales quantity for the last 3 months."
+  salesQuantity_3Months: Int!
+  "Gets the sales quantity for the last 4 months.\n\n\n**Returns:**\nThe sales quantity for the last 4 months."
+  salesQuantity_4Months: Int!
+  "Gets the sales quantity for the last 6 months.\n\n\n**Returns:**\nThe sales quantity for the last 6 months."
+  salesQuantity_6Months: Int!
+  "Gets the sales quantity for the last 8 months.\n\n\n**Returns:**\nThe sales quantity for the last 8 months."
+  salesQuantity_8Months: Int!
+  "Gets or sets the sales quantity for month 0 in the current year."
+  salesQuantity_MIndex0: Int!
+  "Gets or sets the sales quantity for month 1 in the current year."
+  salesQuantity_MIndex1: Int!
+  "Gets or sets the sales quantity for month 10 in the current year."
+  salesQuantity_MIndex10: Int!
+  "Gets or sets the sales quantity for month 11 in the current year."
+  salesQuantity_MIndex11: Int!
+  "Gets or sets the sales quantity for month 12 in the current year."
+  salesQuantity_MIndex12: Int!
+  "Gets or sets the sales quantity for month 2 in the current year."
+  salesQuantity_MIndex2: Int!
+  "Gets or sets the sales quantity for month 3 in the current year."
+  salesQuantity_MIndex3: Int!
+  "Gets or sets the sales quantity for month 4 in the current year."
+  salesQuantity_MIndex4: Int!
+  "Gets or sets the sales quantity for month 5 in the current year."
+  salesQuantity_MIndex5: Int!
+  "Gets or sets the sales quantity for month 6 in the current year."
+  salesQuantity_MIndex6: Int!
+  "Gets or sets the sales quantity for month 7 in the current year."
+  salesQuantity_MIndex7: Int!
+  "Gets or sets the sales quantity for month 8 in the current year."
+  salesQuantity_MIndex8: Int!
+  "Gets or sets the sales quantity for month 9 in the current year."
+  salesQuantity_MIndex9: Int!
+  "Gets or sets the sales quantity for year 0."
+  salesQuantity_YIndex0: Int!
+  "Gets or sets the sales quantity for year 1."
+  salesQuantity_YIndex1: Int!
+  "Gets or sets the sales quantity for year 10."
+  salesQuantity_YIndex10: Int!
+  "Gets or sets the sales quantity for year 11."
+  salesQuantity_YIndex11: Int!
+  "Gets or sets the sales quantity for year 12."
+  salesQuantity_YIndex12: Int!
+  "Gets or sets the sales quantity for year 2."
+  salesQuantity_YIndex2: Int!
+  "Gets or sets the sales quantity for year 3."
+  salesQuantity_YIndex3: Int!
+  "Gets or sets the sales quantity for year 4."
+  salesQuantity_YIndex4: Int!
+  "Gets or sets the sales quantity for year 5."
+  salesQuantity_YIndex5: Int!
+  "Gets or sets the sales quantity for year 6."
+  salesQuantity_YIndex6: Int!
+  "Gets or sets the sales quantity for year 7."
+  salesQuantity_YIndex7: Int!
+  "Gets or sets the sales quantity for year 8."
+  salesQuantity_YIndex8: Int!
+  "Gets or sets the sales quantity for year 9."
+  salesQuantity_YIndex9: Int!
+  "The timestamp for the sales history record."
+  timestamp: Long!
+}
+
+union DeleteArtworkError = ImpersonationRequiredException | InputValidationException | ConflictException | NotFoundException
+
+"Restricts the filter operations available when filtering suppliers."
+input ProductStringOperationFilterInput {
+  and: [ProductStringOperationFilterInput!]
+  or: [ProductStringOperationFilterInput!]
+  contains: String
+  eq: String
+  in: [String]
+}
+
+scalar URL
+
+union UpdateArtworkTagError = ImpersonationRequiredException | InputValidationException | ConflictException | BadRequestException | NotFoundException
+
+type RenameArtworkFolderPayload {
+  errors: [RenameArtworkFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a logo library owner customer contact."
+type OwnerContact {
+  "The contact code."
+  code: UUID!
+  "The contact email address."
+  emailAddress: String!
+}
+
+"Represents a supplier preference."
+type SupplierPreference {
+  "The creation date and time of the preference."
+  created: DateTime!
+  "The unique identifier for the preference."
+  id: Int!
+  "Specifies whether the preference is a default preference."
+  isDefault: Boolean!
+  "The minimum order quantity."
+  minimumOrderQuantity: Int
+  "The last modified date and time of the preference."
+  modified: DateTime!
+  "The source identifier for the preference."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+union UpdateXdpDataEntryError = ConflictException | BadRequestException
+
+enum ArtworkType {
+  LOGO
+  TEMPLATE
+}
+
+"Input type for deleting an artwork tag."
+input DeleteArtworkTagInput {
+  "Gets or sets a value indicating whether the operation should be forcibly executed."
+  force: Boolean
+  "The identifier of the artwork tag."
+  id: ID!
+}
+
+"Specifies the artwork status to query against."
+enum ArtworkQueryStatus {
+  "Include artwork that are active."
+  ACTIVE
+  "Include artwork that have been deleted."
+  DELETED
+}
+
+type RevokeSharedFolderPayload {
+  errors: [RevokeSharedFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a branding method."
+type BrandingMethod implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The branding method code."
+  code: String
+  "The creation date and time of the branding method."
+  created: DateTime!
+  "The unique identifier for the branding method."
+  id: ID!
+  "The branding method identifier."
+  internalId: Int!
+  "The last modified date and time of the branding method."
+  modified: DateTime!
+  "The branding method name."
+  name: String
+  "The sort index for the branding method."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+union RevokeSharedFolderError = ImpersonationRequiredException | InputValidationException | ConflictException
+
+"Represents a region."
+type Region implements Node {
+  "The Accounts Company Code associated with the region."
+  accountsCompany: String!
+  "The checksum for change tracking."
+  checksum: String
+  "The region code."
+  code: String
+  "The creation date and time of the region."
+  created: DateTime!
+  "The currency associated with the region."
+  currency: Currency
+  "The unique identifier for the region."
+  id: ID!
+  "The region identifier."
+  internalId: Int!
+  "The last modified date and time of the region."
+  modified: DateTime!
+  "The region name."
+  name: String
+  "The sort index for the region."
+  sortIndex: Int!
+  "The source identifier for the region."
+  sourceIdentifier: String
+  "The tiers associated with the region."
+  tiers: [Tier!]!
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type UpdateArtworkTagPayload {
+  errors: [UpdateArtworkTagError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type ShareArtworkPayload {
+  errors: [ShareArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a sales channel."
+type SalesChannel implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The sales channel code."
+  code: String
+  "The creation date and time of the sales channel."
+  created: DateTime!
+  "The description of the sales channel."
+  description: String
+  "The unique identifier for the sales channel."
+  id: ID!
+  "The sales channel identifier."
+  internalId: Int!
+  "The last modified date and time of the sales channel."
+  modified: DateTime!
+  "The sales channel name."
+  name: String
+  "The sort index for the sales channel."
+  sortIndex: Int!
+  "The source identifier for the sales channel."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"A connection to a list of items."
+type SalesPersonsConnection {
+  "A list of edges."
+  edges: [SalesPersonsEdge!]
+  "A flattened list of the nodes."
+  nodes: [SalesPerson!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input SupplierStringOperationFilterInput {
+  and: [SupplierStringOperationFilterInput!]
+  or: [SupplierStringOperationFilterInput!]
+  contains: String
+  eq: String
+  in: [String]
+}
+
+union CreateArtworkTagError = ImpersonationRequiredException | InputValidationException | BadRequestException | ConflictException
+
+"Represents an artwork folder."
+type ArtworkFolderDetails implements Node {
+  "Specifies whether the current owner can delete the folder."
+  canDelete: Boolean!
+  "Specifies whether the current owner can edit the folder."
+  canEdit: Boolean!
+  "Specifies whether the current owner can move the folder."
+  canMove: Boolean!
+  "Specifies whether the current owner can share the folder."
+  canShare: Boolean!
+  "The child folders associated with the artwork folder."
+  childFolders: [ArtworkFolderDetails!]!
+  "The unique identifier for the folder."
+  id: ID!
+  "The artwork folder identifier."
+  internalId: Long!
+  "The folder name."
+  name: String!
+  "The logo library owner associated with the folder."
+  owner: Owner!
+  "The folder path within the owner's logo library relative to the root folder."
+  path: String!
+  "The folder sharing permissions."
+  security: SharingSecurity
+}
+
+"Represents the input required to process an XDP transaction."
+input ProcessXdpTransactionInput {
+  "The unique identifier of the XDP transaction to be processed. Must be a positive value."
+  xdpTransactionId: ID!
+}
+
+type DeleteArtworkPayload {
+  errors: [DeleteArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"A connection to a list of items."
+type XdpTransactionsConnection {
+  "A list of edges."
+  edges: [XdpTransactionsEdge!]
+  "A flattened list of the nodes."
+  nodes: [XdpTransaction!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type ArtworkFolderContentsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ArtworkDetails!
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input XdpStringOperationFilterInput {
+  and: [XdpStringOperationFilterInput!]
+  or: [XdpStringOperationFilterInput!]
+  contains: String
+  eq: String
+  in: [String]
+}
+
+input FloatOperationFilterInput {
+  eq: Float
+  neq: Float
+  in: [Float]
+  nin: [Float]
+  gt: Float
+  ngt: Float
+  gte: Float
+  ngte: Float
+  lt: Float
+  nlt: Float
+  lte: Float
+  nlte: Float
+}
+
+"Represents a segment size."
+type SegmentSize implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The segment size code."
+  code: String
+  "The creation date and time of the segment size."
+  created: DateTime!
+  "The unique identifier for the segment size."
+  id: ID!
+  "The segment size identifier."
+  internalId: Int!
+  "The last modified date and time of the segment size."
+  modified: DateTime!
+  "The segment size name."
+  name: String
+  "The size group associated with the segment size."
+  sizeGroup: SizeGroup
+  "The sort index for the segment size."
+  sortIndex: Int!
+  "The source identifier for the segment size."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The type associated with the segment size."
+  type: EnumLookup
+  "The unit of measure associated with the segment size."
+  unitOfMeasure: UnitOfMeasure
+}
+
+"Represents a unit of measure."
+type UnitOfMeasure implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The unit of measure code."
+  code: String
+  "The creation date and time of the unit of measure."
+  created: DateTime!
+  "The unique identifier for the unit of measure."
+  id: ID!
+  "The unit of measure identifier."
+  internalId: Int!
+  "The last modified date and time of the unit of measure."
+  modified: DateTime!
+  "The unit of measure name."
+  name: String
+  "The number of decimal places for the unit of measure."
+  precision: Byte!
+  "The sort index for the unit of measure."
+  sortIndex: Int!
+  "The source identifier for the unit of measure."
+  sourceIdentifier: String
+  "The symbol representing the unit of measure."
+  symbol: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"A connection to a list of items."
+type StockLevelsDeltaConnection {
+  "A list of edges."
+  edges: [StockLevelsDeltaEdge!]
+  "A flattened list of the nodes."
+  nodes: [StockLevel!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"The `Short` scalar type represents non-fractional signed whole 16-bit numeric values. Short can represent values between -(2^15) and 2^15 - 1."
+scalar Short
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The purpose of the `@listSize` directive is to either inform the static analysis about the size of returned lists (if that information is statically available), or to point the analysis to where to find that information."
+directive @listSize("The `assumedSize` argument can be used to statically define the maximum length of a list returned by a field." assumedSize: Int "The `requireOneSlicingArgument` argument can be used to inform the static analysis that it should expect that exactly one of the defined slicing arguments is present in a query. If that is not the case (i.e., if none or multiple slicing arguments are present), the static analysis may throw an error." requireOneSlicingArgument: Boolean! = true "The `sizedFields` argument can be used to define that the value of the `assumedSize` argument or of a slicing argument does not affect the size of a list returned by a field itself, but that of a list returned by one of its sub-fields." sizedFields: [String!] "The `slicingArgumentDefaultValue` argument can be used to define a default value for a slicing argument, which is used if the argument is not present in a query." slicingArgumentDefaultValue: Int "The `slicingArguments` argument can be used to define which of the field's arguments with numeric type are slicing arguments, so that their value determines the size of the list returned by that field. It may specify a list of multiple slicing arguments." slicingArguments: [String!]) on FIELD_DEFINITION

@@ -1,0 +1,64 @@
+query QueryArtwork( 
+  $description: String
+  $extensions: [String!]
+  $name: String
+  $statuses: [ArtworkQueryStatus!]
+  $tags: [String!]
+  $types: [ArtworkType!],
+  $artworkIds: [ID!]
+  $pageSize: Int
+) {
+  artworkQuery(
+    first: $pageSize
+    description: $description
+    extensions: $extensions
+    name: $name
+    statuses: $statuses
+    tags: $tags
+    types: $types
+    ids: $artworkIds
+  ) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    nodes {
+      canDelete
+      canEdit
+      canMove
+      canShare
+      checksum
+      created
+      description
+      extension
+      id
+      internalId
+      mimeType
+      name
+      path
+      size
+      sizeFormatted
+      thumbnailUrl
+      type
+      url
+      owner {
+        contact {
+          code
+          emailAddress
+        }
+        customer {
+          code
+          name
+        }
+      }
+      security {
+        access
+      }
+      tags {
+        color
+        id
+        name
+      }
+    }
+  }
+}

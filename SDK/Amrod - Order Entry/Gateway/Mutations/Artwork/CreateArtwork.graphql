@@ -1,0 +1,36 @@
+﻿mutation CreateArtwork($input: CreateArtworkInput!) {
+  createArtwork(input: $input) {
+    artworkSession {
+      id
+      uploadUri
+      headers {
+        key
+        value
+      }
+    }
+    errors {
+      __typename
+      ... on BadRequestException {
+        code
+        errorDetail
+        message
+      }
+      ... on InputValidationException {
+        code
+        errorDetail
+        message
+        parameterName
+      }
+      ... on ImpersonationRequiredException {
+        code
+        errorDetail
+        message
+      }
+      ... on ConflictException {
+        code
+        errorDetail
+        message
+      }
+    }
+  }
+}

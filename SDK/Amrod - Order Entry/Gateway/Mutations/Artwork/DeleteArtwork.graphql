@@ -1,0 +1,31 @@
+﻿mutation DeleteArtwork($input: DeleteArtworkInput!) {
+  deleteArtwork(input: $input) {
+    resultPayloadType {
+      result
+    }
+    errors {
+      __typename
+      ... on ConflictException {
+        code
+        errorDetail
+        message
+      }
+      ... on ImpersonationRequiredException {
+        code
+        errorDetail
+        message
+      }
+      ... on InputValidationException {
+        code
+        errorDetail
+        message
+        parameterName
+      }
+      ... on NotFoundException {
+        code
+        errorDetail
+        message
+      }
+    }
+  }
+}
