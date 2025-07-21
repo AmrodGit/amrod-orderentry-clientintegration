@@ -1,4 +1,4 @@
-﻿mutation CreateArtworkFolder($input: CreateArtworkFolderInput!) {
+mutation CreateArtworkFolder($input: CreateArtworkFolderInput!) {
   createArtworkFolder(input: $input) {
     errors {
       __typename
@@ -20,31 +20,8 @@
       }
     }
     artworkFolderDetails {
-      canDelete
-      canEdit
-      canMove
-      canShare
       id
-      internalId
-      name
-      path
-      owner {
-        contact {
-          code
-          emailAddress
-        }
-      }
-      security {
-        access
-        contact {
-          code
-          emailAddress
-        }
-        customer {
-          code
-          name
-        }
-      }
+	  path
     }
   }
 }

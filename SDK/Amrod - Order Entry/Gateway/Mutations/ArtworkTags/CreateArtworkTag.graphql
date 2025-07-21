@@ -1,9 +1,7 @@
-﻿mutation CreateArtworkTag($input: CreateArtworkTagInput!) {
+mutation CreateArtworkTag($input: CreateArtworkTagInput!) {
   createArtworkTag(input: $input) {
     artworkTag {
-      color
       id
-      name
     }
     errors {
       __typename

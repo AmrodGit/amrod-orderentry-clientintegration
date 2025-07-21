@@ -19,10 +19,16 @@ body:graphql {
     $tags: [String!]
     $types: [ArtworkType!],
     $artworkIds: [ID!]
-    $pageSize: Int
+    $pageSizeForward: Int
+    $pageSizeBackward: Int
+    $startCursor: String
+    $endCursor: String
   ) {
     artworkQuery(
-      first: $pageSize
+      first: $pageSizeForward
+      last: $pageSizeBackward
+      before: $startCursor
+      after: $endCursor
       description: $description
       extensions: $extensions
       name: $name

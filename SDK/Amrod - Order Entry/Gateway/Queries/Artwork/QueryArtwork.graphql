@@ -1,4 +1,4 @@
-query QueryArtwork( 
+query QueryArtwork(
   $description: String
   $extensions: [String!]
   $name: String
@@ -6,10 +6,16 @@ query QueryArtwork(
   $tags: [String!]
   $types: [ArtworkType!],
   $artworkIds: [ID!]
-  $pageSize: Int
+  $pageSizeForward: Int
+  $pageSizeBackward: Int
+  $startCursor: String
+  $endCursor: String
 ) {
   artworkQuery(
-    first: $pageSize
+    first: $pageSizeForward
+    last: $pageSizeBackward
+    before: $startCursor
+    after: $endCursor
     description: $description
     extensions: $extensions
     name: $name
@@ -20,7 +26,9 @@ query QueryArtwork(
   ) {
     pageInfo {
       endCursor
+	  startCursor
       hasNextPage
+	  hasPreviousPage
     }
     nodes {
       canDelete

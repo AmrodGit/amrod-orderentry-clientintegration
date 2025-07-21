@@ -2,7 +2,7 @@
 
 
 using Amrod.OrderEntry.Providers;
-using Amrod.OrderEntry.Services;
+using Amrod.OrderEntry.Services.LogoLibrary;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
