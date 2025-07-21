@@ -1,16 +1,22 @@
-﻿query GetArtworkFolderContents(
+query GetArtworkFolderContents(
   $folderPath: String!
-  $pageSize: Int
+  $pageSizeForward: Int
+  $pageSizeBackward: Int
+  $startCursor: String
   $endCursor: String
 ) {
   artworkFolderContents(
     folderPath: $folderPath
-    first: $pageSize
+    first: $pageSizeForward
+    last: $pageSizeBackward
+    before: $startCursor
     after: $endCursor
   ) {
     pageInfo {
+       endCursor
+	  startCursor
       hasNextPage
-      endCursor
+	  hasPreviousPage
     }
     nodes {
       canDelete

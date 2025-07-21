@@ -97,6 +97,22 @@ public interface IArtworkService
 	/// <returns>A task that represents the asynchronous operation.</returns>
 	Task DeleteArtworkAsync(string artworkId, CancellationToken cancellationToken = default);
 
+	/// <summary>
+	/// Retrieves a paginated list of artwork details based on the specified query parameters.
+	/// </summary>
+	/// <param name="description">An optional description filter. Only artworks containing this description will be included in the results.</param>
+	/// <param name="extensions">An optional list of file extensions to filter the artworks. Only artworks with these extensions will be included.</param>
+	/// <param name="name">An optional name filter. Only artworks with names matching this value will be included.</param>
+	/// <param name="artworkStatuses">An optional list of artwork statuses to filter the results. Only artworks with these statuses will be included.</param>
+	/// <param name="artworkTypes">An optional list of artwork types to filter the results. Only artworks of these types will be included.</param>
+	/// <param name="tagIds">An optional list of tag IDs to filter the artworks. Only artworks associated with these tags will be included.</param>
+	/// <param name="artworkIds">An optional list of artwork IDs to filter the results. Only artworks with these IDs will be included.</param>
+	/// <param name="endCursor">An optional cursor indicating the end of the current page. Used for pagination.</param>
+	/// <param name="startCursor">An optional cursor indicating the start of the current page. Used for pagination.</param>
+	/// <param name="pageSize">The maximum number of artworks to include in a single page of results. Defaults to 20.</param>
+	/// <param name="cancellationToken">A token to monitor for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="PagedResult{T}"/> of <see
+	/// cref="ArtworkDetail"/> objects matching the specified query parameters.</returns>
 	Task<PagedResult<ArtworkDetail>> GetArtworksAsync(
 		string? description = null,
 		IReadOnlyList<string>? extensions = null,

@@ -9,4 +9,8 @@ internal static partial class ArtworkDetailMapper
 	[MapProperty(nameof(IQueryArtwork_ArtworkQuery_Nodes.Id), nameof(ArtworkDetail.ArtworkId))]
 	[MapperIgnoreSource(nameof(IQueryArtwork_ArtworkQuery_Nodes.InternalId))]
 	public static partial ArtworkDetail ToModel(this IQueryArtwork_ArtworkQuery_Nodes artwork);
+
+	[MapProperty(nameof(IGetArtworkFolderContents_ArtworkFolderContents_Nodes.Id), nameof(ArtworkDetail.ArtworkId))]
+	[MapperIgnoreSource(nameof(IGetArtworkFolderContents_ArtworkFolderContents_Nodes.InternalId))]
+	public static partial ArtworkDetail ToModel(this IGetArtworkFolderContents_ArtworkFolderContents_Nodes artwork);
 }
