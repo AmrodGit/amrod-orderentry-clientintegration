@@ -1,0 +1,93 @@
+meta {
+  name: Update Artwork Tag
+  type: graphql
+  seq: 2
+}
+
+docs {
+  # Update Artwork Tag
+  
+  Updates the name and/or color of an existing tag.
+  
+  ## Use Case
+  Use this mutation to modify tag properties such as name or visual color. Useful when tag purposes change or for visual refinements.
+  
+  ## Variables
+  - **id**: The ID of the tag to update (required)
+  - **name**: New name for the tag (optional, must be unique)
+  - **color**: New hex color code for the tag (optional, format: RRGGBB)
+  
+  ## Expected Response
+  - `resultPayloadType.result`: Boolean indicating successful update (true = updated, false = failed)
+  - `errors`: Array of errors if update fails, including:
+    - `BadRequestException`: Invalid request format
+    - `ConflictException`: New name already exists
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid parameter values
+    - `NotFoundException`: Tag not found
+  
+  ## Prerequisites
+  - Tag must exist and be accessible to the current user
+  - User must have edit permissions on the tag
+  - New name must be unique if being changed
+  
+  ## Important Notes
+  - At least one property (name or color) should be provided for update
+  - Changing tag properties does not affect artworks already tagged with it
+  - All artworks with this tag will reflect the new name/color immediately
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateArtworkTag($input: UpdateArtworkTagInput!) {
+    updateArtworkTag(input: $input) {
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on ImpersonationRequiredException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+      }
+      resultPayloadType {
+        result
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "QXJ0d29ya1RhZ0RldGFpbHM6MjcxNg==",
+      "color": "4ECDC4",
+      "name": "For Review"
+    }
+  }
+}

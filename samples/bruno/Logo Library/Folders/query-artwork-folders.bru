@@ -1,0 +1,94 @@
+meta {
+  name: Query Artwork Folders
+  type: graphql
+  seq: 5
+}
+
+docs {
+  # Query Artwork Folders
+  
+  Retrieves all artwork folders organized in a hierarchical structure with child folders.
+  
+  ## Use Case
+  Use this query to browse the complete folder structure of the logo library. Returns root-level folders and their immediate child folders, along with ownership and permission information.
+  
+  ## Expected Response
+  - `artworkFolders[]`: Array of root-level folder objects including:
+    - `id`: Unique folder identifier
+    - `name`: Folder name
+    - `path`: Full path to the folder
+    - `owner`: Owner contact and customer information
+    - `security.access`: Access level (READ, WRITE, ADMIN, etc.)
+    - `childFolders[]`: Nested array of immediate child folders with same structure
+    - Permission flags: `canDelete`, `canEdit`, `canMove`, `canShare` (boolean)
+  
+  ## Notes
+  - This query provides a complete hierarchical view of the folder structure
+  - Child folders are nested one level deep in the response
+  - For deeper navigation, use "Query Artwork Folders Contents" with specific folder paths
+  - Permissions are calculated based on the current user's access level
+  - No pagination parameters required as this returns the entire hierarchy
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetArtworkFolders {
+    artworkFolders {
+      canDelete
+      canEdit
+      canMove
+      canShare
+      id
+      name
+      owner {
+        contact {
+          code
+          emailAddress
+        }
+        customer {
+          code
+          name
+        }
+      }
+      path
+      security {
+        access
+      }
+      childFolders {
+        canDelete
+        canEdit
+        canMove
+        canShare
+        id
+        name
+        owner {
+          contact {
+            code
+            emailAddress
+          }
+          customer {
+            code
+            name
+          }
+        }
+        path
+        security {
+          access
+          contact {
+            code
+            emailAddress
+          }
+          customer {
+            code
+            name
+          }
+        }
+      }
+    }
+  }
+}

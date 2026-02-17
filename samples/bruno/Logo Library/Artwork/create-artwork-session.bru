@@ -1,0 +1,90 @@
+meta {
+  name: Create Artwork Session
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateArtwork($input: CreateArtworkInput!) {
+    createArtwork(input: $input) {
+      artworkSession {
+        id
+        uploadUri
+        headers {
+          key
+          value
+        }
+      }
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "description": "Some New Artwork",
+      "name": "SomeArtwork",
+      "extension": "png",
+      "mimeType": "image/png",
+      "folder": null,
+      "type": "LOGO"
+    }
+  }
+}
+
+docs {
+  # Create Artwork Session
+  
+  Creates a new artwork session and returns an upload URI with required headers for uploading the artwork file blob to Azure Blob Storage. This is the first step in the artwork creation process.
+  
+  ## Use Case
+  Use this mutation to initiate an artwork creation session. The returned uploadUri and headers should be used in the next step to upload the actual artwork file blob.
+  
+  ## Variables
+  - **name**: Unique name for the artwork
+  - **description**: Detailed description of the artwork
+  - **extension**: File extension (e.g., "png", "jpg")
+  - **mimeType**: MIME type of the file (e.g., "image/png")
+  - **type**: Artwork type (e.g., "LOGO")
+  - **folder**: Optional folder ID for organizing the artwork
+  
+  ## Expected Response
+  - `artworkSession.id`: Unique identifier for the artwork session
+  - `artworkSession.uploadUri`: Azure Blob Storage URI where the file will be uploaded
+  - `artworkSession.headers`: Array of headers required for the blob upload request
+  - `errors`: Array of any errors encountered during session creation
+  
+  ## Next Steps
+  1. Use the uploadUri and headers to upload the artwork file via "Upload Artwork Blob"
+  2. Once uploaded, commit the artwork using "Commit Artwork"
+}

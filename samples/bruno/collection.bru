@@ -1,7 +1,7 @@
 script:pre-request {
   // Read environment variables
-  const var1 = bru.getEnvVar('AMROD_CUSTOMER');
-  const var2 = bru.getEnvVar('AMROD_CONTACT');
+  const var1 = bru.getEnvVar('CUSTOMER_CODE');
+  const var2 = bru.getEnvVar('CONTACT_ID');
   
   // Concatenate with '|'
   const combined = `${var2};${var1}`;
@@ -13,7 +13,4 @@ script:pre-request {
   // Set the custom header
   req.setHeader('x-gateway-impersonate', encoded);
   
-  var url = bru.getEnvVar('MDG_URL')
-  
-  req.setUrl(url)
 }

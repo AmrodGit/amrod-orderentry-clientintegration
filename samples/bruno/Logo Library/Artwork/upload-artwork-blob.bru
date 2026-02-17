@@ -1,0 +1,49 @@
+meta {
+  name: Upload Artwork Blob
+  type: http
+  seq: 6
+}
+
+docs {
+  # Upload Artwork Blob
+  
+  Uploads the artwork file blob to Azure Blob Storage using the URI and headers obtained from the Create Artwork Session mutation. This step physically uploads the file content.
+  
+  ## Use Case
+  After creating an artwork session via "Create Artwork Session", use this HTTP PUT request to upload the actual artwork file to Azure Blob Storage. The uploadUri and headers are provided by the session creation response.
+  
+  ## Required Headers
+  - **x-ms-blob-type**: Must be set to "BlockBlob"
+  - **Authorization headers**: Included in the session response headers
+  
+  ## Prerequisites
+  1. Must first run "Create Artwork Session" to obtain the uploadUri and headers
+  2. Copy the uploadUri from the Create Artwork Session response and set it as {{UPLOAD_URI}} variable
+  3. Update the file path in the body section to point to an existing file on your system
+  4. Replace {{USERNAME}} with your actual Windows username
+  
+  ## Expected Response
+  - **HTTP 201**: File successfully uploaded to Azure Blob Storage
+  - The uploaded file is temporary until committed via "Commit Artwork"
+  
+  ## Important Notes
+  - The SAS token in the uploadUri has a limited validity period (typically a few hours)
+  - The {{UPLOAD_URI}} variable must be populated with the actual uploadUri from Create Artwork Session response
+  - The {{USERNAME}} placeholder in the file path should be replaced with your actual Windows username
+  - The Content-Type in the @contentType() must match the mimeType specified in session creation
+  - This is an HTTP PUT request, not a GraphQL mutation
+}
+
+put {
+  url: {{UPLOAD_URI}}
+  body: file
+  auth: inherit
+}
+
+headers {
+  x-ms-blob-type: BlockBlob
+}
+
+body:file {
+  file: @file(C:\Users\{{USERNAME}}\Pictures\your-artwork-file.png) @contentType(image/png)
+}

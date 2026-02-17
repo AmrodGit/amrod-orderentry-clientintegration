@@ -1,0 +1,84 @@
+meta {
+  name: Delete Artwork
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DeleteArtwork($input: DeleteArtworkInput!) {
+    deleteArtwork(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        __typename
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on ImpersonationRequiredException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "QXJ0d29ya0RldGFpbHM6MzA5MjQy"
+    }
+  }
+}
+
+docs {
+  # Delete Artwork
+  
+  Permanently deletes an artwork from the logo library. This operation removes the artwork and all its associated metadata, tags, and file from the system.
+  
+  ## Use Case
+  Use this mutation to permanently remove an artwork from the logo library. This action is irreversible and should be performed carefully. Ensure proper permissions before deletion.
+  
+  ## Variables
+  - **id**: The artwork ID to delete (required)
+  
+  ## Expected Response
+  - `resultPayloadType.result`: Boolean indicating successful deletion (true = deleted, false = failed)
+  - `errors`: Array of errors if deletion fails, including:
+    - `NotFoundException`: Artwork with specified ID not found
+    - `ConflictException`: Artwork cannot be deleted (e.g., in use by another entity)
+    - `InputValidationException`: Invalid artwork ID format
+    - `ImpersonationRequiredException`: Insufficient permissions
+  
+  ## Prerequisites
+  - Artwork must exist and be accessible to the current user
+  - User must have delete permissions on the artwork
+  - Artwork should not be referenced or locked by other operations
+  
+  ## Important Warning
+  - This operation permanently removes the artwork and cannot be undone
+  - Verify the artwork ID before executing deletion
+  - Consider archiving instead of deletion if you need to maintain history
+  - The associated file blob in Azure Storage will also be removed
+}

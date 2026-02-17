@@ -1,0 +1,78 @@
+meta {
+  name: Share Folder
+  type: graphql
+  seq: 4
+}
+
+docs {
+  # Share Folder
+  
+  Shares or revokes folder access with specific customers and contacts.
+  
+  ## Use Case
+  Use this mutation to grant or revoke access to folders with individual customers or contacts. Sharing a folder grants access to all its contents (artworks and subfolders). Useful for collaborating on organized artwork collections.
+  
+  ## Variables
+  - **id**: The ID of the folder to share (required)
+  - **contactIdsShare**: Array of contact IDs to grant access to (optional)
+  - **contactIdsRevoke**: Array of contact IDs to revoke access from (optional)
+  - **customerCodesShare**: Array of customer codes to grant access to (optional)
+  - **customerCodesRevoke**: Array of customer codes to revoke access from (optional)
+  - **sharedAccess**: Access level (READ_ONLY or READ_WRITE)
+  
+  ## Expected Response
+  - `errors`: Array of errors if operation fails, including:
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid input parameters
+  
+  ## Prerequisites
+  - Folder must exist and be owned by the current user's customer
+  - Contact IDs and customer codes must be valid
+  - User must have share permissions on the folder
+  
+  ## Important Notes
+  - Sharing a folder shares all nested content and subfolders
+  - Both sharing and revoking can be done in the same call
+  - READ_ONLY allows viewing, READ_WRITE allows modification
+  - Permissions cascade to all folder contents
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation ShareFolder($input: ShareFolderInput!) {
+    shareFolder(input: $input) {
+      errors {
+        ... on ConflictException {
+          message
+        }
+        ... on ImpersonationRequiredException {
+          message
+        }
+        ... on InputValidationException {
+          message
+          parameterName
+          validationError
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "QXJ0d29ya0ZvbGRlckRldGFpbHM6MQ==",
+      "contactIdsShare": [],
+      "contactIdsRevoke": [],
+      "customerCodesShare": ["AMR0002"],
+      "customerCodesRevoke": [],
+      "sharedAccess": "READ_ONLY"
+    }
+  }
+}

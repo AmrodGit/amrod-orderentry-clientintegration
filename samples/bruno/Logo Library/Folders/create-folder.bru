@@ -1,0 +1,107 @@
+meta {
+  name: Create Folder
+  type: graphql
+  seq: 1
+}
+
+docs {
+  # Create Folder
+  
+  Creates a new folder in the artwork library for organizing and categorizing artwork files.
+  
+  ## Use Case
+  Use this mutation to create new folders in the logo library for organizing artworks. Folders help structure large artwork collections and improve navigation. New folders can be created at the root level or as subfolders under existing parent folders.
+  
+  ## Variables
+  - **name**: Name for the new folder (required, must be unique within parent)
+  - **parentId**: ID of the parent folder (optional; null creates root-level folder)
+  
+  ## Expected Response
+  - `artworkFolderDetails`: Details of the newly created folder including:
+    - `id`: Unique identifier for the folder
+    - `name`: Folder name
+    - `path`: Full path to the folder
+    - `owner`: Folder owner information
+    - `security.access`: Access permissions
+    - Permission flags: `canDelete`, `canEdit`, `canMove`, `canShare`
+  - `errors`: Array of any errors during folder creation (conflict, validation, permissions)
+  
+  ## Prerequisites
+  - If specifying parentId, the parent folder must exist and be accessible
+  - Folder name must be unique within its parent directory
+  - User must have appropriate permissions to create folders
+  
+  ## Important Notes
+  - Folder names cannot contain special characters
+  - Creating nested folders requires knowing the parent folder ID
+  - Permissions are inherited from the parent folder
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateArtworkFolder($input: CreateArtworkFolderInput!) {
+    createArtworkFolder(input: $input) {
+      errors {
+        __typename
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on ImpersonationRequiredException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+      }
+      artworkFolderDetails {
+        canDelete
+        canEdit
+        canMove
+        canShare
+        id
+        internalId
+        name
+        path
+        owner {
+          contact {
+            code
+            emailAddress
+          }
+        }
+        security {
+          access
+          contact {
+            code
+            emailAddress
+          }
+          customer {
+            code
+            name
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "name": "Brand Assets - Q1 2025",
+      "parentId": null
+    }
+  }
+}

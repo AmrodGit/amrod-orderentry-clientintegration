@@ -1,0 +1,54 @@
+meta {
+  name: Disable Global Sharing
+  type: graphql
+  seq: 2
+}
+
+docs {
+  # Disable Global Sharing
+  
+  Disables global sharing, restricting artwork and folder sharing to individual items.
+  
+  ## Use Case
+  Use this mutation to disable organization-wide sharing. When disabled, sharing must be configured individually for each artwork or folder.
+  
+  ## Expected Response
+  - `errors`: Array of errors if operation fails, including:
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Validation error
+  
+  ## Prerequisites
+  - User must have appropriate permissions to modify customer sharing settings
+  - Global sharing must be currently enabled
+  
+  ## Important Notes
+  - This does not revoke existing shares; it just prevents new global sharing
+  - Existing shared items remain shared
+  - Individual item sharing will still be available
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DisableGlobalSharing {
+    disableGlobalSharing {
+      errors {
+        ... on ConflictException {
+          message
+        }
+        ... on ImpersonationRequiredException {
+          message
+        }
+        ... on InputValidationException {
+          message
+          parameterName
+          validationError
+        }
+      }
+    }
+  }
+}

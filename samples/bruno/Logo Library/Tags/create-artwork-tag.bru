@@ -1,0 +1,86 @@
+meta {
+  name: Create Artwork Tag
+  type: graphql
+  seq: 1
+}
+
+docs {
+  # Create Artwork Tag
+  
+  Creates a new tag for categorizing and organizing artworks in the logo library.
+  
+  ## Use Case
+  Use this mutation to create tags that can be applied to artworks for better organization and searchability. Tags help categorize artwork by subject, status, department, or any other classification scheme.
+  
+  ## Variables
+  - **name**: Unique name for the tag (required)
+  - **color**: Hex color code for the tag (required, format: RRGGBB, e.g., "FF5733")
+  
+  ## Expected Response
+  - `artworkTag`: The newly created tag object including:
+    - `id`: Unique identifier for the tag
+    - `name`: Tag name
+    - `color`: Hex color code
+  - `errors`: Array of any errors during creation (conflict, validation, permissions)
+  
+  ## Prerequisites
+  - Tag name must be unique within the customer's tag collection
+  - Color must be a valid hex color code (6 characters)
+  - User must have appropriate permissions to create tags
+  
+  ## Important Notes
+  - Tags are reusable across multiple artworks
+  - Tag names are case-sensitive
+  - Color is used for visual identification in the UI
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateArtworkTag($input: CreateArtworkTagInput!) {
+    createArtworkTag(input: $input) {
+      artworkTag {
+        color
+        id
+        name
+      }
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on ImpersonationRequiredException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "color": "FF6B6B",
+      "name": "High Priority"
+    }
+  }
+}
