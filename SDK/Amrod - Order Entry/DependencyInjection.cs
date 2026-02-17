@@ -37,7 +37,7 @@ public static partial class AmrodDataGatewayServiceExtensions
 			services.AddOptions<OrderEntryOptions>();
 			services.Configure(options);
 
-			services.AddSingleton<GatewayImpersonationProvider>();
+			services.AddScoped<GatewayImpersonationProvider>();
 			services.AddScoped<GatewayCustomHttpMessageHandler>();
 			services.AddScoped<IArtworkService, ArtworkService>();
 
@@ -47,8 +47,7 @@ public static partial class AmrodDataGatewayServiceExtensions
 					(sp, HttpClient) =>
 					{
 						HttpClient.BaseAddress = orderEntryOptions.GatewayUri;
-					},
-					HttpBuilder => HttpBuilder.AddHttpMessageHandler<GatewayCustomHttpMessageHandler>()
+					}
 				);
 
 			services.AddHttpClient();

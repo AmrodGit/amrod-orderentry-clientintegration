@@ -1,3 +1,4 @@
+using System.Text;
 using Amrod.OrderEntry.Models;
 using Amrod.OrderEntry.Providers;
 using Microsoft.Extensions.Options;
@@ -8,7 +9,7 @@ namespace Amrod.OrderEntry.Services.LogoLibrary;
 internal class ArtworkService(
 	AmrodDataGatewayGraphQlClient amrodDataGatewayGraph,
 	GatewayImpersonationProvider gatewayImpersonationProvider,
-	IOptions<OrderEntryOptions> orderEntryOptions
+	IHttpClientFactory httpClientFactory
 ) : BaseMutationService, IArtworkService
 {
 	/// <inheritdoc/>
@@ -29,8 +30,20 @@ internal class ArtworkService(
 		CancellationToken cancellationToken = default
 	)
 	{
+		using var httpClient = httpClientFactory.CreateClient(nameof(AmrodDataGatewayGraphQlClient));
+
+		httpClient.DefaultRequestHeaders.Add(
+			"x-gateway-impersonate",
+			Convert.ToBase64String(
+				Encoding.UTF8.GetBytes(
+					$"{gatewayImpersonationProvider.ContactCode};{gatewayImpersonationProvider.CustomerCode}"
+				)
+			)
+		);
+
 		var result = await amrodDataGatewayGraph
-			.CreateArtwork.ExecuteAsync(
+			.CreateArtwork.WithHttpClient(httpClient)
+			.ExecuteAsync(
 				new CreateArtworkInput
 				{
 					Name = artworkName,
@@ -136,8 +149,20 @@ internal class ArtworkService(
 		CancellationToken cancellationToken = default
 	)
 	{
+		using var httpClient = httpClientFactory.CreateClient(nameof(AmrodDataGatewayGraphQlClient));
+
+		httpClient.DefaultRequestHeaders.Add(
+			"x-gateway-impersonate",
+			Convert.ToBase64String(
+				Encoding.UTF8.GetBytes(
+					$"{gatewayImpersonationProvider.ContactCode};{gatewayImpersonationProvider.CustomerCode}"
+				)
+			)
+		);
+
 		var result = await amrodDataGatewayGraph
-			.QueryArtwork.ExecuteAsync(
+			.QueryArtwork.WithHttpClient(httpClient)
+			.ExecuteAsync(
 				description,
 				extensions,
 				name,
