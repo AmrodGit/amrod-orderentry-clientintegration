@@ -1,0 +1,28 @@
+meta {
+  name: UploadArtworkBlob
+  type: http
+  seq: 6
+}
+
+put {
+  url: https://amrodnonprodsa.blob.core.windows.net/logo-library/174/161036-638851786491140342-B-01.png?sv=2025-01-05&spr=https&se=2025-06-10T19%3A07%3A29Z&sr=b&sp=rcw&sig=m%2F2Rf5BF8vZL5XKRqMxgzMi16D%2BqTtoyAzonIaUrX5U%3D
+  body: file
+  auth: inherit
+}
+
+params:query {
+  sv: 2025-01-05
+  spr: https
+  se: 2025-06-10T19:07:29Z
+  sr: b
+  sp: rcw
+  sig: m/2Rf5BF8vZL5XKRqMxgzMi16D+qTtoyAzonIaUrX5U=
+}
+
+headers {
+  x-ms-blob-type: BlockBlob
+}
+
+body:file {
+  file: @file(C:\Users\lbreedt\Pictures\unicorn.png) @contentType(image/png)
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Disable Global Sharing
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: 
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DisableGlobalSharing {
+    disablesGlobalSharing {
+      errors {
+        ... on ImpersonationRequiredException {
+          message
+        }
+        ... on InputValidationException {
+          message
+          parameterName
+          validationError
+        }
+      }
+    }
+  }
+  
+}

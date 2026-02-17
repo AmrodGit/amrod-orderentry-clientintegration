@@ -1,0 +1,27 @@
+mutation CreateArtworkFolder($input: CreateArtworkFolderInput!) {
+  createArtworkFolder(input: $input) {
+    errors {
+      __typename
+      ... on ConflictException {
+        code
+        errorDetail
+        message
+      }
+      ... on ImpersonationRequiredException {
+        code
+        errorDetail
+        message
+      }
+      ... on InputValidationException {
+        code
+        errorDetail
+        message
+        parameterName
+      }
+    }
+    artworkFolderDetails {
+      id
+	  path
+    }
+  }
+}

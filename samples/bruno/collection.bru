@@ -1,0 +1,19 @@
+script:pre-request {
+  // Read environment variables
+  const var1 = bru.getEnvVar('AMROD_CUSTOMER');
+  const var2 = bru.getEnvVar('AMROD_CONTACT');
+  
+  // Concatenate with '|'
+  const combined = `${var2};${var1}`;
+  
+  var btoa = require('btoa');
+  // Encode in Base64
+  const encoded = btoa(combined);  // btoa() is available in Bruno
+  
+  // Set the custom header
+  req.setHeader('x-gateway-impersonate', encoded);
+  
+  var url = bru.getEnvVar('MDG_URL')
+  
+  req.setUrl(url)
+}
