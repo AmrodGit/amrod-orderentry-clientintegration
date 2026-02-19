@@ -2,16 +2,13 @@
 
 ## Table of Contents
 
-- [Artwork Retention](docs/artwork-retention.md)
-- [Error Handling](docs/error-handling.md)
-- [Authentication](docs/authentication.md)
-- [Support](docs/support.md)
-- [Manage Artwork](docs/manage-artwork.md)
-- [Query Artwork](docs/query-artwork.md)
-- [Manage Artwork Folders](docs/manage-artwork-folders.md)
-- [Query Artwork Folders](docs/query-artwork-folders.md)
-- [Manage Artwork Tags](docs/manage-artwork-tags.md)
-- [Query Artwork Tags](docs/query-artwork-tags.md)
+- [Artwork Retention](artwork-retention.md)
+- [Manage Artwork](manage-artwork.md)
+- [Query Artwork](query-artwork.md)
+- [Manage Artwork Folders](manage-artwork-folders.md)
+- [Query Artwork Folders](query-artwork-folders.md)
+- [Manage Artwork Tags](manage-artwork-tags.md)
+- [Query Artwork Tags](query-artwork-tags.md)
 
 ## Purpose
 

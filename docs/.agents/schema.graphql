@@ -1,0 +1,5575 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+interface Error {
+  message: String!
+}
+
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+  id: ID!
+}
+
+"Represents a address."
+type Address {
+  "The address code."
+  code: String
+  "The sales person identifier."
+  internalId: Int!
+  "The line 1 for the address."
+  line1: String
+  "The line 2 for the address."
+  line2: String
+  "The line 3 for the address."
+  line3: String
+  "The line 4 for the address."
+  line4: String
+  "The line 5 for the address."
+  line5: String
+  """
+  Determines the type of the specified address based on its type identifier.
+  
+  
+  **Returns:**
+  The type of the address as an AddressType. Returns Postal if the type
+  lookup fails.
+  """
+  type: AddressType! @cost(weight: "10")
+}
+
+type ApproveJobCardPayload {
+  errors: [ApproveJobCardError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a logo."
+type ArtworkDetails implements Node {
+  "Specifies whether the artwork can be deleted."
+  canDelete: Boolean!
+  "Specifies whether the artwork can be edited."
+  canEdit: Boolean!
+  "Specifies whether the artwork can be moved."
+  canMove: Boolean!
+  "Specifies whether the artwork can be shared."
+  canShare: Boolean!
+  "The checksum for change tracking."
+  checksum: String!
+  "The creation date and time of the artwork."
+  created: DateTime!
+  "The artwork description."
+  description: String
+  "The artwork file extension."
+  extension: String!
+  "The unique identifier for the artwork."
+  id: ID!
+  "The artwork identifier."
+  internalId: Long!
+  "The artwork file mimetype."
+  mimeType: String!
+  "The artwork name."
+  name: String!
+  "Specifies the ownership details of the artwork."
+  owner: Owner!
+  "The artwork file storage path."
+  path: String @deprecated(reason: "The Path property is deprecated and will be removed in future versions.")
+  "The artwork sharing permissions."
+  security: SharingSecurity
+  "The artwork filesize."
+  size: Long!
+  "The display file size of the artwork file."
+  sizeFormatted: String!
+  "The artwork status."
+  status: ArtworkStatus!
+  "The tags associated with the artwork."
+  tags: [ArtworkTag!]!
+  "The artwork file thumbnail URL."
+  thumbnailUrl: URL
+  "Specifies the artwork type."
+  type: ArtworkType!
+  "The artwork file URL."
+  url: URL!
+}
+
+"Represents an artwork file type."
+type ArtworkFileType implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The artwork file type code."
+  code: String
+  "The creation date and time of the artwork file type."
+  created: DateTime!
+  "The unique identifier for the artwork file type."
+  id: ID!
+  "The artwork file type identifier."
+  internalId: Int!
+  "The MIME type of the artwork file."
+  mimeType: String
+  "The last modified date and time of the artwork file type."
+  modified: DateTime!
+  "The artwork file type name."
+  name: String
+  "The sort index for the artwork file type."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"Represents an artwork folder."
+type ArtworkFolder {
+  "The unique identifier for the folder."
+  id: Long!
+  "The folder name."
+  name: String!
+  "The folder path within the owner's logo library relative to the root folder."
+  path: String!
+}
+
+"A connection to a list of items."
+type ArtworkFolderContentsConnection {
+  "A list of edges."
+  edges: [ArtworkFolderContentsEdge!]
+  "A flattened list of the nodes."
+  nodes: [ArtworkDetails!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type ArtworkFolderContentsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ArtworkDetails!
+}
+
+"Represents an artwork folder."
+type ArtworkFolderDetails implements Node {
+  "Specifies whether the current owner can delete the folder."
+  canDelete: Boolean!
+  "Specifies whether the current owner can edit the folder."
+  canEdit: Boolean!
+  "Specifies whether the current owner can move the folder."
+  canMove: Boolean!
+  "Specifies whether the current owner can share the folder."
+  canShare: Boolean!
+  "The child folders associated with the artwork folder."
+  childFolders: [ArtworkFolderDetails!]! @cost(weight: "10")
+  "The unique identifier for the folder."
+  id: ID!
+  "The artwork folder identifier."
+  internalId: Long!
+  "The folder name."
+  name: String!
+  "The logo library owner associated with the folder."
+  owner: Owner!
+  "The folder path within the owner's logo library relative to the root folder."
+  path: String!
+  "The folder sharing permissions."
+  security: SharingSecurity
+}
+
+"A connection to a list of items."
+type ArtworkQueryConnection {
+  "A list of edges."
+  edges: [ArtworkQueryEdge!]
+  "A flattened list of the nodes."
+  nodes: [ArtworkDetails!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type ArtworkQueryEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ArtworkDetails!
+}
+
+"Represents a session for uploading artwork, including metadata and upload configuration."
+type ArtworkSession {
+  "The collection of headers associated with the request or response."
+  headers: [KeyValuePairOfStringAndString!]
+  "The unique identifier for the entity."
+  id: ID!
+  "The URI to which the upload operation will be directed."
+  uploadUri: URL!
+}
+
+"Represents an artwork tag."
+type ArtworkTag {
+  "The artwork tag color."
+  color: String!
+  "The unique identifier for the artwork tag."
+  id: ID!
+  "The artwork tag name."
+  name: String!
+}
+
+"Represents an artwork tag."
+type ArtworkTagDetails implements Node {
+  "Specifies whether the artwork tag can be edited."
+  canEdit: Boolean!
+  "The artwork tag color."
+  color: String!
+  "The unique identifier for the artwork tag."
+  id: ID!
+  "The artwork tag name."
+  name: String!
+  "Specifies the ownership details of the artwork tag."
+  owner: Owner!
+}
+
+"Represents a product."
+type AutocompleteProduct {
+  "The product image URL."
+  imageUrl: String!
+  "The name of the product."
+  name: String!
+  "The sold-as style code of the product."
+  soldAsCode: String!
+  "The style code of the product."
+  styleCode: String!
+}
+
+"Represents a variant of a product style."
+type AutocompleteVariant {
+  "The code for the variant."
+  code: String!
+  "The product variant image URL."
+  imageUrl: String!
+  "The name of the product."
+  name: String!
+  "The SKU (Stock Keeping Unit) for the variant."
+  sku: String!
+  "The sold-as style code of the product."
+  soldAsCode: String!
+  "The style code of the product."
+  styleCode: String!
+}
+
+"Represents an exception that is thrown when a bad request is sent, typically due to malformed or incorrect data."
+type BadRequestException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+"Represents a behavior."
+type Behavior implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The behavior code."
+  code: String!
+  "The creation date and time of the behavior."
+  created: DateTime!
+  "The unique identifier for the behavior."
+  id: ID!
+  "The behavior identifier."
+  internalId: Int!
+  "The last modified date and time of the behavior."
+  modified: DateTime!
+  "The behavior name."
+  name: String
+  "The sort index for the behavior."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"Represents a branch."
+type Branch {
+  "The can collect status for the branch."
+  canCollect: Boolean!
+  "The checksum for change tracking."
+  checksum: String
+  "The code for the branch."
+  code: String!
+  "The company for the branch."
+  company: Int!
+  "The created date for the branch."
+  created: DateTime!
+  "Whether the branch is active or not."
+  isActive: Boolean!
+  "Whether the branch CIF is active or not."
+  isCIFActive: Boolean!
+  "Whether the branch is direct to client or not."
+  isDirectToClient: Boolean!
+  "Whether the branch is local or not."
+  isLocal: Boolean!
+  "Whether the branch is a master branch or not."
+  isMaster: Boolean!
+  "The modified date for the branch."
+  modified: DateTime!
+  "The name of the branch."
+  name: String!
+  "The source identifier for the branch."
+  sourceIdentifier: String!
+  "The timestamp for the branch."
+  timestamp: Long!
+}
+
+"Represents a branding method."
+type BrandingMethod implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The branding method code."
+  code: String
+  "The creation date and time of the branding method."
+  created: DateTime!
+  "The unique identifier for the branding method."
+  id: ID!
+  "The branding method identifier."
+  internalId: Int!
+  "The last modified date and time of the branding method."
+  modified: DateTime!
+  "The branding method name."
+  name: String
+  "The sort index for the branding method."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"Represents a branding service."
+type BrandingService implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The branding service code."
+  code: String
+  "The creation date and time of the branding service."
+  created: DateTime!
+  "The unique identifier for the branding service."
+  id: ID!
+  "The branding service identifier."
+  internalId: Int!
+  "The last modified date and time of the branding service."
+  modified: DateTime!
+  "The branding service name."
+  name: String
+  "The sort index for the branding service."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"A connection to a list of items."
+type ChildrenConnection {
+  "A list of edges."
+  edges: [ChildrenEdge!]
+  "A flattened list of the nodes."
+  nodes: [Customer!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type ChildrenEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Customer!
+}
+
+type ClearCachePayload {
+  errors: [ClearCacheError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a color method."
+type ColorMethod implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The color method code."
+  code: String
+  "The creation date and time of the color method."
+  created: DateTime!
+  "The unique identifier for the color method."
+  id: ID!
+  "The color method identifier."
+  internalId: Int!
+  "The last modified date and time of the color method."
+  modified: DateTime!
+  "The color method name."
+  name: String
+  "The sort index for the color method."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+type CommitArtworkPayload {
+  errors: [CommitArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"""
+Represents an exception that is thrown when a conflict occurs, such as when a record with matching information
+already exists, preventing the operation from being processed.
+"""
+type ConflictException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+"A connection to a list of items."
+type ContactsConnection {
+  "A list of edges."
+  edges: [ContactsEdge!]
+  "A flattened list of the nodes."
+  nodes: [SupplierContact!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type ContactsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SupplierContact!
+}
+
+"Represents the cost details for a product."
+type Cost {
+  "The average landed cost."
+  averageLandedCost: Decimal
+  "The creation date and time."
+  created: DateTime!
+  "The Free On Board (FOB) cost."
+  fob: Decimal
+  "The tier identifier."
+  internalId: Int!
+  "The last landed cost."
+  lastLandedCost: Decimal
+  "The last modified date and time."
+  modified: DateTime!
+  "The region associated with the tier."
+  region: Region! @cost(weight: "10")
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp."
+  timestamp: Long!
+}
+
+type CreateArtworkFolderPayload {
+  artworkFolder: ArtworkFolder
+  errors: [CreateArtworkFolderError!]
+}
+
+type CreateArtworkPayload {
+  artworkSession: ArtworkSession
+  errors: [CreateArtworkError!]
+}
+
+type CreateArtworkTagPayload {
+  artworkTag: ArtworkTag
+  errors: [CreateArtworkTagError!]
+}
+
+type CreateXdpDataEntryPayload {
+  errors: [CreateXdpDataEntryError!]
+  xdpData: XdpData
+}
+
+"Represents a credit note style"
+type CreditNote implements Node {
+  "The asset URI for the credit note."
+  assetUri: URL!
+  "The lines associated with the credit note."
+  creditNoteDetails: [CreditNoteDetail!]! @cost(weight: "10")
+  "The number of the credit note."
+  creditNoteNumber: String!
+  "The date of the credit note."
+  credtNoteDate: DateTime!
+  "The unique identifier of the credit note"
+  id: ID!
+  "The credit note identifier."
+  internalId: Int!
+  "The tax for the credit note."
+  tax: Float!
+  "The total excluding tax for the credit note."
+  totalExcl: Float!
+}
+
+"Represents the details of a credit note, including product information and quantity."
+type CreditNoteDetail {
+  "The quantity for the credit note detail."
+  quantity: Int!
+  "The stock-keeping unit (SKU) identifier for the product."
+  sku: String!
+}
+
+"A connection to a list of items."
+type CreditNotesConnection {
+  "A list of edges."
+  edges: [CreditNotesEdge!]
+  "A flattened list of the nodes."
+  nodes: [CreditNote!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type CreditNotesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: CreditNote!
+}
+
+"Represents a currency."
+type Currency implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The currency code."
+  code: String
+  "The conversion factor used for currency exchange."
+  conversionFactor: Decimal!
+  "The creation date and time of the currency."
+  created: DateTime!
+  "The display format for the currency."
+  displayFormat: String
+  "The unique identifier for the currency."
+  id: ID!
+  "The currency identifier."
+  internalId: Int!
+  "Indicates whether this currency is the master currency."
+  isMaster: Boolean!
+  "The last modified date and time of the currency."
+  modified: DateTime!
+  "The currency name."
+  name: String
+  "The number of decimal places for the currency."
+  precision: Byte!
+  "The sort index for the currency."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The symbol representing the currency."
+  symbol: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"Represents a customer."
+type Customer implements Node {
+  "The account clerk for the customer."
+  accountsClerk: String
+  "The account contact for the customer."
+  accountsContact: String!
+  "The account contact email for the customer."
+  accountsContactEmail: String!
+  "The addresses associated with the customer."
+  addresses: [Address!]! @cost(weight: "10")
+  "The checksum for change tracking."
+  checksum: String
+  "The master associated with the customer."
+  children("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): ChildrenConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  "The Customer code."
+  code: String!
+  "The company registration number for the customer."
+  companyRegistrationNumber: String
+  "The contact number for the customer."
+  contactNumber: String
+  "The creation date and time of the customer."
+  created: DateTime!
+  "The credit limit for the customer."
+  creditLimit: Decimal!
+  "The contacts associated with the customer."
+  customerContacts: [CustomerContact!]! @cost(weight: "10")
+  "The customer group for the customer."
+  customerGroup: String
+  "The customer group name for the customer."
+  customerGroupName: String
+  "The unique identifier for the customer."
+  id: ID!
+  "The customer identifier."
+  internalId: Int!
+  "The master associated with the customer."
+  master: Customer @cost(weight: "10")
+  "The last modified date and time of the customer."
+  modified: DateTime!
+  "The customer name."
+  name: String!
+  "The payment term associated with the customer."
+  paymentTerm: PaymentTerm @cost(weight: "10")
+  "The region associated with the customer."
+  region: Region @cost(weight: "10")
+  "The sales area associated with the customer."
+  salesArea: SalesArea @cost(weight: "10")
+  "The sales person associated with the customer."
+  salesPerson: SalesPerson @cost(weight: "10")
+  "The source identifier for the contact."
+  sourceIdentifier: String!
+  "The status associated with the customer."
+  status: EnumLookup @cost(weight: "10")
+  "The tax number for the customer."
+  taxNumber: String
+  "The tax status associated with the customer."
+  taxStatus: EnumLookup @cost(weight: "10")
+  "The tier associated with the customer."
+  tier: Tier @cost(weight: "10")
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The vat deferment number for the customer."
+  vatDefermentNumber: String
+}
+
+"Represents a contact."
+type CustomerContact implements Node {
+  "The branch name of the contact."
+  branchName: String
+  "The checksum for the contact."
+  checksum: String
+  "The unique code for the contact."
+  code: UUID!
+  "The date and time when the contact was created."
+  created: DateTime!
+  "The customer associated with the contact."
+  customer: Customer @cost(weight: "10")
+  "The email address of the contact."
+  emailAddress: String
+  "The first name of the contact."
+  firstName: String
+  "The full name of the contact."
+  fullName: String
+  "The gender of the contact."
+  gender: String
+  "The unique identifier for the contact."
+  id: ID!
+  "The contact identifier."
+  internalId: Int!
+  "Gets or sets a value indicating whether the contact is a master contact."
+  isMastercontact: Boolean!
+  "Gets or sets a value indicating whether the contact is a website user."
+  isWebSiteUser: Boolean!
+  "The job role of the contact."
+  jobRole: String
+  "The last name of the contact."
+  lastName: String
+  "The mobile number of the contact."
+  mobileNumber: String
+  "The date and time when the contact was last modified."
+  modified: DateTime!
+  "The source identifier for the contact."
+  sourceIdentifier: String!
+  "The status associated with the contact."
+  status: EnumLookup @cost(weight: "10")
+  "Gets or sets a value indicating whether the contact is a sync user."
+  syncUser: Boolean!
+  "The telephone number of the contact."
+  telephoneNumber: String
+  "The timestamp for the contact."
+  timestamp: Long!
+  "The date and time when the website was last modified."
+  websiteLastModified: DateTime
+}
+
+"A connection to a list of items."
+type CustomerContactsConnection {
+  "A list of edges."
+  edges: [CustomerContactsEdge!]
+  "A flattened list of the nodes."
+  nodes: [CustomerContact!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type CustomerContactsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: CustomerContact!
+}
+
+"Represents a customer group."
+type CustomerGroup {
+  "The master associated with the customer."
+  customers: [Customer!]! @cost(weight: "10")
+  "The Customer Group Unique Code."
+  groupCode: String!
+  "The Customer Group Name."
+  groupName: String!
+}
+
+"Represents the result of a customer group query."
+type CustomerGroupQueryResult {
+  "Gets or sets the contacts in the customer group."
+  contacts: [CustomerContact!]
+  "Gets or sets the customer group."
+  customerGroup: CustomerGroup!
+  "Gets or sets the customers in the customer group."
+  customers: [Customer!]
+}
+
+"A connection to a list of items."
+type CustomersConnection {
+  "A list of edges."
+  edges: [CustomersEdge!]
+  "A flattened list of the nodes."
+  nodes: [Customer!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type CustomersEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Customer!
+}
+
+"Represents date details."
+type DateDetails implements Node {
+  "Indicates the current day of the year."
+  currentDay: Short
+  "Indicates the current month of the year."
+  currentMonth: Short
+  "Indicates the current quarter of the year."
+  currentQuarter: Short
+  "Indicates the current week of the year."
+  currentWeek: Short
+  "Indicates the current year."
+  currentYear: Short
+  "The actual date."
+  date: Date
+  "The date two years ago from this date."
+  date2YearsBack: Date
+  "The date three years ago from this date."
+  date3YearsBack: Date
+  "The date one year ago from this date."
+  dateLastYear: Date
+  "The day of the month."
+  day: Byte
+  "The day of the year."
+  dayOfYear: Short
+  "The suffix for the day (e.g., \"st\", \"nd\", \"rd\")."
+  daySuffix: String
+  "The number of the day of the week within the month."
+  dowInMonth: Byte
+  "The financial month for the date."
+  financialMonth: Int
+  "The financial quarter for the date."
+  financialQuarter: Int
+  "The financial year for the date."
+  financialYear: Int
+  "The first date of the month."
+  firstDateOfMonth: Date
+  "The first date of the quarter."
+  firstDateOfQuater: Date
+  "The first date of the week."
+  firstDateOfWeek: Date
+  "The first date of the year."
+  firstDateOfYear: Date
+  "The name of the holiday (if applicable)."
+  holidayName: String
+  "Unique identifier for the date."
+  id: ID!
+  "Gets the internal identifier of the date details record."
+  internalId: Int!
+  "Indicates if the date is a holiday."
+  isHoliday: Boolean
+  "Indicates if the date falls on a weekend."
+  isWeekend: Boolean
+  "The last date of the month."
+  lastDateOfMonth: Date
+  "The last date of the quarter."
+  lastDateOfQuater: Date
+  "The last date of the week."
+  lastDateOfWeek: Date
+  "The last date of the year."
+  lastDateOfYear: Date
+  "The month and year in \"MMYYYY\" format."
+  mmyyyy: String
+  "The month of the year."
+  month: Byte
+  "The full name of the month (e.g., \"January\")."
+  monthName: String
+  "The first letter of the month name (e.g., \"J\")."
+  monthName_FirstLetter: String
+  "The abbreviated name of the month (e.g., \"Jan\")."
+  monthName_Short: String
+  "The month name and year in \"Month YYYY\" format."
+  monthNameYYYY: String
+  "The month and year in \"Month YYYY\" format (e.g., \"January 2025\")."
+  monthYear: String
+  "The quarter of the year (1-4)."
+  quarter: Byte
+  "The name of the quarter (e.g., \"Q1\")."
+  quarterName: String
+  "Any special day designation for the date."
+  specialDays: String
+  "The number representing the day of the week (0 = Sunday, 1 = Monday, etc.)."
+  weekday: Byte
+  "The weekday of the same date last year."
+  weekDayLastYear: String
+  "The full name of the weekday (e.g., \"Monday\")."
+  weekDayName: String
+  "The first letter of the weekday name (e.g., \"M\")."
+  weekDayName_FirstLetter: String
+  "The abbreviated name of the weekday (e.g., \"Mon\")."
+  weekDayName_Short: String
+  "The week number of the month."
+  weekOfMonth: Byte
+  "The week number of the year."
+  weekOfYear: Byte
+  "The year."
+  year: Int
+  "The year and month in \"YYYYMM\" format."
+  yyyymm: String
+}
+
+type DeleteArtworkFolderPayload {
+  errors: [DeleteArtworkFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type DeleteArtworkPayload {
+  errors: [DeleteArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type DeleteArtworkTagPayload {
+  errors: [DeleteArtworkTagError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type DeleteXdpDataEntryPayload {
+  errors: [DeleteXdpDataEntryError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type DisablesGlobalSharingPayload {
+  errors: [DisablesGlobalSharingError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type EnableGlobalSharingPayload {
+  errors: [EnableGlobalSharingError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents an enumeration lookup."
+type EnumLookup implements Node {
+  "The code for the enumeration lookup."
+  code: String!
+  "The description of the enumeration lookup."
+  description: String!
+  "The unique identifier for the enumeration lookup."
+  id: ID!
+  "The enum lookup identifier."
+  internalId: Int!
+  "The value of the enumeration lookup."
+  value: String!
+  "The numeric value associated with this instance."
+  valueNumeric: Int!
+}
+
+"Represents a gender."
+type Gender implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The gender code."
+  code: String
+  "The creation date and time of the gender."
+  created: DateTime!
+  "The unique identifier for the gender."
+  id: ID!
+  "The gender identifier."
+  internalId: Int!
+  "The last modified date and time of the gender."
+  modified: DateTime!
+  "The gender name."
+  name: String
+  "The sort index for the gender."
+  sortIndex: Int!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"Represents an exception that is thrown when input validation fails for a specific parameter."
+type InputValidationException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+  "Gets the name of the parameter that failed validation."
+  parameterName: String!
+}
+
+"Represents a job card."
+type JobCard implements Node {
+  "The associated created date."
+  created: DateTime!
+  "The identifier for the job card."
+  id: ID!
+  "The job card's identifier."
+  internalId: Int!
+  "Indicates whether the job card is active. Active job cards are those that are currently in progress or not yet completed\/cancelled."
+  isActive: Boolean!
+  """
+  Retrieves the collection of assets associated with the specified job card.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of job card assets
+  associated with the specified job card, or null if no assets are found.
+  """
+  jobCardAssets: [JobCardAsset!] @cost(weight: "10")
+  """
+  Retrieves the branding details associated with the specified job card.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the branding details for the specified
+  job card.
+  """
+  jobCardBrandingDetail: JobCardBrandingDetail! @cost(weight: "10")
+  """
+  Retrieves the date information associated with the specified job card for the current customer.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a JobCardDate object if date information
+  is found; otherwise, null.
+  """
+  jobCardDate: JobCardDate @cost(weight: "10")
+  """
+  Retrieves the details of a specified job card.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of  JobCardDetail objects representing the details of the specified job card.
+  """
+  jobCardDetail: [JobCardDetail!] @cost(weight: "10")
+  "The associated job card number."
+  jobCardNumber: String!
+  "The associated last modified date."
+  lastModifiedDate: DateTime!
+  """
+  Retrieves a sales order associated with the specified job card.
+  
+  
+  **Returns:**
+  A SalesOrder object representing the sales order associated with the job card,  or null if no matching sales order is found.
+  """
+  salesOrder: SalesOrder! @cost(weight: "10")
+  """
+  Retrieves the status of the specified job card.
+  
+  
+  **Returns:**
+  The resolved JobCardStatus value for the job card, or Unknown if the
+  status cannot be resolved.
+  """
+  status: JobCardStatus! @cost(weight: "10")
+}
+
+"Represents a job card asset."
+type JobCardAsset implements Node {
+  "The unique id of the asset."
+  assetId: String!
+  "The created date for the job card asset."
+  created: DateTime!
+  "The identifier for the job card asset."
+  id: ID!
+  "The name for the job card asset."
+  name: String!
+  """
+  Asynchronously retrieves the asset type for the specified job card asset.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the asset type of the specified job
+  card asset. Returns JobCardAssetType.Unknown if the type cannot be determined.
+  """
+  type: JobCardAssetType! @cost(weight: "10")
+  "The URL for the job card asset."
+  url: URL
+  "Version of the Asset. Currently on Layout Proofs only."
+  version: Int
+}
+
+"Represents a job card branding detail."
+type JobCardBrandingDetail {
+  "The branding code for the job card branding detail."
+  brandingCode: String!
+  "The branding placement for the job card branding detail."
+  brandingPlacement: String
+  "The branding position for the job card branding detail."
+  brandingPosition: String!
+  "The branding size height for the job card branding detail."
+  brandingSizeHeight: Float
+  "The branding size width for the job card branding detail."
+  brandingSizeWidth: Float
+  "The colors for the job card branding detail."
+  colors: String
+  "The foil color for the job card branding detail."
+  foilColor: String
+  "The logo for the job card branding detail."
+  logo: String!
+  "The repeat option for the job card branding detail."
+  repeatOption: JobCardRepeatType!
+  "The repeat reference for the job card branding detail."
+  repeatReference: String
+  "The silicone color for the job card branding detail."
+  siliconeColor: String
+  "The vinyl color for the job card branding detail."
+  vinylColor: String
+}
+
+"Represents a job card."
+type JobCardDate {
+  "The action date for the job card date."
+  actionDate: Date
+  "The due date for the job card date."
+  dueDate: Date
+  "The internal due date for the job card date."
+  internalDueDate: Date
+  "The internal lead time for the job card date."
+  internalLeadTime: Int
+  "The lead time for the job card date."
+  leadTime: Int
+}
+
+"Represents a job card detail."
+type JobCardDetail {
+  "The quantity for the job card detail."
+  quantity: Int!
+  "The sku for the job card detail."
+  sku: String!
+}
+
+"A connection to a list of items."
+type JobCardsConnection {
+  "A list of edges."
+  edges: [JobCardsEdge!]
+  "A flattened list of the nodes."
+  nodes: [JobCard!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type JobCardsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: JobCard!
+}
+
+type KeyValuePairOfStringAndString {
+  key: String!
+  value: String!
+}
+
+"Represents a logo."
+type Logo {
+  "The checksum for change tracking."
+  checksum: String
+  "The logo code."
+  code: String
+  "The creation date and time of the logo."
+  created: DateTime!
+  "The unique identifier for the logo."
+  id: Int!
+  "The logo identifier."
+  internalId: Int!
+  "The last modified date and time of the logo."
+  modified: DateTime!
+  "The logo name."
+  name: String
+  "The source identifier for the logo."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The type associated with the logo."
+  type: EnumLookup @cost(weight: "10")
+  "The logo URI."
+  uri: String
+}
+
+"Represents a manufacturing region."
+type ManufacturingRegion implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The manufacturing region code."
+  code: String
+  "The creation date and time of the manufacturing region."
+  created: DateTime!
+  "The unique identifier for the manufacturing region."
+  id: ID!
+  "The manufacturing region identifier."
+  internalId: Int!
+  "The logo associated with the manufacturing region."
+  logo: Logo @cost(weight: "10")
+  "The last modified date and time of the manufacturing region."
+  modified: DateTime!
+  "The name of the manufacturing region."
+  name: String
+  "The region associated with the manufacturing region."
+  region: Region @cost(weight: "10")
+  "The sort index for the manufacturing region."
+  sortIndex: Int!
+  "The source identifier for the manufacturing region."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type MoveArtworkFolderPayload {
+  errors: [MoveArtworkFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type MoveArtworkToFolderPayload {
+  errors: [MoveArtworkToFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Provides mutation operations for managing stock item level details."
+type Mutation {
+  """
+  Approves a job card based on the provided input and user context.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing the result of the operation. If successful, the result contains a ResultPayloadType. If errors occur, the result contains a collection of exceptions.
+  """
+  approveJobCard("The input containing details required to approve the job card, such as the job card number and layout information." input: ApproveJobCardInput!): ApproveJobCardPayload! @cost(weight: "10")
+  """
+  Clears all entries from the specified cache store.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing a ResultPayloadType if the operation succeeds,  or an error
+  result if the cache store is not found or another error occurs.
+  """
+  clearCache(input: ClearCacheInput!): ClearCachePayload! @cost(weight: "10")
+  """
+  Commits an artwork to the system and optionally tags it with specified identifiers.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  commitArtwork("The input data required to commit the artwork, including its identifier and optional tags." input: CommitArtworkInput!): CommitArtworkPayload! @cost(weight: "10")
+  """
+  Initiates the creation of an artwork session using the specified input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 which includes the created artwork session or a list of validation errors.
+  """
+  createArtwork("The input data required to create the artwork, including name, description, type, extension, and MIME type." input: CreateArtworkInput!): CreateArtworkPayload! @cost(weight: "10")
+  """
+  Creates a new artwork folder using the specified input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 with the details of the created artwork folder, or a collection of
+  validation errors if the creation fails.
+  """
+  createArtworkFolder("The input parameters for creating the folder, including the folder name and optional parent ID." input: CreateArtworkFolderInput!): CreateArtworkFolderPayload! @cost(weight: "10")
+  """
+  Creates a new artwork tag using the specified input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1
+  which includes the created artwork tag or a list of errors if the operation fails.
+  """
+  createArtworkTag("The input data for creating the artwork tag, including name and color." input: CreateArtworkTagInput!): CreateArtworkTagPayload! @cost(weight: "10")
+  """
+  Creates a new XDP data entry based on the provided input.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing the created XdpData object if successful,  or a collection
+  of errors if the input validation fails.
+  """
+  createXdpDataEntry("""
+  The input data required to create the XDP entry, including item code, MRN number, MRN line number, and other
+              optional fields.
+  """ input: CreateXdpDataEntryInput!): CreateXdpDataEntryPayload! @cost(weight: "10")
+  """
+  Deletes an artwork based on the specified input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  deleteArtwork("The input containing the ID of the artwork to be deleted." input: DeleteArtworkInput!): DeleteArtworkPayload! @cost(weight: "10")
+  """
+  Deletes an artwork folder specified by the input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  deleteArtworkFolder("The input containing the ID of the folder to be deleted. The ID must be greater than 0." input: DeleteArtworkFolderInput!): DeleteArtworkFolderPayload! @cost(weight: "10")
+  """
+  Deletes an artwork tag based on the specified input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  deleteArtworkTag("The input parameters for deleting the artwork tag, including the tag ID and force flag." input: DeleteArtworkTagInput!): DeleteArtworkTagPayload! @cost(weight: "10")
+  """
+  Deletes an XDP data entry identified by the specified ID.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing the result of the operation. If the operation is successful, the result
+  will contain no errors. If validation or processing errors occur, the result will include the relevant errors.
+  """
+  deleteXdpDataEntry("The input containing the ID of the XDP data entry to delete. The XdpDataEntryId must be greater than 0." input: DeleteXdpDataEntryInput!): DeleteXdpDataEntryPayload! @cost(weight: "10")
+  """
+  Disables global sharing for the current user context.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  disablesGlobalSharing: DisablesGlobalSharingPayload! @cost(weight: "10")
+  """
+  Enables global sharing for the specified security type.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  enableGlobalSharing("The input parameters required to enable global sharing, including security type and force enable flag." input: EnableGlobalSharingInput!): EnableGlobalSharingPayload! @cost(weight: "10")
+  """
+  Moves an artwork folder to a new parent folder.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing the result of the operation or any validation errors.
+  """
+  moveArtworkFolder("The input containing the folder ID and the new parent folder ID." input: MoveArtworkFolderInput!): MoveArtworkFolderPayload! @cost(weight: "10")
+  """
+  Moves an artwork to a specified folder.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing the result of the operation. If successful, the result contains a ResultPayloadType. If an error occurs, the result contains the appropriate exception.
+  """
+  moveArtworkToFolder("The input containing the identifiers of the artwork and the target folder." input: MoveArtworkToFolderInput!): MoveArtworkToFolderPayload! @cost(weight: "10")
+  """
+  Places a sales order or validates the order details based on the specified input.
+  
+  
+  **Returns:**
+  A field result containing the order placement payload, including order details and any warnings. If validation
+  errors occur, the result contains the relevant errors.
+  """
+  placeOrder("The input containing order details, options, and items to be placed or validated. Cannot be null." input: PlaceOrderInput!): PlaceOrderPayload! @cost(weight: "10")
+  """
+  Processes an XDP transaction using the specified service and input parameters.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing the result of the operation. If the operation is successful, the result
+  will be empty. If there are validation errors or conflicts, the result will contain the corresponding errors.
+  """
+  processXdpTransaction("""
+  The input data required to process the transaction. The XdpTransactionId
+              must be greater than 0.
+  """ input: ProcessXdpTransactionInput!): ProcessXdpTransactionPayload! @cost(weight: "10")
+  """
+  Removes the stock item level detail associated with the specified identifier.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1
+  indicating the outcome of the operation.
+  """
+  removeStockItemLevelDetail(input: RemoveStockItemLevelDetailInput!): RemoveStockItemLevelDetailPayload! @cost(weight: "10")
+  requestChangeJobCard(input: RequestChangeJobCardInput!): RequestChangeJobCardPayload! @cost(weight: "10")
+  """
+  Revokes all sharing permissions for the current user.
+  
+  
+  **Returns:**
+  A FieldResult`1 indicating the result of the operation, including any errors
+  encountered.
+  """
+  revokeAllShares: RevokeAllSharesPayload! @cost(weight: "10")
+  """
+  Revokes the sharing of an artwork identified by the specified input.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  revokeSharedArtwork("""
+  The input containing the artwork identifier to be revoked. The ArtworkId
+              must be greater than 0.
+  """ input: RevokeSharedArtworkInput!): RevokeSharedArtworkPayload! @cost(weight: "10")
+  """
+  Revokes access to a shared folder for a specified user or group.
+  
+  
+  **Returns:**
+  A FieldResult`1 indicating the success or failure of the operation, including any
+  validation or conflict errors.
+  """
+  revokeSharedFolder("The input containing the details of the folder to be revoked, including the folder ID." input: RevokeSharedFolderInput!): RevokeSharedFolderPayload! @cost(weight: "10")
+  """
+  Shares an artwork with specified contacts and customers, allowing for access control modifications.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  shareArtwork("The input containing details of the artwork to share and the access modifications." input: ShareArtworkInput!): ShareArtworkPayload! @cost(weight: "10")
+  """
+  Shares a folder with specified contacts and customers, allowing for access modifications.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  shareFolder("The input parameters specifying the folder to share and the access details." input: ShareFolderInput!): ShareFolderPayload! @cost(weight: "10")
+  """
+  Tags an artwork with the specified tags using the provided artwork tag service.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  tagArtwork("The input containing the artwork ID and tag IDs to be applied." input: TagArtworkInput!): TagArtworkPayload! @cost(weight: "10")
+  """
+  Updates the artwork details using the specified input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  updateArtwork("The input containing the artwork details to be updated." input: UpdateArtworkInput!): UpdateArtworkPayload! @cost(weight: "10")
+  """
+  Updates an artwork folder using the specified input parameters.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  updateArtworkFolder("The input containing the folder ID and the new name for the folder." input: UpdateArtworkFolderInput!): UpdateArtworkFolderPayload! @cost(weight: "10")
+  """
+  Updates the tag information for a specified artwork.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the updated artwork tag information.
+  """
+  updateArtworkTag("The input containing the artwork tag details to be updated." input: UpdateArtworkTagInput!): UpdateArtworkTagPayload! @cost(weight: "10")
+  """
+  Updates global sharing to the specified security type.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a FieldResult`1 indicating the success or failure of the operation.
+  """
+  updateGlobalSharing("The input parameters required to enable global sharing, including security type and force enable flag." input: UpdateGlobalSharingInput!): UpdateGlobalSharingPayload! @cost(weight: "10")
+  updateJobCardBrandingInfo(input: UpdateJobCardBrandingInfoInput!): UpdateJobCardBrandingInfoPayload! @cost(weight: "10")
+  """
+  Updates an XDP data entry by its identifier.
+  
+  
+  **Returns:**
+  A FieldResult`1 containing the result of the operation. If the operation is successful, the result
+  will be empty. If there are validation errors or conflicts, the result will contain the corresponding errors.
+  """
+  updateXdpDataEntry("The input containing the details of the XDP data entry to update. The XdpDataEntryId must be greater than 0." input: UpdateXdpDataEntryInput!): UpdateXdpDataEntryPayload! @cost(weight: "10")
+}
+
+"Represents an exception that is thrown when a requested resource or record cannot be found."
+type NotFoundException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+"Represents the details of branding associated with an order, including pricing, setup charges, and lead times."
+type OrderBrandingDetail {
+  "The branding code that identifies the specific branding applied to the order."
+  brandingCode: String!
+  "The branding position code according to the branding specification, which indicates where the branding is applied."
+  brandingPosition: String!
+  "The unit price for the branding, excluding tax, which is the cost per branded item."
+  brandingUnitPriceExcl: Float!
+  "The description of the branding, providing additional context or details about the branding applied."
+  description: String!
+  "The DYE charge for the branding, excluding tax, if applicable."
+  dyeChargeExcl: Float
+  "The name of the DYE charge associated with the branding, if applicable."
+  dyeChargeName: String
+  """
+  The Print Quantity for the branding, indicating how many items/brandings are branded.
+  Note: For a 2 sided product, this is the total quantity branded across both sides.
+  """
+  printQuantity: Int!
+  "The setup charge code associated with the branding, which indicates any additional setup fees."
+  setupChargeCode: String
+  "The setup charge for the branding, excluding tax, which is a one-time fee for setting up the branding."
+  setupChargeExcl: Float
+}
+
+"""
+Represents the details of a grouped item within an order, including its unique identifier, associated items, and
+optional branding information.
+"""
+type OrderGroupItemDetail {
+  "The list of branding details associated with the order, if applicable."
+  branding: [OrderBrandingDetail!]!
+  "The unique identifier for the item within the order, which is used to reference back to the requested grouping."
+  id: String!
+  "The list of order detail items, which includes individual products and their associated details."
+  items: [OrderItemDetail!]!
+}
+
+"""
+Represents a created order, containing details about the order's unique identifiers,  pricing information, and
+associated order details.
+"""
+type OrderItem {
+  "The list of order group items, which includes individual products and their associated details."
+  details: [OrderGroupItemDetail!]!
+  "The Production Lead Time in Days for the order, if applicable."
+  leadTimeInDays: Int
+  """
+  The Warehouse Lead Time in Hours for the order, if applicable.
+  Note: This is for future use and is not currently populated.
+  """
+  leadTimeInHours: Int
+  "The order date, which indicates when the order was placed."
+  orderDate: Date!
+  "The unique identifier for the order, which is used to reference back to the requested order."
+  orderNumber: String!
+  "The unique identifier for the order, which is used to tie the requested order to the processed order."
+  salesOrderNumber: String
+  "The total price for the order, excluding tax, which is the sum of all individual item totals."
+  totalExcl: Float!
+}
+
+"""
+Represents the details of an item within an order, including its identifier, product information, pricing, and tax
+details.
+"""
+type OrderItemDetail {
+  "The name of the item, which is typically the product name or description."
+  name: String!
+  "The quantity of the item, representing how many units of the SKU are included in the order."
+  quantity: Int!
+  "The SKU (Stock Keeping Unit) identifier for the item, which is used to uniquely identify the product."
+  sku: String!
+  "The unit price of the item, which is the cost per unit of the SKU."
+  unitPrice: Float!
+}
+
+"Represents a warning associated with an order, including a code for categorization and a detailed message."
+type OrderWarning {
+  "The code that identifies the type of warning, which can be used for categorization or filtering."
+  code: String!
+  "The warning message that provides details about the issue or condition that needs attention."
+  message: String!
+  "The type of warning that has occurred."
+  warningType: OrderWarningType!
+}
+
+"Represents a logo library owner."
+type Owner {
+  "The associated customer contact."
+  contact: OwnerContact!
+  "The associated customer."
+  customer: OwnerCustomer!
+}
+
+"Represents a logo library owner customer contact."
+type OwnerContact {
+  "The contact code."
+  code: UUID!
+  "The contact email address."
+  emailAddress: String!
+}
+
+"Represents a logo library owner customer."
+type OwnerCustomer {
+  "The customer code."
+  code: String!
+  "The customer name."
+  name: String!
+}
+
+"Represents the packaging details of a product."
+type Packaging {
+  "The conversion quantity for the packaging."
+  conversionQuantity: Int!
+  "The creation date and time of the packaging."
+  created: DateTime!
+  "The Unit of Measure associated with the Packaging Unit."
+  dimUnitOfMeasure: UnitOfMeasure @cost(weight: "10")
+  "The height of the packaging."
+  height: Float!
+  "The tier identifier."
+  internalId: Int!
+  "The length of the packaging."
+  length: Float!
+  "The last modified date and time of the packaging."
+  modified: DateTime!
+  "The Type of Packaging (Eaches, Cartons, Pallets)."
+  packagingType: EnumLookup @cost(weight: "10")
+  "The source identifier for the packaging."
+  sourceIdentifier: String
+  "The timestamp for the packaging."
+  timestamp: Long!
+  "The weight of the packaging."
+  weight: Float!
+  "The Unit of Measure associated with the Packaging Unit's Weight."
+  weightDimUnitOfMeasure: UnitOfMeasure @cost(weight: "10")
+  "The width of the packaging."
+  width: Float!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+}
+
+"Represents a payment term style."
+type PaymentTerm implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The code or the payment term."
+  code: String!
+  "The creation date and time of the payment term."
+  created: DateTime!
+  "The unique identifier for the payment term."
+  id: ID!
+  """
+  Gets the internal identifier of the payment term.
+  
+  
+  **Returns:**
+  The internal identifier of the payment term.
+  """
+  internalId: Int!
+  "The last modified date and time of the payment term."
+  modified: DateTime!
+  "The name of the payment term."
+  name: String!
+  "The region associated with the payment term."
+  region: Region @cost(weight: "10")
+  "The source identifier for the payment term."
+  sourceIdentifier: String
+  "The timestamp for the payment term."
+  timestamp: Long!
+}
+
+type PlaceOrderPayload {
+  errors: [PlaceOrderError!]
+  placeOrderPayloadType: PlaceOrderPayloadType
+}
+
+"""
+Represents the result of an order processing operation, including successfully processed orders and any associated
+warnings.
+"""
+type PlaceOrderPayloadType {
+  "The list of orders that were successfully processed, each containing details about the order."
+  orders: [OrderItem!]!
+  "The list of warnings associated with the order processing, which may include issues or notes that need to be addressed."
+  warnings: [OrderWarning!]!
+}
+
+"Represents a port."
+type Port implements Node {
+  "Indicates whether the port is active or not."
+  active: Boolean!
+  "The checksum for change tracking."
+  checksum: String
+  "The port code."
+  code: String
+  "The creation date and time of the port."
+  created: DateTime!
+  "The unique identifier for the port."
+  id: ID!
+  "The port identifier."
+  internalId: Int!
+  "The last modified date and time of the port."
+  modified: DateTime!
+  "The port name."
+  name: String
+  "The region associated with the port."
+  region: Region @cost(weight: "10")
+  "The source identifier for the port."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type ProcessXdpTransactionPayload {
+  errors: [ProcessXdpTransactionError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a product style."
+type Product implements Node {
+  "The creation date and time of the product."
+  created: DateTime!
+  """
+  Retrieves the default e-commerce details for a specified product.
+  
+  
+  **Returns:**
+  A ProductECommerceDetail object representing the e-commerce details of the product,  or null if no preferences are available.
+  """
+  defaultECommerceDetail: ProductECommerceDetail @cost(weight: "10")
+  """
+  Retrieves the e-commerce details for a product based on the specified color segment.
+  
+  
+  **Returns:**
+  A ProductECommerceDetail object containing the e-commerce details for the product and color segment,
+  or null if no matching details are found.
+  """
+  eCommerceDetailByColor("The code of the color segment. If provided, it is used to filter the e-commerce details. Can be null if segmentColorId is specified." segmentColorCode: String """
+  The identifier of the color segment. If provided, it is used to filter the e-commerce details. Can be null if
+              segmentColorCode is specified.
+  """ segmentColorId: ID): ProductECommerceDetail @cost(weight: "10")
+  "The unique identifier for the product."
+  id: ID!
+  """
+  Gets the internal identifier of the product.
+  
+  
+  **Returns:**
+  The internal identifier of the product.
+  """
+  internalId: Int!
+  "The introduction date of the product."
+  introductionDate: Date
+  "Gets or sets a value indicating whether the product is active."
+  isActive: Boolean!
+  "Indication if the product is continuing or not."
+  isContinuing: Boolean!
+  "Gets or sets a value indicating whether the product is made to order."
+  isMadeToOrder: Boolean!
+  "Gets or sets a value indicating whether the product is physical."
+  isPhysical: Boolean!
+  "The last modified date and time of the product."
+  modified: DateTime!
+  "The name of the product."
+  name: String!
+  """
+  Retrieves the brand information for a specified product.
+  
+  
+  **Returns:**
+  A CancellationToken) object representing the brand of the product, or null if the product
+  does not have a brand.
+  """
+  productBrand: ProductBrand @cost(weight: "10")
+  """
+  Gets the product category of the product.
+  
+  
+  **Returns:**
+  The product category of the product.
+  """
+  productCategory: ProductCategory! @cost(weight: "10")
+  """
+  Gets the product class of the product.
+  
+  
+  **Returns:**
+  The product class of the product.
+  """
+  productClass: ProductClass! @cost(weight: "10")
+  """
+  Retrieves the product division associated with the specified product.
+  
+  
+  **Returns:**
+  A CancellationToken) object representing the division associated with the product,  or null if no division is found.
+  """
+  productDivision: ProductDivision @cost(weight: "10")
+  """
+  Gets the sales history associated with the product.
+  
+  
+  **Returns:**
+  A collection of sales history associated with the product.
+  """
+  salesHistory: [SalesHistory!]! @cost(weight: "10")
+  "The sold-as style code of the product."
+  soldAsStyleCode: String!
+  "The source identifier for the product."
+  sourceIdentifier: String
+  """
+  Gets the stock class of the product.
+  
+  
+  **Returns:**
+  The stock class of the product.
+  """
+  stockClass: StockClass! @cost(weight: "10")
+  """
+  Gets the stock level of the product.
+  
+  
+  **Returns:**
+  The stock level of the product.
+  """
+  stockLevel: StockLevel @cost(weight: "10")
+  "The style code of the product."
+  styleCode: String!
+  "The timestamp for the product."
+  timestamp: Long!
+  """
+  Gets the variants associated with the product.
+  
+  
+  **Returns:**
+  A collection of variants associated with the product.
+  """
+  variants: [Variant!]! @cost(weight: "10")
+  """
+  Retrieves the warehouse preference for the specified product.
+  
+  
+  **Returns:**
+  A ProductWarehousePreference object representing the warehouse preference for the product,  or null if no preference is found.
+  """
+  warehousePreferences: ProductWarehousePreference @cost(weight: "10")
+}
+
+"Represents a product brand."
+type ProductBrand implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The product brand code."
+  code: String
+  "The creation date and time of the product brand."
+  created: DateTime!
+  "The unique identifier for the product brand."
+  id: ID!
+  "The product brand identifier."
+  internalId: Int!
+  "The logo associated with the product brand."
+  logo: Logo @cost(weight: "10")
+  "The last modified date and time of the product brand."
+  modified: DateTime!
+  "The product brand name."
+  name: String
+  "The sort index for the product brand."
+  sortIndex: Int!
+  "The source identifier for the product brand."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a product category."
+type ProductCategory implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The child categories associated with the product category."
+  childCategories: [ProductCategory!]! @cost(weight: "10")
+  "The category code."
+  code: String
+  "The creation date and time of the product category."
+  created: DateTime!
+  "The unique identifier for the product category."
+  id: ID!
+  "The product category identifier."
+  internalId: Int!
+  "The last modified date and time of the product category."
+  modified: DateTime!
+  "The product category name."
+  name: String
+  "The parent category associated with the product category."
+  parentCategory: ProductCategory @cost(weight: "10")
+  """
+  The path of the product category.
+  
+  
+  **Returns:**
+  The path of the product category.
+  """
+  path: String! @cost(weight: "10")
+  "The product class associated with the product category."
+  productClass: ProductClass @cost(weight: "10")
+  "The sort index for the product category."
+  sortIndex: Int!
+  "The source identifier for the product category."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a product class."
+type ProductClass implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The child product classes associated with the product class."
+  childProductClasses: [ProductClass!]! @cost(weight: "10")
+  "The product class code."
+  code: String
+  "The creation date and time of the product class."
+  created: DateTime!
+  "The unique identifier for the product class."
+  id: ID!
+  "The product class identifier."
+  internalId: Int!
+  "The last modified date and time of the product class."
+  modified: DateTime!
+  "The product class name."
+  name: String
+  "The parent product class associated with the product class."
+  parentProductClass: ProductClass @cost(weight: "10")
+  """
+  The path of the product class.
+  
+  
+  **Returns:**
+  The path of the product class.
+  """
+  path: String! @cost(weight: "10")
+  "The product categories associated with the product class."
+  productCategories: [ProductCategory!]! @cost(weight: "10")
+  "The sort index for the product class."
+  sortIndex: Int!
+  "The source identifier for the product class."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a product division."
+type ProductDivision implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The product division code."
+  code: String
+  "The creation date and time of the product division."
+  created: DateTime!
+  "The unique identifier for the product division."
+  id: ID!
+  "The product division identifier."
+  internalId: Int!
+  "The last modified date and time of the product division."
+  modified: DateTime!
+  "The product division name."
+  name: String
+  "The sort index for the product division."
+  sortIndex: Int!
+  "The source identifier for the product division."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"""
+Represents the e-commerce details of a product, including metadata such as timestamps,  web-friendly name, and
+description.
+"""
+type ProductECommerceDetail {
+  """
+  Retrieves the behavior associated with the specified product e-commerce detail.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the behavior associated with the
+  specified product e-commerce detail.
+  """
+  behavior: Behavior! @cost(weight: "10")
+  "The date and time when the entity was created."
+  created: DateTime!
+  "The web friendly description of the Product."
+  description: String
+  "The tag identifier."
+  internalId: Int!
+  "The date and time when the entity was last modified."
+  modified: DateTime!
+  "The web friendly name of the Product."
+  name: String
+  """
+  Retrieves the promotion details for the specified product.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the promotion details associated with
+  the specified product.
+  """
+  promotion: Promotion! @cost(weight: "10")
+  """
+  Retrieves the segment color associated with the specified product.
+  
+  
+  **Returns:**
+  A CancellationToken) object representing the segment color associated with the product,  or null if the product does not have an associated segment color.
+  """
+  segmentColor: SegmentColor @cost(weight: "10")
+  "The timestamp for the product web preferences."
+  timestamp: Long!
+}
+
+"Represents a product item group."
+type ProductItemGroup implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The product item group code."
+  code: String
+  "The creation date and time of the product item group."
+  created: DateTime!
+  "The unique identifier for the product item group."
+  id: ID!
+  "The product item group identifier."
+  internalId: Int!
+  "The last modified date and time of the product item group."
+  modified: DateTime!
+  "The product item group name."
+  name: String
+  "The sort index for the product item group."
+  sortIndex: Int!
+  "The source identifier for the product item group."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents the preferences and attributes of a product in relation to warehouse handling."
+type ProductWarehousePreference {
+  "Gets or sets a value indicating whether the item is conveyorable."
+  isConveyorable: Boolean!
+  "Gets or sets a value indicating whether the item is classified as dangerous goods."
+  isDangerousGoods: Boolean!
+  "Gets or sets a value indicating whether the item is considered high value."
+  isHighValue: Boolean!
+}
+
+"A connection to a list of items."
+type ProductsConnection {
+  "A list of edges."
+  edges: [ProductsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Product!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type ProductsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Product!
+}
+
+"Represents a promotion."
+type Promotion implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The promotion code."
+  code: String
+  "The creation date and time of the promotion."
+  created: DateTime!
+  "The unique identifier for the promotion."
+  id: ID!
+  "The promotion identifier."
+  internalId: Int!
+  "The last modified date and time of the promotion."
+  modified: DateTime!
+  "The promotion name."
+  name: String
+  "The sort index for the promotion."
+  sortIndex: Int!
+  "The source identifier for the promotion."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Provides query methods for retrieving XDP data and transactions with support for paging and filtering."
+type Query {
+  """
+  Retrieves the details of an artwork by its unique identifier.
+  
+  
+  **Returns:**
+  An ArtworkDetails object containing the details of the artwork if found; otherwise, null.
+  """
+  artworkById("The unique identifier of the artwork to retrieve." id: ID!): ArtworkDetails @cost(weight: "10")
+  """
+  Retrieves an artwork file type by its code.
+  
+  
+  **Returns:**
+  The artwork file type with the specified code, or null if not found.
+  """
+  artworkFileTypeByCode("The code of the artwork file type." code: String!): ArtworkFileType @cost(weight: "10")
+  """
+  Retrieves an artwork file type by its identifier.
+  
+  
+  **Returns:**
+  The artwork file type with the specified identifier, or null if not found.
+  """
+  artworkFileTypeById("The identifier of the artwork file type." id: ID!): ArtworkFileType @cost(weight: "10")
+  """
+  Retrieves all artwork file types.
+  
+  
+  **Returns:**
+  A collection of all artwork file types.
+  """
+  artworkFileTypes: [ArtworkFileType!]! @cost(weight: "10")
+  """
+  Retrieves the details of an artwork folder by its unique identifier.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the details of the artwork folder, or
+  null if the folder is not found.
+  """
+  artworkFolderById("The unique identifier of the artwork folder to retrieve." id: ID!): ArtworkFolderDetails @cost(weight: "10")
+  """
+  Retrieves the contents of an artwork folder, supporting pagination.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a connection object with the paginated
+  artwork details.
+  """
+  artworkFolderContents("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "The path to the folder whose contents are to be retrieved. Cannot be null or empty." folderPath: String! "Returns the last _n_ elements from the list." last: Int): ArtworkFolderContentsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a collection of artwork folder details for the current user context.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of ArtworkFolderDetails.
+  """
+  artworkFolders: [ArtworkFolderDetails!]! @cost(weight: "10")
+  """
+  Queries artwork details based on specified criteria and returns a paginated connection of results.
+  
+  
+  **Returns:**
+  A task representing the asynchronous operation, containing a connection of ArtworkDetails.
+  """
+  artworkQuery("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "The description of the artwork to filter by. If null, the description is not used as a filter." description: String "An array of file extensions to filter the artworks by. If null, extensions are not used as a filter." extensions: [String!] "Returns the first _n_ elements from the list." first: Int "A list of artwork IDs to filter the query. If null, all artworks are considered." ids: [ID!] "Returns the last _n_ elements from the list." last: Int "The name of the artwork to filter by. If null, the name is not used as a filter." name: String "An array of artwork query statuses to filter the artworks by. Defaults to active status if null or empty." statuses: [ArtworkQueryStatus!] "An array of tags to filter the artworks by. If null, tags are not used as a filter." tags: [String!] "An array of artwork types to filter the artworks by. If null, types are not used as a filter." types: [ArtworkType!]): ArtworkQueryConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves the details of an artwork tag by its unique identifier.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the details of the artwork tag if found;
+  otherwise, null.
+  """
+  artworkTagById("The unique identifier of the artwork tag to retrieve." id: ID!): ArtworkTagDetails @cost(weight: "10")
+  """
+  Retrieves a collection of artwork tags associated with the current user's customer and contact codes.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of ArtworkTagDetails.
+  """
+  artworkTags: [ArtworkTagDetails!]! @cost(weight: "10")
+  """
+  Searches for products by name, sold as code and style code.
+  
+  
+  **Returns:**
+  Products that match the search term.
+  """
+  autocompleteProduct("Whether to exclude res the specified product class." excludeProductClass: Boolean! = false "The product class code to filter by." productClassCode: String "The search term to use." searchTerm: String!): [AutocompleteProduct!]! @cost(weight: "10")
+  """
+  Searches for product variants by code, name and SKU.
+  
+  
+  **Returns:**
+  Product variants that match the search term.
+  """
+  autocompleteVariant("Whether to exclude results from the specified product class." excludeProductClass: Boolean! = false "The product class code to filter by." productClassCode: String "The search term to use." searchTerm: String!): [AutocompleteVariant!]! @cost(weight: "10")
+  """
+  Retrieves a behavior by its code.
+  
+  
+  **Returns:**
+  The behavior with the specified code, or null if not found.
+  """
+  behaviorByCode("The code of the behavior." code: String!): Behavior @cost(weight: "10")
+  """
+  Retrieves a behavior by its identifier.
+  
+  
+  **Returns:**
+  The behavior with the specified identifier, or null if not found.
+  """
+  behaviorById("The identifier of the behavior." id: ID!): Behavior @cost(weight: "10")
+  """
+  Retrieves all behaviors.
+  
+  
+  **Returns:**
+  A collection of all behaviors.
+  """
+  behaviors: [Behavior!]! @cost(weight: "10")
+  """
+  Retrieves a branding method by its code.
+  
+  
+  **Returns:**
+  The branding method with the specified code, or null if not found.
+  """
+  brandingMethodByCode("The code of the branding method." code: String!): BrandingMethod @cost(weight: "10")
+  """
+  Retrieves a branding method by its identifier.
+  
+  
+  **Returns:**
+  The branding method with the specified identifier, or null if not found.
+  """
+  brandingMethodById("The identifier of the branding method." id: ID!): BrandingMethod @cost(weight: "10")
+  """
+  Retrieves all branding methods.
+  
+  
+  **Returns:**
+  A collection of all branding methods.
+  """
+  brandingMethods: [BrandingMethod!]! @cost(weight: "10")
+  """
+  Retrieves a branding service by its code.
+  
+  
+  **Returns:**
+  The branding service with the specified code, or null if not found.
+  """
+  brandingServiceByCode("The code of the branding service." code: String!): BrandingService @cost(weight: "10")
+  """
+  Retrieves a branding service by its identifier.
+  
+  
+  **Returns:**
+  The branding service with the specified identifier, or null if not found.
+  """
+  brandingServiceById("The identifier of the branding service." id: ID!): BrandingService @cost(weight: "10")
+  """
+  Retrieves all branding services.
+  
+  
+  **Returns:**
+  A collection of all branding services.
+  """
+  brandingServices: [BrandingService!]! @cost(weight: "10")
+  """
+  Retrieves a color method by its code.
+  
+  
+  **Returns:**
+  The color method with the specified code, or null if not found.
+  """
+  colorMethodByCode("The code of the color method." code: String!): ColorMethod @cost(weight: "10")
+  """
+  Retrieves a color method by its identifier.
+  
+  
+  **Returns:**
+  The color method with the specified identifier, or null if not found.
+  """
+  colorMethodById("The identifier of the color method." id: ID!): ColorMethod @cost(weight: "10")
+  """
+  Retrieves all color methods.
+  
+  
+  **Returns:**
+  A collection of all color methods.
+  """
+  colorMethods: [ColorMethod!]! @cost(weight: "10")
+  """
+  Retrieves a credit note by its unique identifier for the current customer.
+  
+  
+  **Returns:**
+  A CreditNote object representing the credit note if found; otherwise, null.
+  """
+  creditNote("The unique identifier of the credit note to retrieve." creditNoteId: ID!): CreditNote @cost(weight: "10")
+  """
+  Retrieves a credit note by its unique credit note number.
+  
+  
+  **Returns:**
+  A CreditNote object representing the credit note if found; otherwise, null.
+  """
+  creditNoteByCreditNoteNumber("The unique identifier of the credit note to retrieve. Cannot be null or empty." creditNoteNumber: String!): CreditNote @cost(weight: "10")
+  """
+  Retrieves a paginated and filtered list of credit notes associated with a specific sales order number.
+  
+  
+  **Returns:**
+  A task representing the asynchronous operation, containing a connection of credit notes.
+  """
+  creditNotes("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: CreditNoteFilterInput @cost(weight: "10")): CreditNotesConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves all currencies.
+  
+  
+  **Returns:**
+  A collection of all currencies.
+  """
+  currencies: [PaymentTerm!]! @cost(weight: "10")
+  """
+  Retrieves a currency by its code.
+  
+  
+  **Returns:**
+  The currency with the specified code, or null if not found.
+  """
+  currencyByCode("The code of the currency." code: String!): Currency @cost(weight: "10")
+  """
+  Retrieves a currency by its identifier.
+  
+  
+  **Returns:**
+  The currency with the specified identifier, or null if not found.
+  """
+  currencyById("The identifier of the currency." id: ID!): Currency @cost(weight: "10")
+  """
+  Retrieves a customer by their unique code.
+  
+  
+  **Returns:**
+  The customer with the specified code, or null if not found.
+  """
+  customerByCode("The unique code of the customer." code: String!): Customer @cost(weight: "10")
+  """
+  Retrieves a customer by their unique identifier.
+  
+  
+  **Returns:**
+  The customer with the specified identifier, or null if not found.
+  """
+  customerById("The unique identifier of the customer." id: ID!): Customer @cost(weight: "10")
+  """
+  Retrieves a customer contact by its unique identifier.
+  
+  
+  **Returns:**
+  The customer contact if found; otherwise, null.
+  """
+  customerContact("The unique identifier of the contact." id: ID!): CustomerContact @cost(weight: "10")
+  """
+  Retrieves a customer contact by its code / customer combination.
+  
+  
+  **Returns:**
+  The customer contact if found; otherwise, null.
+  """
+  customerContactByCodeAndCustomerCode("The code of the contact." code: UUID! "The customer code." customerCode: String!): CustomerContact @cost(weight: "10")
+  """
+  Retrieves a customer contact by its code / customer combination.
+  
+  
+  **Returns:**
+  The customer contact if found; otherwise, null.
+  """
+  customerContactByCodeAndCustomerId("The code of the contact." code: UUID! "The customer's unique identifier." customerId: ID!): CustomerContact @cost(weight: "10")
+  """
+  Retrieves a customer contact by its email address.
+  
+  
+  **Returns:**
+  The customer contact if found; otherwise, null.
+  """
+  customerContactByEmail("The email address of the contact." email: String!): CustomerContact @cost(weight: "10")
+  """
+  Retrieves a paginated list of customer contacts.
+  
+  
+  **Returns:**
+  A paginated list of customer contacts.
+  """
+  customerContacts("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: ContactFilterInput @cost(weight: "10")): CustomerContactsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a CustomerGroup by its unique code.
+  
+  
+  **Returns:**
+  A CustomerGroup if found.
+  """
+  customerGroup("The CustomerGroup code." customerGroupCode: String!): CustomerGroup @cost(weight: "10")
+  """
+  Retrieves a CustomerGroup by a child customer code.
+  
+  
+  **Returns:**
+  A Customer Group if found.
+  """
+  customerGroupByCustomerCode("The customer code." customerCode: String!): CustomerGroup @cost(weight: "10")
+  """
+  Retrieves a CustomerGroup by a child customer identifier.
+  
+  
+  **Returns:**
+  A Customer Group if found.
+  """
+  customerGroupByCustomerId("The customer Id." customerId: Int!): CustomerGroup @cost(weight: "10")
+  """
+  Queries customers and contacts within a customer group based on a search query.
+  
+  
+  **Returns:**
+  A Customer Group Query result containing Customer Group Information including matching customers and contacts within the customer group.
+  """
+  customerGroupQuery("A child customer code." childCustomerCode: String "The customer group code." customerGroupCode: String "Search criteria on fields, Customer: Code, Name; Contact: emailAddress, firstname, lastname, fullname" query: String!): CustomerGroupQueryResult @cost(weight: "10")
+  """
+  Retrieves a paginated list of customers with optional filtering.
+  
+  
+  **Returns:**
+  A paginated list of customers.
+  """
+  customers("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int "The region identifier to filter customers by." region: ID "The sales person identifier to filter customers by." salesPerson: ID "The tier identifier to filter customers by." tier: ID where: CustomerFilterInput @cost(weight: "10")): CustomersConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves all date detail records.
+  
+  
+  **Returns:**
+  A collection of all date detail records.
+  """
+  dateDetails: [DateDetails!]! @cost(weight: "10")
+  """
+  Retrieves a date details record by its identifier.
+  
+  
+  **Returns:**
+  The date details record with the specified identifier, or null if not found.
+  """
+  dateDetailsById("The identifier of the date details record." id: ID!): DateDetails @cost(weight: "10")
+  """
+  Retrieves an enum lookup by its code.
+  
+  
+  **Returns:**
+  The enum lookup with the specified code, or null if not found.
+  """
+  enumLookupByCode("The code of the enum lookup." code: String!): EnumLookup @cost(weight: "10")
+  """
+  Retrieves an enum lookup by its identifier.
+  
+  
+  **Returns:**
+  The enum lookup with the specified identifier, or null if not found.
+  """
+  enumLookupById("The identifier of the enum lookup." id: ID!): EnumLookup @cost(weight: "10")
+  """
+  Retrieves all enum lookups.
+  
+  
+  **Returns:**
+  A collection of all enum lookups.
+  """
+  enumLookups: [EnumLookup!]! @cost(weight: "10")
+  """
+  Retrieves a gender by its code.
+  
+  
+  **Returns:**
+  The gender with the specified code, or null if not found.
+  """
+  genderByCode("The code of the gender." code: String!): Gender @cost(weight: "10")
+  """
+  Retrieves a gender by its identifier.
+  
+  
+  **Returns:**
+  The gender with the specified identifier, or null if not found.
+  """
+  genderById("The identifier of the gender." id: ID!): Gender @cost(weight: "10")
+  """
+  Retrieves all genders.
+  
+  
+  **Returns:**
+  A collection of all genders.
+  """
+  genders: [Gender!]! @cost(weight: "10")
+  """
+  Retrieves a job card by its unique identifier for the current customer context.
+  
+  
+  **Returns:**
+  A JobCard object representing the requested job card if found; otherwise, null.
+  """
+  jobCard("The unique identifier of the job card to retrieve." id: ID!): JobCard @cost(weight: "10")
+  """
+  Retrieves a job card asset by its unique identifier for the current customer context.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the job card asset if found; otherwise,
+  null.
+  """
+  jobCardAsset("The unique identifier of the job card asset to retrieve." id: ID!): JobCardAsset @cost(weight: "10")
+  """
+  Retrieves a job card based on the specified job card number.
+  
+  
+  **Returns:**
+  A JobCard object representing the job card if found; otherwise, null.
+  """
+  jobCardByJobCardNumber("The unique identifier of the job card to retrieve. This value cannot be null or empty." jobCardNumber: String!): JobCard @cost(weight: "10")
+  """
+  Retrieves a paginated and filtered list of job cards based on the specified criteria.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a Connection`1
+  representing the paginated list of job cards.
+  """
+  jobCards("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: JobCardFilterInput @cost(weight: "10")): JobCardsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a manufacturing region by its code.
+  
+  
+  **Returns:**
+  The manufacturing region with the specified code, or null if not found.
+  """
+  manufacturingRegionByCode("The code of the manufacturing region." code: String!): ManufacturingRegion @cost(weight: "10")
+  """
+  Retrieves a manufacturing region by its identifier.
+  
+  
+  **Returns:**
+  The manufacturing region with the specified identifier, or null if not found.
+  """
+  manufacturingRegionById("The identifier of the manufacturing region." id: ID!): ManufacturingRegion @cost(weight: "10")
+  """
+  Retrieves all manufacturing regions.
+  
+  
+  **Returns:**
+  A collection of all manufacturing regions.
+  """
+  manufacturingRegions: [ManufacturingRegion!]! @cost(weight: "10")
+  "Fetches an object given its ID."
+  node("ID of the object." id: ID!): Node @cost(weight: "10")
+  "Lookup nodes by a list of IDs."
+  nodes("The list of node IDs." ids: [ID!]!): [Node]! @cost(weight: "10")
+  """
+  Retrieves a payment term by its identifier.
+  
+  
+  **Returns:**
+  The payment term with the specified identifier, or null if not found.
+  """
+  paymentTermById("The identifier of the payment term." id: ID!): PaymentTerm @cost(weight: "10")
+  """
+  Retrieves a port by its code.
+  
+  
+  **Returns:**
+  The port with the specified code, or null if not found.
+  """
+  portByCode("The code of the port." code: String!): Port @cost(weight: "10")
+  """
+  Retrieves a port by its identifier.
+  
+  
+  **Returns:**
+  The port with the specified identifier, or null if not found.
+  """
+  portById("The identifier of the port." id: ID!): Port @cost(weight: "10")
+  """
+  Retrieves all ports.
+  
+  
+  **Returns:**
+  A collection of all ports.
+  """
+  ports: [Port!]! @cost(weight: "10")
+  """
+  Retrieves a product brand by its code.
+  
+  
+  **Returns:**
+  The product brand with the specified code, or null if not found.
+  """
+  productBrandByCode("The code of the product brand." code: String!): ProductBrand @cost(weight: "10")
+  """
+  Retrieves a product brand by its identifier.
+  
+  
+  **Returns:**
+  The product brand with the specified identifier, or null if not found.
+  """
+  productBrandById("The identifier of the product brand." id: ID!): ProductBrand @cost(weight: "10")
+  """
+  Retrieves all product brands.
+  
+  
+  **Returns:**
+  A collection of all product brands.
+  """
+  productBrands: [ProductBrand!]! @cost(weight: "10")
+  """
+  Retrieves a product by its identifier.
+  
+  
+  **Returns:**
+  The product with the specified identifier, or null if not found.
+  """
+  productById("The identifier of the product." id: ID!): Product @cost(weight: "10")
+  """
+  Retrieves a product by its sold-as code.
+  
+  
+  **Returns:**
+  The product with the specified sold-as code, or null if not found.
+  """
+  productBySoldAsCode("The sold-as code of the product." soldAsCode: String!): Product @cost(weight: "10")
+  """
+  Retrieves a product by its style code.
+  
+  
+  **Returns:**
+  The product with the specified style code, or null if not found.
+  """
+  productByStyleCode("The style code of the product." styleCode: String!): Product @cost(weight: "10")
+  """
+  Retrieves all product categories.
+  
+  
+  **Returns:**
+  A collection of all product categories.
+  """
+  productCategories: [ProductCategory!]! @cost(weight: "10")
+  """
+  Retrieves a product category by its code.
+  
+  
+  **Returns:**
+  The product category with the specified code, or null if not found.
+  """
+  productCategoryByCode("The code of the product category." code: String!): ProductCategory @cost(weight: "10")
+  """
+  Retrieves a product category by its identifier.
+  
+  
+  **Returns:**
+  The product category with the specified identifier, or null if not found.
+  """
+  productCategoryById("The identifier of the product category." id: ID!): ProductCategory @cost(weight: "10")
+  """
+  Retrieves a product class by its code.
+  
+  
+  **Returns:**
+  The product class with the specified code, or null if not found.
+  """
+  productClassByCode("The code of the product class." code: String!): ProductClass @cost(weight: "10")
+  """
+  Retrieves a product class by its identifier.
+  
+  
+  **Returns:**
+  The product class with the specified identifier, or null if not found.
+  """
+  productClassById("The identifier of the product class." id: ID!): ProductClass @cost(weight: "10")
+  """
+  Retrieves all product classes.
+  
+  
+  **Returns:**
+  A collection of all product classes.
+  """
+  productClasses: [ProductClass!]! @cost(weight: "10")
+  """
+  Retrieves a product division by its code.
+  
+  
+  **Returns:**
+  The product division with the specified code, or null if not found.
+  """
+  productDivisionByCode("The code of the product division." code: String!): ProductDivision @cost(weight: "10")
+  """
+  Retrieves a product division by its identifier.
+  
+  
+  **Returns:**
+  The product division with the specified identifier, or null if not found.
+  """
+  productDivisionById("The identifier of the product division." id: ID!): ProductDivision @cost(weight: "10")
+  """
+  Retrieves all product divisions.
+  
+  
+  **Returns:**
+  A collection of all product divisions.
+  """
+  productDivisions: [ProductDivision!]! @cost(weight: "10")
+  """
+  Retrieves a product item group by its code.
+  
+  
+  **Returns:**
+  The product item group with the specified code, or null if not found.
+  """
+  productItemGroupByCode("The code of the product item group." code: String!): ProductItemGroup @cost(weight: "10")
+  """
+  Retrieves a product item group by its identifier.
+  
+  
+  **Returns:**
+  The product item group with the specified identifier, or null if not found.
+  """
+  productItemGroupById("The identifier of the product item group." id: ID!): ProductItemGroup @cost(weight: "10")
+  """
+  Retrieves all product item groups.
+  
+  
+  **Returns:**
+  A collection of all product item groups.
+  """
+  productItemGroups: [ProductItemGroup!]! @cost(weight: "10")
+  """
+  Retrieves a paginated list of products, optionally filtered by product category, code or name.
+  
+  
+  **Returns:**
+  A paginated list of products.
+  """
+  products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int "The optional product category identifier to filter by." productCategory: ID where: ProductFilterInput @cost(weight: "10")): ProductsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a promotion by its code.
+  
+  
+  **Returns:**
+  The promotion with the specified code, or null if not found.
+  """
+  promotionByCode("The code of the promotion." code: String!): Promotion @cost(weight: "10")
+  """
+  Retrieves a promotion by its identifier.
+  
+  
+  **Returns:**
+  The promotion with the specified identifier, or null if not found.
+  """
+  promotionById("The identifier of the promotion." id: ID!): Promotion @cost(weight: "10")
+  """
+  Retrieves all promotions.
+  
+  
+  **Returns:**
+  A collection of all promotions.
+  """
+  promotions: [Promotion!]! @cost(weight: "10")
+  """
+  Retrieves a region by its code.
+  
+  
+  **Returns:**
+  The region with the specified code, or null if not found.
+  """
+  regionByCode("The code of the region." code: String!): Region @cost(weight: "10")
+  """
+  Retrieves a region by its identifier.
+  
+  
+  **Returns:**
+  The region with the specified identifier, or null if not found.
+  """
+  regionById("The identifier of the region." id: ID!): Region @cost(weight: "10")
+  """
+  Retrieves all regions.
+  
+  
+  **Returns:**
+  A collection of all regions.
+  """
+  regions: [Region!]! @cost(weight: "10")
+  """
+  Retrieves a sales channel by its code.
+  
+  
+  **Returns:**
+  The sales channel with the specified code, or null if not found.
+  """
+  salesChannelByCode("The code of the sales channel." code: String!): SalesChannel @cost(weight: "10")
+  """
+  Retrieves a sales channel by its identifier.
+  
+  
+  **Returns:**
+  The sales channel with the specified identifier, or null if not found.
+  """
+  salesChannelById("The identifier of the sales channel." id: ID!): SalesChannel @cost(weight: "10")
+  """
+  Retrieves all sales channels.
+  
+  
+  **Returns:**
+  A collection of all sales channels.
+  """
+  salesChannels: [SalesChannel!]! @cost(weight: "10")
+  """
+  Retrieves a sales history record by its identifier.
+  
+  
+  **Returns:**
+  The sales history record with the specified identifier, or null if not found.
+  """
+  salesHistoryById("The identifier of the sales history record." id: ID!): SalesHistory @cost(weight: "10")
+  """
+  Retrieves sales history for a product by its SKU.
+  
+  
+  **Returns:**
+  The sales history of the product with the specified sold-as code.
+  """
+  salesHistoryByProductSku("The SKU of the product." productSku: String!): SalesHistory @cost(weight: "10")
+  """
+  Retrieves sales history for a product by its sold-as code.
+  
+  
+  **Returns:**
+  The sales history of the product with the specified sold-as code.
+  """
+  salesHistoryByProductSoldAsCode("The sold-as code of the product." soldAsCode: String!): [SalesHistory!]! @cost(weight: "10")
+  """
+  Retrieves a sales order by its unique identifier.
+  
+  
+  **Returns:**
+  A SalesOrder object representing the sales order if found; otherwise, null.
+  """
+  salesOrder("The unique identifier of the sales order to retrieve." id: ID!): SalesOrder @cost(weight: "10")
+  """
+  Retrieves a sales order asset by its unique identifier for the current customer context.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the sales order asset if found;
+  otherwise, null.
+  """
+  salesOrderAsset("The unique identifier of the sales order asset to retrieve." id: ID!): SalesOrderAsset @cost(weight: "10")
+  """
+  Retrieves a sales order based on the specified customer reference.
+  
+  
+  **Returns:**
+  A SalesOrder object representing the sales order associated with the given customer reference, or
+  null if no matching order is found.
+  """
+  salesOrderByCustomerReference("The unique reference identifier for the customer. Cannot be null or empty." customerReference: String!): SalesOrder @cost(weight: "10")
+  """
+  Retrieves a sales order based on the specified invoice number.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the sales order associated with the
+  specified invoice number, or null if no matching sales order is found.
+  """
+  salesOrderByInvoiceNumber("The invoice number of the sales order to retrieve. Cannot be null or empty." invoiceNumber: String!): SalesOrder @cost(weight: "10")
+  """
+  Retrieves a sales order by its sales order number.
+  
+  
+  **Returns:**
+  A SalesOrder object representing the sales order, or null if the sales order is not
+  found.
+  """
+  salesOrderBySalesOrderNumber("The unique identifier for the sales order to retrieve." salesOrderNumber: String!): SalesOrder @cost(weight: "10")
+  """
+  Retrieves a paginated and filtered list of sales orders.
+  
+  
+  **Returns:**
+  A task representing the asynchronous operation, containing a connection object with the paginated sales orders.
+  """
+  salesOrders("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: SalesOrderFilterInput @cost(weight: "10")): SalesOrdersConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a sales person by their code.
+  
+  
+  **Returns:**
+  The sales person with the specified code, or null if not found.
+  """
+  salesPersonByCode("The code of the sales person." code: String!): SalesPerson @cost(weight: "10")
+  """
+  Retrieves a sales person by their ID.
+  
+  
+  **Returns:**
+  The sales person with the specified ID, or null if not found.
+  """
+  salesPersonById("The ID of the sales person." id: ID!): SalesPerson @cost(weight: "10")
+  """
+  Retrieves a paginated list of sales persons.
+  
+  
+  **Returns:**
+  A paginated list of sales persons.
+  """
+  salesPersons("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): SalesPersonsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a paginated list of sales persons by region.
+  
+  
+  **Returns:**
+  A paginated list of sales persons in the specified region.
+  """
+  salesPersonsByRegion("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int "The ID of the region." regionId: Int!): SalesPersonsByRegionConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a segment color by its code.
+  
+  
+  **Returns:**
+  The segment color with the specified code, or null if not found.
+  """
+  segmentColorByCode("The code of the segment color." code: String!): SegmentColor @cost(weight: "10")
+  """
+  Retrieves a segment color by its identifier.
+  
+  
+  **Returns:**
+  The segment color with the specified identifier, or null if not found.
+  """
+  segmentColorById("The identifier of the segment color." id: ID!): SegmentColor @cost(weight: "10")
+  """
+  Retrieves all segment colors.
+  
+  
+  **Returns:**
+  A collection of all segment colors.
+  """
+  segmentColors: [SegmentColor!]! @cost(weight: "10")
+  """
+  Retrieves a segment size by its code.
+  
+  
+  **Returns:**
+  The segment size with the specified code, or null if not found.
+  """
+  segmentSizeByCode("The code of the segment size." code: String!): SegmentSize @cost(weight: "10")
+  """
+  Retrieves a segment size by its identifier.
+  
+  
+  **Returns:**
+  The segment size with the specified identifier, or null if not found.
+  """
+  segmentSizeById("The identifier of the segment size." id: ID!): SegmentSize @cost(weight: "10")
+  """
+  Retrieves all segment sizes.
+  
+  
+  **Returns:**
+  A collection of all segment sizes.
+  """
+  segmentSizes: [SegmentSize!]! @cost(weight: "10")
+  """
+  Retrieves a size group by its code.
+  
+  
+  **Returns:**
+  The size group with the specified code, or null if not found.
+  """
+  sizeGroupByCode("The code of the size group." code: String!): SizeGroup @cost(weight: "10")
+  """
+  Retrieves a size group by its identifier.
+  
+  
+  **Returns:**
+  The size group with the specified identifier, or null if not found.
+  """
+  sizeGroupById("The identifier of the size group." id: ID!): SizeGroup @cost(weight: "10")
+  """
+  Retrieves all size groups.
+  
+  
+  **Returns:**
+  A collection of all size groups.
+  """
+  sizeGroups: [SizeGroup!]! @cost(weight: "10")
+  """
+  Retrieves a stock class by its code.
+  
+  
+  **Returns:**
+  The stock class with the specified code, or null if not found.
+  """
+  stockClassByCode("The code of the stock class." code: String!): StockClass @cost(weight: "10")
+  """
+  Retrieves a stock class by its identifier.
+  
+  
+  **Returns:**
+  The stock class with the specified identifier, or null if not found.
+  """
+  stockClassById("The identifier of the stock class." id: ID!): StockClass @cost(weight: "10")
+  """
+  Retrieves all stock classes.
+  
+  
+  **Returns:**
+  A collection of all stock classes.
+  """
+  stockClasss: [StockClass!]! @cost(weight: "10")
+  """
+  Gets the stock level by ID.
+  
+  
+  **Returns:**
+  The stock level.
+  """
+  stockLevelById("The stock level ID." id: ID!): StockLevel @cost(weight: "10")
+  """
+  Gets the stock level by item code.
+  
+  
+  **Returns:**
+  The stock level.
+  """
+  stockLevelByItemCode("The item code." itemCode: String!): StockLevel @cost(weight: "10")
+  """
+  Gets the stock level by SKU code.
+  
+  
+  **Returns:**
+  The stock level.
+  """
+  stockLevelBySkuCode("The SKU code." skuCode: String!): StockLevel @cost(weight: "10")
+  """
+  Gets the stock level by sold as and color code.
+  
+  
+  **Returns:**
+  The stock level.
+  """
+  stockLevelBySoldAsAndColorCode("The color segment code." colorSegmentCode: String! "The sold as code." soldAsCode: String!): StockLevel @cost(weight: "10")
+  """
+  Gets the stock level by sold as code.
+  
+  
+  **Returns:**
+  The stock level.
+  """
+  stockLevelBySoldAsCode("The sold as code." soldAsCode: String!): StockLevel @cost(weight: "10")
+  """
+  Gets the stock level by style and color code.
+  
+  
+  **Returns:**
+  The stock level.
+  """
+  stockLevelByStyleAndColorCode("The color segment code." colorSegmentCode: String! "The style code." styleCode: String!): StockLevel @cost(weight: "10")
+  """
+  Gets the stock level by style code.
+  
+  
+  **Returns:**
+  The stock level.
+  """
+  stockLevelByStyleCode("The style code." styleCode: String!): StockLevel @cost(weight: "10")
+  """
+  Gets the current index of stock level deltas.
+  
+  
+  **Returns:**
+  The stock level delta index.
+  """
+  stockLevelDeltaIndex: StockLevelDeltaIndex! @cost(weight: "10")
+  stockLevelIncomingDetails("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: StockItemLevelIncomingDetailFilterInput @cost(weight: "10")): StockLevelIncomingDetailsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Gets a paginated list of stock levels.
+  
+  
+  **Returns:**
+  A paginated list of stock levels.
+  """
+  stockLevels("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): StockLevelsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Gets a paginated list of stock levels that have changed since a given timestamp.
+  
+  
+  **Returns:**
+  A paginated list of stock levels that have changed.
+  """
+  stockLevelsDelta("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "The timestamp to filter changes from." fromTimestamp: Long! "Returns the last _n_ elements from the list." last: Int): StockLevelsDeltaConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a supplier by their code.
+  
+  
+  **Returns:**
+  The supplier with the specified code, or null if not found.
+  """
+  supplierByCode("The code of the supplier." code: String!): Supplier @cost(weight: "10")
+  """
+  Retrieves a supplier by their identifier.
+  
+  
+  **Returns:**
+  The supplier with the specified identifier, or null if not found.
+  """
+  supplierById("The identifier of the supplier." id: ID!): Supplier @cost(weight: "10")
+  """
+  Retrieves a supplier contact by their email.
+  
+  
+  **Returns:**
+  The supplier contact with the specified email, or null if not found.
+  """
+  supplierContactByEmail("The email of the supplier contact." email: String!): SupplierContact @cost(weight: "10")
+  """
+  Retrieves a supplier contact by their identifier.
+  
+  
+  **Returns:**
+  The supplier contact with the specified identifier, or null if not found.
+  """
+  supplierContactById("The identifier of the supplier contact." id: ID!): SupplierContact @cost(weight: "10")
+  """
+  Retrieves a paginated collection of suppliers.
+  
+  
+  **Returns:**
+  A paginated collection of suppliers.
+  """
+  suppliers("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: SupplierFilterInput @cost(weight: "10")): SuppliersConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves a tier by its identifier.
+  
+  
+  **Returns:**
+  The tier with the specified identifier, or null if not found.
+  """
+  tierById("The identifier of the tier." id: ID!): Tier @cost(weight: "10")
+  """
+  Retrieves a tier by its region code.
+  
+  
+  **Returns:**
+  The tier associated with the specified region code, or null if not found.
+  """
+  tierByRegion("The code of the region." code: String!): Tier @cost(weight: "10")
+  """
+  Retrieves all tiers.
+  
+  
+  **Returns:**
+  A collection of all tiers.
+  """
+  tiers: [Tier!]! @cost(weight: "10")
+  """
+  Retrieves tiers by their region identifier.
+  
+  
+  **Returns:**
+  A collection of tiers associated with the specified region identifier.
+  """
+  tiersByRegion("The identifier of the region." regionId: Int!): [Tier!]! @cost(weight: "10")
+  """
+  Retrieves tiers by their region code.
+  
+  
+  **Returns:**
+  A collection of tiers associated with the specified region code.
+  """
+  tiersByRegionCode("The code of the region." regionCode: String!): [Tier!]! @cost(weight: "10")
+  """
+  Retrieves a unit of measure by its code.
+  
+  
+  **Returns:**
+  The unit of measure with the specified code, or null if not found.
+  """
+  unitOfMeasureByCode("The code of the unit of measure." code: String!): UnitOfMeasure @cost(weight: "10")
+  """
+  Retrieves a unit of measure by its identifier.
+  
+  
+  **Returns:**
+  The unit of measure with the specified identifier, or null if not found.
+  """
+  unitOfMeasureById("The identifier of the unit of measure." id: ID!): UnitOfMeasure @cost(weight: "10")
+  """
+  Retrieves all units of measurement.
+  
+  
+  **Returns:**
+  A collection of all units of measurement.
+  """
+  unitsOfMeasurement: [UnitOfMeasure!]! @cost(weight: "10")
+  """
+  Retrieves a variant by its code.
+  
+  
+  **Returns:**
+  The variant with the specified code, or null if not found.
+  """
+  variantByCode("The code of the variant." code: String!): Variant @cost(weight: "10")
+  """
+  Retrieves a variant by its identifier.
+  
+  
+  **Returns:**
+  The variant with the specified identifier, or null if not found.
+  """
+  variantById("The identifier of the variant." id: ID!): Variant @cost(weight: "10")
+  """
+  Retrieves a variant by its SKU.
+  
+  
+  **Returns:**
+  The variant with the specified SKU, or null if not found.
+  """
+  variantBySku("The SKU of the variant." sku: String!): Variant @cost(weight: "10")
+  """
+  Retrieves a paginated and filterable list of product variants based on the specified criteria.
+  
+  
+  **Returns:**
+  A Connection`1 containing the paginated list of Variant objects that match the
+  specified criteria.
+  """
+  variants("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int """
+  The ID of the product category to filter variants by. Can be null to include variants from all
+              categories.
+  """ productCategory: ID """
+  An optional search query to filter variants by name or other attributes. Can be null to include
+              all variants.
+  """ query: String where: VariantFilterInput @cost(weight: "10")): VariantsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves XDP data for the specified identifier.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the XDP data as a model object, or null if no data is found for the specified identifier.
+  """
+  xdpData("The unique identifier of the XDP data to retrieve." id: ID!): XdpData @cost(weight: "10")
+  """
+  Retrieves a paginated and filterable collection of XDP data.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a Connection`1 of XdpData, representing the paginated and filtered XDP data.
+  """
+  xdpDatas("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: XdpDataFilterInput @cost(weight: "10")): XdpDatasConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  """
+  Retrieves an XDP transaction by its unique identifier.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the XDP transaction as an XdpTransaction object, or null if no transaction is found with the specified identifier.
+  """
+  xdpTransaction("The unique identifier of the XDP transaction to retrieve." id: ID!): XdpTransaction @cost(weight: "10")
+  """
+  Retrieves a paginated and filterable list of XDP transactions.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a connection object that includes the
+  paginated list of XDP transactions and associated metadata.
+  """
+  xdpTransactions("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: XdpTransactionFilterInput @cost(weight: "10")): XdpTransactionsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+}
+
+"Represents a region."
+type Region implements Node {
+  "The Accounts Company Code associated with the region."
+  accountsCompany: String!
+  "The checksum for change tracking."
+  checksum: String
+  "The region code."
+  code: String
+  "The creation date and time of the region."
+  created: DateTime!
+  "The currency associated with the region."
+  currency: Currency @cost(weight: "10")
+  "The unique identifier for the region."
+  id: ID!
+  "The region identifier."
+  internalId: Int!
+  "The last modified date and time of the region."
+  modified: DateTime!
+  "The region name."
+  name: String
+  "The sort index for the region."
+  sortIndex: Int!
+  "The source identifier for the region."
+  sourceIdentifier: String
+  "The tiers associated with the region."
+  tiers: [Tier!]! @cost(weight: "10")
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type RemoveStockItemLevelDetailPayload {
+  errors: [RemoveStockItemLevelDetailError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type RequestChangeJobCardPayload {
+  errors: [RequestChangeJobCardError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Payload type for success status of request."
+type ResultPayloadType {
+  result: ResultTypeStatus!
+}
+
+type RevokeAllSharesPayload {
+  errors: [RevokeAllSharesError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type RevokeSharedArtworkPayload {
+  errors: [RevokeSharedArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type RevokeSharedFolderPayload {
+  errors: [RevokeSharedFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a sales area style."
+type SalesArea {
+  "The checksum for change tracking."
+  checksum: String
+  "The name of the sales area."
+  code: String!
+  "The creation date and time of the sales area."
+  created: DateTime!
+  """
+  Gets the internal identifier of the sales area.
+  
+  
+  **Returns:**
+  The internal identifier of the sales area.
+  """
+  internalId: Int!
+  "The last modified date and time of the sales area."
+  modified: DateTime!
+  "The name of the sales area."
+  name: String!
+  "The region associated with the sales area."
+  region: Region @cost(weight: "10")
+  "The source identifier for the sales area."
+  sourceIdentifier: String
+  "The timestamp for the sales area."
+  timestamp: Long!
+}
+
+"Represents a sales channel."
+type SalesChannel implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The sales channel code."
+  code: String
+  "The creation date and time of the sales channel."
+  created: DateTime!
+  "The description of the sales channel."
+  description: String
+  "The unique identifier for the sales channel."
+  id: ID!
+  "The sales channel identifier."
+  internalId: Int!
+  "The last modified date and time of the sales channel."
+  modified: DateTime!
+  "The sales channel name."
+  name: String
+  "The sort index for the sales channel."
+  sortIndex: Int!
+  "The source identifier for the sales channel."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a sales history record."
+type SalesHistory implements Node {
+  id: ID!
+  "Gets the internal identifier of the sales history."
+  internalId: Int!
+  isTopSeller: Boolean!
+  modified: DateTime!
+  salesCurvePerc: Float
+  """
+  Gets the sales quantity for the last 12 months. Date-to-date
+  
+  
+  **Returns:**
+  The sales quantity for the last 12 months.
+  """
+  salesQuantity_12Months: Int!
+  """
+  Gets the sales quantity for the last 3 months. Date-to-date
+  
+  
+  **Returns:**
+  The sales quantity for the last 3 months.
+  """
+  salesQuantity_3Months: Int!
+  """
+  Gets the sales quantity for the last 4 months. Date-to-date
+  
+  
+  **Returns:**
+  The sales quantity for the last 4 months.
+  """
+  salesQuantity_4Months: Int!
+  """
+  Gets the sales quantity for the last 6 months. Date-to-date
+  
+  
+  **Returns:**
+  The sales quantity for the last 6 months.
+  """
+  salesQuantity_6Months: Int!
+  """
+  Gets the sales quantity for the last 8 months. Date-to-date
+  
+  
+  **Returns:**
+  The sales quantity for the last 8 months.
+  """
+  salesQuantity_8Months: Int!
+  salesQuantity_CVMIndex12: Int!
+  salesQuantity_CVMIndex3: Int!
+  salesQuantity_CVMIndex4: Int!
+  salesQuantity_CVMIndex6: Int!
+  salesQuantity_CVMIndex8: Int!
+  salesQuantity_MIndex0: Int!
+  salesQuantity_MIndex1: Int!
+  salesQuantity_MIndex10: Int!
+  salesQuantity_MIndex11: Int!
+  salesQuantity_MIndex12: Int!
+  salesQuantity_MIndex2: Int!
+  salesQuantity_MIndex3: Int!
+  salesQuantity_MIndex4: Int!
+  salesQuantity_MIndex5: Int!
+  salesQuantity_MIndex6: Int!
+  salesQuantity_MIndex7: Int!
+  salesQuantity_MIndex8: Int!
+  salesQuantity_MIndex9: Int!
+  salesQuantity_VMIndex0: Int!
+  salesQuantity_VMIndex1: Int!
+  salesQuantity_VMIndex10: Int!
+  salesQuantity_VMIndex11: Int!
+  salesQuantity_VMIndex12: Int!
+  salesQuantity_VMIndex2: Int!
+  salesQuantity_VMIndex3: Int!
+  salesQuantity_VMIndex4: Int!
+  salesQuantity_VMIndex5: Int!
+  salesQuantity_VMIndex6: Int!
+  salesQuantity_VMIndex7: Int!
+  salesQuantity_VMIndex8: Int!
+  salesQuantity_VMIndex9: Int!
+  salesQuantity_YIndex0: Int!
+  salesQuantity_YIndex1: Int!
+  salesQuantity_YIndex10: Int!
+  salesQuantity_YIndex11: Int!
+  salesQuantity_YIndex12: Int!
+  salesQuantity_YIndex2: Int!
+  salesQuantity_YIndex3: Int!
+  salesQuantity_YIndex4: Int!
+  salesQuantity_YIndex5: Int!
+  salesQuantity_YIndex6: Int!
+  salesQuantity_YIndex7: Int!
+  salesQuantity_YIndex8: Int!
+  salesQuantity_YIndex9: Int!
+  timestamp: Long!
+}
+
+"Represents a sales order."
+type SalesOrder implements Node {
+  """
+  Retrieves the collection of assets associated with the specified sales order.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of assets linked to the
+  sales order. The collection may be empty if no assets are associated.
+  """
+  assets(where: SalesOrderAssetFilterInput @cost(weight: "10")): [SalesOrderAsset]! @cost(weight: "10")
+  "The associated outstanding balance."
+  balanceOutstanding: Decimal!
+  "The branch associated with the sales order."
+  collectionBranch: Branch @cost(weight: "10")
+  "The contact associated with the sales order."
+  contact: CustomerContact @cost(weight: "10")
+  "The customer associated with the sales order."
+  customer: Customer @cost(weight: "10")
+  "The associated customer reference number."
+  customerReference: String!
+  "The delivery associated with the sales order."
+  deliveryDetail: SalesOrderDeliveryDetail @cost(weight: "10")
+  "The associated VAT exclusive discount."
+  discountExcl: Decimal!
+  "The identifier for the sales order."
+  id: ID!
+  "The internal lines associated with the sales order."
+  internalDetails: [SalesOrderInternalDetail]! @cost(weight: "10")
+  "The Sales order's  identifier."
+  internalId: Int!
+  "The associated internal line count."
+  internalLineCount: Int!
+  "The associated invoice date."
+  invoiceDate: DateTime
+  "The associated invoice number."
+  invoiceNumber: String
+  "The active status for the sales order."
+  isActive: Boolean!
+  "The paid status for the sales order."
+  isPaid: Boolean!
+  """
+  Retrieves the collection of job cards associated with the specified sales order.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of job cards linked to the
+  specified sales order. The collection will be empty if no job cards are found.
+  """
+  jobCards: [JobCard!]! @cost(weight: "10")
+  "The associated last modified date."
+  lastModifiedDate: DateTime!
+  "The associated line count for the sales order."
+  lineCount: Int!
+  "The associated order date."
+  orderDate: Date!
+  "The packaging associated with the sales order."
+  packaging: Packaging @cost(weight: "10")
+  "The associated packaging count for the sales order."
+  packagingCount: Int!
+  "The payment associated with the sales order."
+  paymentHistory: [SalesOrderPaymentHistory]! @cost(weight: "10")
+  "The lines associated with the sales order."
+  salesOrderDetails: [SalesOrderDetail]! @cost(weight: "10")
+  "The associated sales order number."
+  salesOrderNumber: String!
+  """
+  Retrieves the status of the specified sales order.
+  
+  
+  **Returns:**
+  The status of the sales order as a SalesOrderStatus. Returns Unknown
+  if the status ID cannot be resolved.
+  """
+  status: SalesOrderStatus! @cost(weight: "10")
+  "The associated tax amount."
+  tax: Decimal!
+  "The associated VAT exclusive total."
+  totalExcl: Decimal!
+}
+
+"Represents a sales order asset."
+type SalesOrderAsset implements Node {
+  "The unique id of the asset."
+  assetId: String!
+  "The created date for the asset."
+  created: DateTime!
+  "The unique identifier for the asset."
+  id: ID!
+  "The name for the asset."
+  name: String!
+  """
+  Retrieves the asset type for the specified sales order asset.
+  
+  
+  **Returns:**
+  A value of type SalesOrderAssetType representing the asset type. Returns Unknown if the type cannot be determined.
+  """
+  type: SalesOrderAssetType! @cost(weight: "10")
+  "The Url for the asset."
+  url: URL
+}
+
+"Represents a sales order delivery detail."
+type SalesOrderDeliveryDetail {
+  "The courier for sales order delivery detail."
+  courier: String
+  "The courier contact number for sales order delivery detail."
+  courierContactNumber: String
+  "The service for sales order delivery detail."
+  service: String!
+  "The total excluding VAT for sales order delivery detail."
+  totalExcl: Decimal!
+  "The waybill for sales order delivery detail."
+  waybill: String!
+  "The weight for sales order delivery detail."
+  weight: Float!
+  "The unit of measurement associated with the sales order delivery detail."
+  weightUnitOfMeasure: UnitOfMeasure @cost(weight: "10")
+}
+
+"Represents a sales order detail."
+type SalesOrderDetail {
+  "The tax amount for the sales order detail."
+  lineTax: Decimal!
+  "The line total excluding VAT for the sales order detail."
+  lineTotalExcl: Decimal!
+  "The quantity for the sales order detail."
+  quantity: Int!
+  "The row number for the sales order detail."
+  rowNumber: Int!
+  "The sku for the sales order detail."
+  sku: String!
+  "The unit discount excluding VAT for the sales order detail."
+  unitDiscountExcl: Decimal!
+  "The unit price excluding VAT for the sales order detail."
+  unitPriceExcl: Decimal!
+}
+
+"Represents a sales order internal detail."
+type SalesOrderInternalDetail {
+  "The tax amount for the sales order internal detail."
+  lineTax: Decimal!
+  "The line total excluding VAT for the sales order internal detail."
+  lineTotalExcl: Decimal!
+  "The quantity for the sales order internal detail."
+  quantity: Int!
+  "The row number for the sales order internal detail."
+  rowNumber: Int!
+  "The sku for the sales order internal detail."
+  sku: String!
+  "The unit discount excluding VAT for the sales order internal detail."
+  unitDiscountExcl: Decimal!
+  "The unit price excluding VAT for the sales order internal detail."
+  unitPriceExcl: Decimal!
+}
+
+"Represents a sales order payment history."
+type SalesOrderPaymentHistory {
+  "The amount for the sales order payment history."
+  amount: Decimal!
+  "The date for the sales order payment history."
+  date: DateTime!
+  "The payment type for the sales order payment history."
+  paymentType: PaymentType!
+}
+
+"A connection to a list of items."
+type SalesOrdersConnection {
+  "A list of edges."
+  edges: [SalesOrdersEdge!]
+  "A flattened list of the nodes."
+  nodes: [SalesOrder!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type SalesOrdersEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SalesOrder!
+}
+
+"Represents a sales person."
+type SalesPerson implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The sales person code."
+  code: String!
+  "The creation date and time of the sales person."
+  created: DateTime!
+  "The customers associated with the sales person."
+  customers("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): CustomersConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  "The sales person direct number."
+  directNumber: String
+  "The sales person first name."
+  firstname: String!
+  "The unique identifier for the sales person."
+  id: ID!
+  "The sales person identifier."
+  internalId: Int!
+  "The sales person last name."
+  lastname: String!
+  "The last modified date and time of the sales person."
+  modified: DateTime!
+  "The sales person primary email."
+  primaryEmail: String!
+  "The region associated with the sales person."
+  region: Region @cost(weight: "10")
+  "The sales person secondary email."
+  secondaryEmail: String
+  "The source identifier for the sales person."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"A connection to a list of items."
+type SalesPersonsByRegionConnection {
+  "A list of edges."
+  edges: [SalesPersonsByRegionEdge!]
+  "A flattened list of the nodes."
+  nodes: [SalesPerson!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type SalesPersonsByRegionEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SalesPerson!
+}
+
+"A connection to a list of items."
+type SalesPersonsConnection {
+  "A list of edges."
+  edges: [SalesPersonsEdge!]
+  "A flattened list of the nodes."
+  nodes: [SalesPerson!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type SalesPersonsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SalesPerson!
+}
+
+"Represents a segment color."
+type SegmentColor implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The segment color code."
+  code: String
+  "The creation date and time of the segment color."
+  created: DateTime!
+  "The unique identifier for the segment color."
+  id: ID!
+  "The URI of the segment color image."
+  imageUri: String
+  "The segment color identifier."
+  internalId: Int!
+  "The last modified date and time of the segment color."
+  modified: DateTime!
+  "The segment color name."
+  name: String
+  "The sort index for the segment color."
+  sortIndex: Int!
+  "The source identifier for the segment color."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The web color associated with the segment color."
+  webColor: WebColor @cost(weight: "10")
+}
+
+"Represents a segment size."
+type SegmentSize implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The segment size code."
+  code: String
+  "The creation date and time of the segment size."
+  created: DateTime!
+  "The unique identifier for the segment size."
+  id: ID!
+  "The segment size identifier."
+  internalId: Int!
+  "The last modified date and time of the segment size."
+  modified: DateTime!
+  "The segment size name."
+  name: String
+  "The size group associated with the segment size."
+  sizeGroup: SizeGroup @cost(weight: "10")
+  "The sort index for the segment size."
+  sortIndex: Int!
+  "The source identifier for the segment size."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The type associated with the segment size."
+  type: EnumLookup @cost(weight: "10")
+  "The unit of measure associated with the segment size."
+  unitOfMeasure: UnitOfMeasure @cost(weight: "10")
+}
+
+type ServerError implements Error {
+  errorType: OrderErrorType!
+  items: [String!]
+  message: String!
+  requestReference: String!
+}
+
+type ShareArtworkPayload {
+  errors: [ShareArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type ShareFolderPayload {
+  errors: [ShareFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents the permissions for a shared resource."
+type SharingSecurity {
+  "The resource access level."
+  access: SharingSecurityAccess!
+  "The customer contact that the resource is shared with."
+  contact: OwnerContact!
+  "The customer that the resource is shared with."
+  customer: OwnerCustomer!
+}
+
+"Represents a size group."
+type SizeGroup implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The size group code."
+  code: String
+  "The creation date and time of the size group."
+  created: DateTime!
+  "The unique identifier for the size group."
+  id: ID!
+  "The size group identifier."
+  internalId: Int!
+  "The last modified date and time of the size group."
+  modified: DateTime!
+  "The size group name."
+  name: String
+  "The sort index for the size group."
+  sortIndex: Int!
+  "The source identifier for the size group."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a stock class."
+type StockClass implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The stock class code."
+  code: String
+  "The creation date and time of the stock class."
+  created: DateTime!
+  "The unique identifier for the stock class."
+  id: ID!
+  "The stock class identifier."
+  internalId: Int!
+  "Indicates whether the stock class is continuing or not."
+  isContinuing: Boolean!
+  "The last modified date and time of the stock class."
+  modified: DateTime!
+  "The stock class name."
+  name: String
+  "The sort index for the stock class."
+  sortIndex: Int!
+  "The source identifier for the stock class."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents the stock level of a product."
+type StockIncomingLevel {
+  "Incoming Estimated Time of Arrival."
+  eta: Date!
+  "Incoming Stock Level."
+  incoming: Int!
+  "The last modified date and time of the incoming level."
+  modified: DateTime!
+}
+
+"Represents the internal incoming stock level of a product."
+type StockInternalIncomingLevel {
+  "Incoming Estimated Time of Arrival."
+  eta: Date!
+  "Incoming Stock Level."
+  incoming: Int!
+  "The last modified date and time of the incoming level."
+  modified: DateTime!
+}
+
+"Represents the stock level of a product."
+type StockLevel implements Node {
+  "The available stock quantity."
+  available: Int!
+  "The product variant Code."
+  code: String
+  "The unique identifier for the stock level."
+  id: ID!
+  """
+  Retrieves the incoming levels for the parent stock level.
+  
+  
+  **Returns:**
+  A List of Incoming Stock Levels.
+  """
+  incomingLevels: [StockIncomingLevel!]! @cost(weight: "10")
+  "The reserved stock quantity on incoming stock levels."
+  incomingReserved: Int!
+  "The stock level identifier."
+  internalId: Int!
+  """
+  Retrieves the internal incoming stock levels for the specified stock level.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of  StockIncomingLevel objects representing the internal incoming stock levels.
+  """
+  internalIncomingLevels: [StockInternalIncomingLevel!]! @cost(weight: "10")
+  "The inventory level of bonded stock."
+  inventoryBonded: Int!
+  "The inventory level of free stock."
+  inventoryFree: Int!
+  "The date and time when the stock level was last modified."
+  modified: DateTime!
+  "The reserved stock quantity."
+  reserved: Int!
+  "The product segmented color code."
+  segmentColorCode: String
+  "The product variant sku."
+  sku: String
+  "The product sold as code."
+  soldAsCode: String
+  "The source identifier."
+  sourceIdentifier: String!
+  "The stock level type code."
+  stockLevelType: StockLevelType!
+  "The product style code."
+  styleCode: String
+  "The timestamp of the stock level."
+  timestamp: Long!
+  """
+  Retrieves the level for all variants of the Parent product stock level.
+  
+  
+  **Returns:**
+  A List of Variant stock levels.
+  """
+  variants: [StockLevel!]! @cost(weight: "10")
+}
+
+"Represents a delta of changes in stock levels."
+type StockLevelDeltaIndex {
+  "The last modified date of the stock level."
+  modified: DateTime!
+  """
+  The timestamp of the latest change in stock level.
+  Use this in the next call to delta to get the latest changes.
+  """
+  timestamp: Long!
+}
+
+type StockLevelIncomingDetail {
+  eta: Date!
+  id: ID!
+  name: String!
+  quantity: Int!
+  reference: String!
+  sku: String!
+}
+
+"A connection to a list of items."
+type StockLevelIncomingDetailsConnection {
+  "A list of edges."
+  edges: [StockLevelIncomingDetailsEdge!]
+  "A flattened list of the nodes."
+  nodes: [StockLevelIncomingDetail!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type StockLevelIncomingDetailsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: StockLevelIncomingDetail!
+}
+
+"A connection to a list of items."
+type StockLevelsConnection {
+  "A list of edges."
+  edges: [StockLevelsEdge!]
+  "A flattened list of the nodes."
+  nodes: [StockLevel!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"A connection to a list of items."
+type StockLevelsDeltaConnection {
+  "A list of edges."
+  edges: [StockLevelsDeltaEdge!]
+  "A flattened list of the nodes."
+  nodes: [StockLevel!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type StockLevelsDeltaEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: StockLevel!
+}
+
+"An edge in a connection."
+type StockLevelsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: StockLevel!
+}
+
+"Represents a supplier."
+type Supplier implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The supplier code."
+  code: String!
+  "The contacts associated with the supplier."
+  contacts("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): ContactsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  "The creation date and time of the supplier."
+  created: DateTime!
+  "The supplier's trading currency."
+  currency: Currency @cost(weight: "10")
+  "The email address of the supplier."
+  email: String
+  "The unique identifier for the supplier."
+  id: ID!
+  "The supplier identifier."
+  internalId: Int!
+  "Indicates whether the supplier is local."
+  isLocal: Boolean!
+  "The last modified date and time of the supplier."
+  modified: DateTime!
+  "The supplier name."
+  name: String!
+  "The supplier phone number."
+  phone: String
+  "The preferences associated with the supplier."
+  preferences: [SupplierPreference!]! @cost(weight: "10")
+  "The source identifier for the supplier."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+  "The supplier website URL."
+  websiteUrl: String
+}
+
+"Represents a supplier contact."
+type SupplierContact implements Node {
+  "The creation date and time of the supplier contact."
+  created: DateTime!
+  "The supplier contact email address."
+  email: String
+  "The unique identifier for the supplier contact."
+  id: ID!
+  "The supplier contact identifier."
+  internalId: Int!
+  "The last modified date and time of the supplier contact."
+  modified: DateTime!
+  "The supplier contact name."
+  name: String
+  "The supplier contact phone number."
+  phone: String
+  "The source identifier for the supplier contact."
+  sourceIdentifier: String
+  "The supplier associated with the supplier contact."
+  supplier: Supplier @cost(weight: "10")
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents a supplier preference."
+type SupplierPreference {
+  "The creation date and time of the preference."
+  created: DateTime!
+  "The unique identifier for the preference."
+  id: Int!
+  "Specifies whether the preference is a default preference."
+  isDefault: Boolean!
+  "The minimum order quantity."
+  minimumOrderQuantity: Int
+  "The last modified date and time of the preference."
+  modified: DateTime!
+  "The source identifier for the preference."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"A connection to a list of items."
+type SuppliersConnection {
+  "A list of edges."
+  edges: [SuppliersEdge!]
+  "A flattened list of the nodes."
+  nodes: [Supplier!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type SuppliersEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Supplier!
+}
+
+type TagArtworkPayload {
+  errors: [TagArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a tier."
+type Tier implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The tier code."
+  code: String
+  "The creation date and time of the tier."
+  created: DateTime!
+  "The unique identifier for the tier."
+  id: ID!
+  "The tier identifier."
+  internalId: Int!
+  "The last modified date and time of the tier."
+  modified: DateTime!
+  "The tier name."
+  name: String
+  "The region associated with the tier."
+  region: Region @cost(weight: "10")
+  "The sort index for the tier."
+  sortIndex: Int!
+  "The source identifier for the tier."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"Represents an exception that is thrown when a request lacks valid authentication credentials."
+type UnauthorizedException implements Error {
+  "Gets or sets additional data associated with the object as key-value pairs."
+  additionalData: [KeyValuePairOfStringAndString!]
+  "Gets the error code associated with the exception."
+  code: Long!
+  "Gets the detailed error message associated with the current operation."
+  errorDetail: String
+  "Gets the error message associated with the exception."
+  message: String!
+}
+
+"Represents a unit of measure."
+type UnitOfMeasure implements Node {
+  "The checksum for change tracking."
+  checksum: String
+  "The unit of measure code."
+  code: String
+  "The creation date and time of the unit of measure."
+  created: DateTime!
+  "The unique identifier for the unit of measure."
+  id: ID!
+  "The unit of measure identifier."
+  internalId: Int!
+  "The last modified date and time of the unit of measure."
+  modified: DateTime!
+  "The unit of measure name."
+  name: String
+  "The number of decimal places for the unit of measure."
+  precision: Byte!
+  "The sort index for the unit of measure."
+  sortIndex: Int!
+  "The source identifier for the unit of measure."
+  sourceIdentifier: String
+  "The symbol representing the unit of measure."
+  symbol: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+type UpdateArtworkFolderPayload {
+  errors: [UpdateArtworkFolderError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type UpdateArtworkPayload {
+  errors: [UpdateArtworkError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type UpdateArtworkTagPayload {
+  errors: [UpdateArtworkTagError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type UpdateGlobalSharingPayload {
+  errors: [UpdateGlobalSharingError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type UpdateJobCardBrandingInfoPayload {
+  errors: [UpdateJobCardBrandingInfoError!]
+  resultPayloadType: ResultPayloadType
+}
+
+type UpdateXdpDataEntryPayload {
+  errors: [UpdateXdpDataEntryError!]
+  resultPayloadType: ResultPayloadType
+}
+
+"Represents a variant of a product style."
+type Variant implements Node {
+  "The code for the variant."
+  code: String!
+  """
+  Gets the cost associated with the variant.
+  
+  
+  **Returns:**
+  The cost associated with the variant, or null if not found.
+  """
+  cost: Cost @cost(weight: "10")
+  "The creation date and time of the variant."
+  created: DateTime!
+  """
+  Retrieves the default warehouse preferences for a given product variant.
+  
+  
+  **Returns:**
+  A VariantWarehousePreference object representing the warehouse preferences for the specified variant.
+  If no preferences are explicitly defined for the variant, a new instance with default values is returned.
+  """
+  defaultWarehousePreferences: VariantWarehousePreference @cost(weight: "10")
+  "The unique identifier for the variant."
+  id: ID!
+  """
+  Gets the internal identifier of the variant.
+  
+  
+  **Returns:**
+  The internal identifier of the variant.
+  """
+  internalId: Int!
+  "Gets or sets a value indicating whether the variant is active."
+  isActive: Boolean!
+  "Indication if the variant is continuing or not."
+  isContinuing: Boolean!
+  "Indicates whether the variant is new or not. New variants are those which have arrived for the first time in the last 365 days."
+  isNew: Boolean!
+  "Variant's first landed date at the Woodmead facility."
+  landedDate: Date
+  "The minimum order quantity for the variant."
+  minimumOrderQuantity: Int
+  "The last modified date and time of the variant."
+  modified: DateTime!
+  """
+  Gets the packaging associated with the variant.
+  
+  
+  **Returns:**
+  The packaging associated with the variant.
+  """
+  packaging: [Packaging!]! @cost(weight: "10")
+  """
+  Gets the packaging associated with the variant by packaging type.
+  
+  
+  **Returns:**
+  The packaging associated with the variant and type, or null if not found.
+  """
+  packagingByType("The type of packaging requested." packagingType: String!): Packaging @cost(weight: "10")
+  """
+  Gets the product associated with the variant.
+  
+  
+  **Returns:**
+  The product associated with the variant.
+  """
+  product: Product! @cost(weight: "10")
+  """
+  Gets the sales history associated with the variant.
+  
+  
+  **Returns:**
+  A collection of sales history associated with the variant.
+  """
+  salesHistory: SalesHistory @cost(weight: "10")
+  """
+  Gets the segment color associated with the variant.
+  
+  
+  **Returns:**
+  The segment color associated with the variant, or null if not found.
+  """
+  segmentColor: SegmentColor @cost(weight: "10")
+  """
+  Gets the segment size associated with the variant.
+  
+  
+  **Returns:**
+  The segment size associated with the variant, or null if not found.
+  """
+  segmentSize: SegmentSize @cost(weight: "10")
+  "The SKU (Stock Keeping Unit) for the variant."
+  sku: String!
+  "The source identifier for the variant."
+  sourceIdentifier: String
+  """
+  Gets the stock class of the product.
+  
+  
+  **Returns:**
+  The stock class of the variant.
+  """
+  stockClass: StockClass! @cost(weight: "10")
+  "The stock class identifier associated with the variant."
+  stockClassId: Int!
+  """
+  Gets the stock level associated with the variant.
+  
+  
+  **Returns:**
+  The stock level associated with the variant, or null if not found.
+  """
+  stockLevel: StockLevel @cost(weight: "10")
+  "The timestamp for the variant."
+  timestamp: Long!
+  """
+  Retrieves the warehouse preferences for a given product variant and division.
+  
+  
+  **Returns:**
+  A VariantWarehousePreference object containing the warehouse preferences for the specified variant
+  and division. If no preferences are found, a default preference object is returned.
+  """
+  warehousePreferences("The division code to use when retrieving preferences. If null or whitespace, a default value of \"Amrod\" is used." division: String!): VariantWarehousePreference @cost(weight: "10")
+}
+
+"Represents the warehouse preferences for a specific product variant."
+type VariantWarehousePreference {
+  "Gets or sets a value indicating whether the entity is active."
+  active: Boolean
+  "Gets or sets the name of the company associated with the entity."
+  company: String
+  "Gets or sets a value indicating whether the item is conveyorable."
+  isConveyorable: Boolean
+  "Gets or sets a value indicating whether the item is classified as dangerous goods."
+  isDangerousGoods: Boolean
+  "Gets or sets a value indicating whether the item is considered high value."
+  isHighValue: Boolean
+}
+
+"A connection to a list of items."
+type VariantsConnection {
+  "A list of edges."
+  edges: [VariantsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Variant!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type VariantsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Variant!
+}
+
+"Represents a web color."
+type WebColor {
+  "The checksum for change tracking."
+  checksum: String
+  "The web color code."
+  code: String
+  "The web color hexadecimal code."
+  colorHex: String
+  "The creation date and time of the web color."
+  created: DateTime!
+  "The unique identifier for the web color."
+  id: Int!
+  "The web color identifier."
+  internalId: Int!
+  "The last modified date and time of the web color."
+  modified: DateTime!
+  "The web color name."
+  name: String
+  "The sort index for the web color."
+  sortIndex: Int!
+  "The source identifier for the web color."
+  sourceIdentifier: String
+  "The timestamp for concurrency control."
+  timestamp: Long!
+}
+
+"""
+Represents data associated with an XDP (Ex Duty Paid) record, including details such as item code,
+quantities, and related identifiers.
+"""
+type XdpData implements Node {
+  "The unique identifier for the XdpData instance."
+  id: ID!
+  "The unique code that identifies the item."
+  itemCode: String!
+  "The line number associated with the current context."
+  lineNumber: Int!
+  "The Movement Reference Number (MRN)."
+  mrn: String!
+  "The purchase order number associated with the transaction."
+  poNumber: String
+  "The quantity of the item."
+  quantity: Float!
+  "The quantity of items that have been received."
+  receivedQuantity: Float!
+  "The quantity that has been used."
+  usedQuantity: Float!
+  """
+  Retrieves a paginated and filterable list of XDP transactions associated with the specified XDP data.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a Connection`1 of XdpTransaction objects, representing the paginated and filterable list of transactions.
+  """
+  xdpTransactions("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: XdpTransactionFilterInput @cost(weight: "10")): XdpTransactionsConnection @listSize(assumedSize: 1000, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+}
+
+"A connection to a list of items."
+type XdpDatasConnection {
+  "A list of edges."
+  edges: [XdpDatasEdge!]
+  "A flattened list of the nodes."
+  nodes: [XdpData!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type XdpDatasEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: XdpData!
+}
+
+"Represents a transaction in the XDP (Ex Duty Paid) system, containing details such as type, quantity, and processing status."
+type XdpTransaction implements Node {
+  "The date and time when the transaction was created."
+  created: DateTime!
+  flags: Int!
+  "The unique identifier for the transaction."
+  id: ID!
+  "A value indicating whether the confirmation process was successful."
+  isConfirmSuccess: Boolean!
+  "The launch number associated with the operation."
+  launchNum: String
+  "The quantity associated with the transaction."
+  quantity: Float!
+  "The reason associated with the current operation or state."
+  reason: String!
+  sequence: Int
+  "The type of the transaction."
+  type: XdpTransactionType!
+  """
+  Retrieves XDP data associated with the specified transaction.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the XDP data as an XdpData object, or null if no data is found.
+  """
+  xdpData: XdpData @cost(weight: "10")
+  "The date and time when the XDP process was completed. Null if the process has not been completed yet."
+  xdpProcessedDate: DateTime
+}
+
+"A connection to a list of items."
+type XdpTransactionsConnection {
+  "A list of edges."
+  edges: [XdpTransactionsEdge!]
+  "A flattened list of the nodes."
+  nodes: [XdpTransaction!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type XdpTransactionsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: XdpTransaction!
+}
+
+union ApproveJobCardError = ConflictException
+
+union ClearCacheError = NotFoundException
+
+union CommitArtworkError = BadRequestException | UnauthorizedException | NotFoundException | ConflictException | InputValidationException
+
+union CreateArtworkError = InputValidationException | BadRequestException | UnauthorizedException | ConflictException
+
+union CreateArtworkFolderError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union CreateArtworkTagError = InputValidationException | BadRequestException | UnauthorizedException | ConflictException
+
+union CreateXdpDataEntryError = ConflictException | BadRequestException
+
+union DeleteArtworkError = BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union DeleteArtworkFolderError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException
+
+union DeleteArtworkTagError = BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union DeleteXdpDataEntryError = ConflictException | BadRequestException
+
+union DisablesGlobalSharingError = UnauthorizedException | NotFoundException | ConflictException
+
+union EnableGlobalSharingError = UnauthorizedException | NotFoundException | ConflictException
+
+union MoveArtworkFolderError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union MoveArtworkToFolderError = BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union PlaceOrderError = InputValidationException | BadRequestException | ConflictException | ServerError
+
+union ProcessXdpTransactionError = ConflictException | BadRequestException
+
+union RemoveStockItemLevelDetailError = NotFoundException
+
+union RequestChangeJobCardError = ConflictException
+
+union RevokeAllSharesError = BadRequestException | UnauthorizedException | NotFoundException
+
+union RevokeSharedArtworkError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException
+
+union RevokeSharedFolderError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException
+
+union ShareArtworkError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException
+
+union ShareFolderError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException
+
+union TagArtworkError = BadRequestException | UnauthorizedException | NotFoundException | ConflictException | InputValidationException
+
+union UpdateArtworkError = BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union UpdateArtworkFolderError = InputValidationException | BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union UpdateArtworkTagError = BadRequestException | UnauthorizedException | NotFoundException | ConflictException
+
+union UpdateGlobalSharingError = UnauthorizedException | NotFoundException | ConflictException
+
+union UpdateJobCardBrandingInfoError = ConflictException
+
+union UpdateXdpDataEntryError = ConflictException | BadRequestException
+
+"""
+Represents the input required to approve a job card, including details about the job card and its layout
+configuration.
+"""
+input ApproveJobCardInput {
+  "This is the unique JobCard number of the job card to be approved."
+  jobCardNumber: String!
+  "This is the ID of the job card layout to be used for printing."
+  layoutId: ID!
+  "This is the option number of the job card layout to be used for printing."
+  layoutOptionNumber: Int!
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean @cost(weight: "10")
+  neq: Boolean @cost(weight: "10")
+}
+
+"Represents the details of a branding color associated with an order, including its type and color code."
+input BrandingColorDetailInput {
+  "The color code for the branding, represented as a string. This could be a hex code or any other format"
+  code: String!
+  "The type of branding color, which indicates the purpose or category of the color used in the order branding."
+  type: OrderBrandingColorType!
+}
+
+"""
+Represents the detailed branding information for an order group, including specifications for branding position,
+logos, colors, and additional metadata.
+"""
+input BrandingDetailInput {
+  "The branding code that identifies the specific branding to be used for the order group."
+  brandingCode: String!
+  """
+  The colors associated with the branding, represented as a list of BrandingColorDetail instances.
+  The number of colors supplied must match according to the branding specification.
+  """
+  colors: [BrandingColorDetailInput!]
+  "The logo position placement within the branding, indicating where the logo should be positioned relative to the branding elements."
+  logoPosition: OrderBrandingLogoPositionType!
+  "The list of logos ids, from the Logo Library, that are to be used in the branding."
+  logos: [ID!]
+  "The size of the logo to be used in the branding, specified in millimeters."
+  logoSize: Float!
+  "The size type of the logo, which indicates if the LogoSize supplied is the Width or Height."
+  logoSizeType: OrderBrandingLogoSizeType!
+  """
+  The metadata associated with the branding, which may include additional information or attributes related to the branding.
+  Example metadata could include details about the branding job, such as the foil color for the Foiling branding process.
+  """
+  metadata: [BrandingMetadataInput!]
+  """
+  The packing instructions for the order group, which may include details on how the items should be packed or handled.
+  For internal use only, as it is not used in the branding specification.
+  """
+  packingInstructions: String
+  "The branding position code according to the branding specification, which indicates where the branding should be applied."
+  position: String!
+  "The reference identifier for the branding job."
+  reference: String!
+  "The repeat branding details, which may include information on how the branding should be repeated or applied across multiple items."
+  repeat: BrandingRepeatDetailInput
+  "The special instructions for the branding, which may include specific requirements or notes related to the branding."
+  specialInstructions: String
+}
+
+"Represents metadata associated with order branding, consisting of a key-value pair."
+input BrandingMetadataInput {
+  "The key for the metadata entry, which identifies the type of information stored."
+  key: String!
+  "The value associated with the key, which contains the actual data or information."
+  value: String
+}
+
+"Represents the details of a repeat order branding, including its type and reference information."
+input BrandingRepeatDetailInput {
+  "The reference identifier for the repeat branding, which may correspond to a previous job instance."
+  reference: String!
+  "Indicates the type of repeat branding for the order, such as a logo or exact match."
+  type: JobCardRepeatType!
+}
+
+input ByteOperationFilterInput {
+  eq: Byte @cost(weight: "10")
+  neq: Byte @cost(weight: "10")
+  in: [Byte] @cost(weight: "10")
+  nin: [Byte] @cost(weight: "10")
+  gt: Byte @cost(weight: "10")
+  ngt: Byte @cost(weight: "10")
+  gte: Byte @cost(weight: "10")
+  ngte: Byte @cost(weight: "10")
+  lt: Byte @cost(weight: "10")
+  nlt: Byte @cost(weight: "10")
+  lte: Byte @cost(weight: "10")
+  nlte: Byte @cost(weight: "10")
+}
+
+input ClearCacheInput {
+  "The name of the cache store to clear. This must correspond to a valid cache store managed by the application."
+  cacheStore: String!
+}
+
+"Input type for committing a new artwork."
+input CommitArtworkInput {
+  "The identifier of the artwork."
+  id: ID!
+  "Gets the collection of tag identifiers associated with the entity."
+  tagIds: [ID]
+}
+
+input ContactFilterInput {
+  and: [ContactFilterInput!]
+  or: [ContactFilterInput!]
+  firstName: ProductStringOperationFilterInput
+  lastName: ProductStringOperationFilterInput
+  emailAddress: ProductStringOperationFilterInput
+  fullName: ProductStringOperationFilterInput
+}
+
+"Input type for creating a new folder."
+input CreateArtworkFolderInput {
+  "The name of the folder."
+  name: String!
+  "The parent folder identifier, if one exists."
+  parentId: ID
+}
+
+"Input type for creating a new artwork."
+input CreateArtworkInput {
+  "The description of the artwork."
+  description: String
+  "The extension of the artwork."
+  extension: String!
+  "The Folder of the artwork."
+  folder: ID
+  "The mime type of the artwork."
+  mimeType: String!
+  "The name of the artwork."
+  name: String!
+  "The Type Identifier of the artwork."
+  type: ArtworkType!
+}
+
+"Input type for creating a new artwork tag."
+input CreateArtworkTagInput {
+  """
+  The color of the artwork tag in hex format (e.g., "FF5733").
+  NOTE: The '#' is not required
+  """
+  color: String!
+  "The name of the artwork tag."
+  name: String!
+}
+
+"Represents the input data required to create an XDP data entry."
+input CreateXdpDataEntryInput {
+  "The unique code identifying the item. This value cannot be null or empty."
+  itemCode: String!
+  "The line number within the MRN that corresponds to the item. Must be a non-negative integer."
+  mrnLineNumber: Int!
+  "The material receipt note (MRN) number associated with the item. This value cannot be null or empty."
+  mrnNumber: String!
+  "The purchase order number associated with the item. This value is optional and can be null."
+  poNumber: String
+  "The quantity of the item to be recorded. Must be a positive value."
+  quantity: Float!
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input CreditNoteDateRangeOperationFilterInput {
+  and: [CreditNoteDateRangeOperationFilterInput!]
+  or: [CreditNoteDateRangeOperationFilterInput!]
+  gt: DateTime @cost(weight: "10")
+  gte: DateTime @cost(weight: "10")
+  lt: DateTime @cost(weight: "10")
+  lte: DateTime @cost(weight: "10")
+}
+
+input CreditNoteFilterInput {
+  and: [CreditNoteFilterInput!]
+  or: [CreditNoteFilterInput!]
+  creditNoteNumber: CreditNoteStringOperationFilterInput
+  creditNoteDate: CreditNoteDateRangeOperationFilterInput
+  SalesOrder: SalesOrderFilterInput
+}
+
+"Restricts the filter operations available when filtering credit notes."
+input CreditNoteStringOperationFilterInput {
+  and: [CreditNoteStringOperationFilterInput!]
+  or: [CreditNoteStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input CustomerFilterInput {
+  and: [CustomerFilterInput!]
+  or: [CustomerFilterInput!]
+  code: ProductStringOperationFilterInput
+  name: ProductStringOperationFilterInput
+}
+
+input DateTimeOperationFilterInput {
+  eq: DateTime @cost(weight: "10")
+  neq: DateTime @cost(weight: "10")
+  in: [DateTime] @cost(weight: "10")
+  nin: [DateTime] @cost(weight: "10")
+  gt: DateTime @cost(weight: "10")
+  ngt: DateTime @cost(weight: "10")
+  gte: DateTime @cost(weight: "10")
+  ngte: DateTime @cost(weight: "10")
+  lt: DateTime @cost(weight: "10")
+  nlt: DateTime @cost(weight: "10")
+  lte: DateTime @cost(weight: "10")
+  nlte: DateTime @cost(weight: "10")
+}
+
+"Input type for renaming a folder."
+input DeleteArtworkFolderInput {
+  "The identifier of the folder."
+  id: ID!
+}
+
+"Input type for deleting an artwork object."
+input DeleteArtworkInput {
+  "The identifier of the artwork."
+  id: ID!
+}
+
+"Input type for deleting an artwork tag."
+input DeleteArtworkTagInput {
+  "Gets or sets a value indicating whether the operation should be forcibly executed."
+  force: Boolean
+  "The identifier of the artwork tag."
+  id: ID!
+}
+
+"Represents the input required to delete an XDP data entry."
+input DeleteXdpDataEntryInput {
+  "The unique identifier for an XdpData entry."
+  xdpDataEntryId: ID!
+}
+
+"Input type to enable global sharing."
+input EnableGlobalSharingInput {
+  "The value to see if sharing needs to be force enabled."
+  forceEnable: Boolean
+  "The securityType for the global sharing record."
+  securityType: SecurityType!
+}
+
+input FloatOperationFilterInput {
+  eq: Float @cost(weight: "10")
+  neq: Float @cost(weight: "10")
+  in: [Float] @cost(weight: "10")
+  nin: [Float] @cost(weight: "10")
+  gt: Float @cost(weight: "10")
+  ngt: Float @cost(weight: "10")
+  gte: Float @cost(weight: "10")
+  ngte: Float @cost(weight: "10")
+  lt: Float @cost(weight: "10")
+  nlt: Float @cost(weight: "10")
+  lte: Float @cost(weight: "10")
+  nlte: Float @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input GatewayBoolOperationFilterInput {
+  and: [GatewayBoolOperationFilterInput!]
+  or: [GatewayBoolOperationFilterInput!]
+  eq: Boolean @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input GatewayDateOperationFilterInput {
+  and: [GatewayDateOperationFilterInput!]
+  or: [GatewayDateOperationFilterInput!]
+  eq: Date @cost(weight: "10")
+  lt: Date @cost(weight: "10")
+  gt: Date @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input GatewayStringOperationFilterInput {
+  and: [GatewayStringOperationFilterInput!]
+  or: [GatewayStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input HistoryFilterInput {
+  and: [HistoryFilterInput!]
+  or: [HistoryFilterInput!]
+  isTopSeller: BooleanOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input IncomingStringOperationFilterInput {
+  and: [IncomingStringOperationFilterInput!]
+  or: [IncomingStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input IntOperationFilterInput {
+  eq: Int @cost(weight: "10")
+  neq: Int @cost(weight: "10")
+  in: [Int] @cost(weight: "10")
+  nin: [Int] @cost(weight: "10")
+  gt: Int @cost(weight: "10")
+  ngt: Int @cost(weight: "10")
+  gte: Int @cost(weight: "10")
+  ngte: Int @cost(weight: "10")
+  lt: Int @cost(weight: "10")
+  nlt: Int @cost(weight: "10")
+  lte: Int @cost(weight: "10")
+  nlte: Int @cost(weight: "10")
+}
+
+"Represents a request to change a job card, including the job card number and associated branding details."
+input JobCardBrandingDetailInput {
+  "The branding detail for the job card change request, which includes all necessary information for applying branding to the job card."
+  brandingDetail: BrandingDetailInput!
+  "The job card number that is being changed, which uniquely identifies the job card within the system."
+  jobCardNumber: String!
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input JobCardDateTimeOperationFilterInput {
+  and: [JobCardDateTimeOperationFilterInput!]
+  or: [JobCardDateTimeOperationFilterInput!]
+  gte: DateTime @cost(weight: "10")
+  lte: DateTime @cost(weight: "10")
+}
+
+input JobCardFilterInput {
+  and: [JobCardFilterInput!]
+  or: [JobCardFilterInput!]
+  SalesOrder: SalesOrderFilterInput
+  JobCardNumber: JobCardStringOperationFilterInput
+  Status: JobCardStatusEnumOperationFilterInput
+  isActive: GatewayBoolOperationFilterInput
+  created: JobCardDateTimeOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input JobCardStatusEnumOperationFilterInput {
+  and: [JobCardStatusEnumOperationFilterInput!]
+  or: [JobCardStatusEnumOperationFilterInput!]
+  eq: JobCardStatus @cost(weight: "10")
+  neq: JobCardStatus @cost(weight: "10")
+  in: [JobCardStatus] @cost(weight: "10")
+  nin: [JobCardStatus] @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input JobCardStringOperationFilterInput {
+  and: [JobCardStringOperationFilterInput!]
+  or: [JobCardStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input ListByteOperationFilterInput {
+  all: ByteOperationFilterInput @cost(weight: "10")
+  none: ByteOperationFilterInput @cost(weight: "10")
+  some: ByteOperationFilterInput @cost(weight: "10")
+  any: Boolean @cost(weight: "10")
+}
+
+input ListFilterInputTypeOfProductClassFilterInput {
+  all: ProductClassFilterInput @cost(weight: "10")
+  none: ProductClassFilterInput @cost(weight: "10")
+  some: ProductClassFilterInput @cost(weight: "10")
+  any: Boolean @cost(weight: "10")
+}
+
+input ListFilterInputTypeOfProductFilterInput {
+  all: ProductFilterInput @cost(weight: "10")
+  none: ProductFilterInput @cost(weight: "10")
+  some: ProductFilterInput @cost(weight: "10")
+  any: Boolean @cost(weight: "10")
+}
+
+"Input type for moving a folder."
+input MoveArtworkFolderInput {
+  "The identifier of the folder."
+  folderId: ID!
+  "The new parent folder identifier."
+  parentId: ID!
+}
+
+"Input type for committing a new artwork."
+input MoveArtworkToFolderInput {
+  "The identifier of the artwork."
+  artworkId: ID!
+  "Gets the collection of tag identifiers associated with the entity."
+  folderId: ID!
+}
+
+"Represents detailed information about an order collection, including the associated branch code."
+input OrderCollectionDetailInput {
+  "Represents the code of the collection branch associated with the order."
+  branchCode: String
+  "Represents the type of collection for the order, indicating where and how the order will be collected."
+  collectionType: OrderCollectionType!
+}
+
+"""
+Represents the contact details associated with an order, including optional notification and branded order contact
+information.
+"""
+input OrderContactDetailInput {
+  "The contact information for a branded logo24 order, which may include details such as name, email, and phone number."
+  logo24: OrderContactInput
+  "The primary contact for the order, which may include details such as name, email, and phone number."
+  notifications: OrderContactNotificationDetailInput!
+}
+
+"Represents the contact information associated with an order."
+input OrderContactInput {
+  "The contact number of the contact person for the order."
+  contactNumber: String
+  "The email address of the contact person for the order."
+  email: String!
+  "The first name of the contact person for the order."
+  firstName: String!
+  "The last name of the contact person for the order."
+  lastName: String!
+}
+
+"""
+Represents the details of notification contacts for an order, including the primary order contact and the branding
+contact.
+"""
+input OrderContactNotificationDetailInput {
+  "The contact who will receive notifications about the branding associated with the order."
+  branding: OrderContactInput
+  "The contact who will receive notifications about the order."
+  order: OrderContactInput!
+}
+
+"""
+Represents the details of an order group, including its unique identifier, associated items, and optional branding
+information.
+"""
+input OrderGroupDetailInput {
+  "The branding details associated with the order group, which may include logos, repeat branding, and other metadata."
+  branding: [BrandingDetailInput!]
+  """
+  The unique identifier for the order group, which is used to match the response to the request.
+  The has no special meaning other than to ensure that the response can be matched to the request.
+  """
+  id: String!
+  "The items included in the order group, each represented by an instance of OrderGroupItemDetail."
+  items: [OrderGroupItemDetailInput!]!
+}
+
+"""
+Represents the details of an item within an order group, including its SKU, quantity, and optional price
+information.
+"""
+input OrderGroupItemDetailInput {
+  """
+  The price of the item, which is the cost per unit of the SKU.
+  Optional, as it will only be used to generate warnings if the price input differed from the expected price.
+  """
+  price: Float
+  "The unit quantity of the item, representing how many units of the SKU are included in the order."
+  quantity: Long!
+  "The SKU (Stock Keeping Unit) identifier for the item, which is used to uniquely identify the product."
+  sku: String!
+}
+
+"Represents configuration options for processing an order."
+input OrderOptionsInput {
+  "Indicates if Inclusive Branding should be applied to the order."
+  applyInclusiveBranding: Boolean
+  "Indicates the type of order to process."
+  orderType: OrderType!
+  "Indicates if the order should be processed or just validated."
+  validateOnly: Boolean!
+}
+
+"Represents the input data required to create or process an order."
+input PlaceOrderInput {
+  "The collection detail for the order, which includes information about the collection point."
+  collection: OrderCollectionDetailInput!
+  "The primary contact for the order, which includes details such as contact email and name."
+  contact: OrderContactDetailInput!
+  "The order detail content, including products and their branding details."
+  details: [OrderGroupDetailInput!]!
+  "The options to control the processing of the order, such as whether to validate or process the order immediately."
+  options: OrderOptionsInput!
+  "The unique identifier for the order, which is used to tie the requested order to the processed order."
+  orderNumber: String!
+}
+
+"Represents the input required to process an XDP transaction."
+input ProcessXdpTransactionInput {
+  "The unique identifier of the XDP transaction to be processed. Must be a positive value."
+  xdpTransactionId: ID!
+}
+
+input ProductClassFilterInput {
+  and: [ProductClassFilterInput!]
+  or: [ProductClassFilterInput!]
+  id: IntOperationFilterInput
+  sourceIdentifier: StringOperationFilterInput
+  timestamp: ListByteOperationFilterInput
+  created: DateTimeOperationFilterInput
+  modified: DateTimeOperationFilterInput
+  code: StringOperationFilterInput
+  name: StringOperationFilterInput
+  sortIndex: IntOperationFilterInput
+  parent: IntOperationFilterInput
+  checksum: ListByteOperationFilterInput
+  inverseParentNavigation: ListFilterInputTypeOfProductClassFilterInput
+  parentNavigation: ProductClassFilterInput
+  products: ListFilterInputTypeOfProductFilterInput
+}
+
+input ProductFilterInput {
+  and: [ProductFilterInput!]
+  or: [ProductFilterInput!]
+  soldAsStyleCode: ProductStringOperationFilterInput
+  styleCode: ProductStringOperationFilterInput
+  name: ProductStringOperationFilterInput
+  ProductClass: ProductClassFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input ProductStringOperationFilterInput {
+  and: [ProductStringOperationFilterInput!]
+  or: [ProductStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input RemoveStockItemLevelDetailInput {
+  "The unique identifier of the stock item level detail to remove."
+  id: ID!
+}
+
+"Represents the input data required to request a change to a job card."
+input RequestChangeJobCardInput {
+  "The type of change request being made for the job card."
+  changeRequestType: JobCardChangeRequestType!
+  "The list of job card change requests, each containing the job card number and associated branding details."
+  jobCards: [JobCardBrandingDetailInput!]!
+  "The order number associated with the change request."
+  salesOrderNumber: String!
+}
+
+"Input type for sharing of a artwork."
+input RevokeSharedArtworkInput {
+  "The Identifier of the artwork object."
+  artworkId: ID!
+}
+
+"Input type for sharing of a Folder."
+input RevokeSharedFolderInput {
+  "The Identifier of the Folder object."
+  folderId: ID!
+}
+
+input SalesOrderAssetFilterInput {
+  and: [SalesOrderAssetFilterInput!]
+  or: [SalesOrderAssetFilterInput!]
+  name: GatewayStringOperationFilterInput
+  Type: SalesOrderAssetTypeEnumOperationFilterInput
+}
+
+"""
+Represents a filter input type for performing filter operations on the SalesOrderAssetType enumeration in GraphQL
+queries.
+"""
+input SalesOrderAssetTypeEnumOperationFilterInput {
+  and: [SalesOrderAssetTypeEnumOperationFilterInput!]
+  or: [SalesOrderAssetTypeEnumOperationFilterInput!]
+  eq: SalesOrderAssetType @cost(weight: "10")
+  neq: SalesOrderAssetType @cost(weight: "10")
+  in: [SalesOrderAssetType] @cost(weight: "10")
+  nin: [SalesOrderAssetType] @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input SalesOrderBoolOperationFilterInput {
+  and: [SalesOrderBoolOperationFilterInput!]
+  or: [SalesOrderBoolOperationFilterInput!]
+  eq: Boolean @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input SalesOrderDateTimeOperationFilterInput {
+  and: [SalesOrderDateTimeOperationFilterInput!]
+  or: [SalesOrderDateTimeOperationFilterInput!]
+  gte: DateTime @cost(weight: "10")
+  lte: DateTime @cost(weight: "10")
+}
+
+input SalesOrderFilterInput {
+  and: [SalesOrderFilterInput!]
+  or: [SalesOrderFilterInput!]
+  salesOrderNumber: SalesOrderStringOperationFilterInput
+  InvoiceNumber: SalesOrderStringOperationFilterInput
+  CustomerReference: SalesOrderStringOperationFilterInput
+  isActive: SalesOrderBoolOperationFilterInput
+  Status: SalesOrderStatusEnumOperationFilterInput
+  orderDate: SalesOrderDateTimeOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input SalesOrderStatusEnumOperationFilterInput {
+  and: [SalesOrderStatusEnumOperationFilterInput!]
+  or: [SalesOrderStatusEnumOperationFilterInput!]
+  eq: SalesOrderStatus @cost(weight: "10")
+  neq: SalesOrderStatus @cost(weight: "10")
+  in: [SalesOrderStatus] @cost(weight: "10")
+  nin: [SalesOrderStatus] @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input SalesOrderStringOperationFilterInput {
+  and: [SalesOrderStringOperationFilterInput!]
+  or: [SalesOrderStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+"Input type for sharing of a artwork."
+input ShareArtworkInput {
+  "The Identifier of the artwork object."
+  artworkId: ID!
+  "List of Contact Ids to removed share access."
+  contactIdsRevoke: [UUID!]!
+  "List of Contact Ids to share with."
+  contactIdsShare: [UUID!]!
+  "List of Customer Codes to remove share access."
+  customerCodesRevoke: [String!]!
+  "List of Customer Code to share with."
+  customerCodesShare: [String!]!
+  "The Access  granted to the shared artwork."
+  sharedAccess: SecurityType
+}
+
+"Input type for sharing of a Folder."
+input ShareFolderInput {
+  "List of Contact Ids to removed share access."
+  contactIdsRevoke: [UUID!]!
+  "List of Contact Ids to share with."
+  contactIdsShare: [UUID!]!
+  "List of Customer Codes to remove share access."
+  customerCodesRevoke: [String!]!
+  "List of Customer Code to share with."
+  customerCodesShare: [String!]!
+  "The Identifier of the Folder object."
+  folderId: ID!
+  "The Access  granted to the shared folder."
+  sharedAccess: SecurityType
+}
+
+input StockItemLevelIncomingDetailFilterInput {
+  and: [StockItemLevelIncomingDetailFilterInput!]
+  or: [StockItemLevelIncomingDetailFilterInput!]
+  Sku: IncomingStringOperationFilterInput
+  Reference: IncomingStringOperationFilterInput
+  eta: GatewayDateOperationFilterInput
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String @cost(weight: "10")
+  neq: String @cost(weight: "10")
+  contains: String @cost(weight: "20")
+  ncontains: String @cost(weight: "20")
+  in: [String] @cost(weight: "10")
+  nin: [String] @cost(weight: "10")
+  startsWith: String @cost(weight: "20")
+  nstartsWith: String @cost(weight: "20")
+  endsWith: String @cost(weight: "20")
+  nendsWith: String @cost(weight: "20")
+}
+
+input SupplierFilterInput {
+  and: [SupplierFilterInput!]
+  or: [SupplierFilterInput!]
+  code: SupplierStringOperationFilterInput
+  name: SupplierStringOperationFilterInput
+  isLocal: BooleanOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input SupplierStringOperationFilterInput {
+  and: [SupplierStringOperationFilterInput!]
+  or: [SupplierStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+"Input type for linking an artwork tag."
+input TagArtworkInput {
+  "The identifier of the artwork."
+  artworkId: ID!
+  "Gets the list of tag identifiers associated with the entity."
+  tagIds: [ID!]!
+}
+
+"Input type for updating a folder."
+input UpdateArtworkFolderInput {
+  "The identifier of the folder."
+  id: ID!
+  "The new name of the folder."
+  name: String!
+}
+
+"Input type for updating an artwork."
+input UpdateArtworkInput {
+  "The description of the artwork."
+  description: String
+  "The identifier of the artwork."
+  id: ID!
+  "The name of the artwork."
+  name: String
+}
+
+"Input type for updating an artwork tag."
+input UpdateArtworkTagInput {
+  "The color of the artwork tag in hex format (e.g., \"FF5733\")."
+  color: String
+  "The identifier of the artwork tag."
+  id: ID!
+  "The name of the artwork tag."
+  name: String
+}
+
+"Input type to update global sharing."
+input UpdateGlobalSharingInput {
+  "The securityType for the global sharing record."
+  securityType: SecurityType!
+}
+
+"Represents the input data required to update the branding information of a job card."
+input UpdateJobCardBrandingInfoInput {
+  "The list of job card requests, each containing the job card number and associated branding details."
+  jobCards: [JobCardBrandingDetailInput!]!
+  "The master job card number for which the branding information is to be updated."
+  masterJobCardNumber: String!
+}
+
+"Represents the input data required to update an XDP data entry."
+input UpdateXdpDataEntryInput {
+  "The code of the item associated with the XDP data entry. Cannot be null or empty."
+  itemCode: String!
+  "The line number within the MRN that corresponds to the XDP data entry. Must be a non-negative integer."
+  mrnLineNumber: Int!
+  "The Movement Reference Number (MRN)associated with the XDP data entry. Cannot be null or empty."
+  mrnNumber: String!
+  "The purchase order number associated with the XDP data entry. Can be null if no purchase order is linked."
+  poNumber: String
+  "The quantity of the item to be updated in the XDP data entry. Must be a positive value."
+  quantity: Float!
+  "The unique identifier of the XDP data entry to be updated. Must be a positive value."
+  xdpDataEntryId: ID!
+}
+
+input VariantFilterInput {
+  and: [VariantFilterInput!]
+  or: [VariantFilterInput!]
+  sku: ProductStringOperationFilterInput
+  code: ProductStringOperationFilterInput
+  SalesHistory: HistoryFilterInput
+  isNew: GatewayBoolOperationFilterInput
+  Product: ProductFilterInput
+}
+
+input XdpDataFilterInput {
+  and: [XdpDataFilterInput!]
+  or: [XdpDataFilterInput!]
+  ReceivedQuantity: FloatOperationFilterInput
+  UsedQuantity: FloatOperationFilterInput
+  quantity: FloatOperationFilterInput
+  itemCode: XdpStringOperationFilterInput
+  mrn: XdpStringOperationFilterInput
+  lineNumber: IntOperationFilterInput
+  poNumber: XdpStringOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input XdpDateTimeNullOperationFilterInput {
+  and: [XdpDateTimeNullOperationFilterInput!]
+  or: [XdpDateTimeNullOperationFilterInput!]
+  eq: DateTime @cost(weight: "10")
+  neq: DateTime @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input XdpStringOperationFilterInput {
+  and: [XdpStringOperationFilterInput!]
+  or: [XdpStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input XdpTransactionFilterInput {
+  and: [XdpTransactionFilterInput!]
+  or: [XdpTransactionFilterInput!]
+  isConfirmSuccess: BooleanOperationFilterInput
+  quantity: FloatOperationFilterInput
+  launchNum: XdpStringOperationFilterInput
+  xdpData: XdpDataFilterInput
+  type: XdpTransactionTypeOperationFilterInput
+  xdpProcessedDate: XdpDateTimeNullOperationFilterInput
+}
+
+input XdpTransactionTypeOperationFilterInput {
+  eq: XdpTransactionType @cost(weight: "10")
+  neq: XdpTransactionType @cost(weight: "10")
+  in: [XdpTransactionType!] @cost(weight: "10")
+  nin: [XdpTransactionType!] @cost(weight: "10")
+}
+
+enum AddressType {
+  PHYSICAL
+  POSTAL
+}
+
+"Specifies the artwork status to query against."
+enum ArtworkQueryStatus {
+  "Include artwork that are active."
+  ACTIVE
+  "Include artwork that have been deleted."
+  DELETED
+}
+
+enum ArtworkStatus {
+  ACTIVE
+  ARCHIVE
+  DELETED
+  PENDING
+  REJECTED
+  PENDING_ACTIVE
+}
+
+enum ArtworkType {
+  LOGO
+  TEMPLATE
+}
+
+enum JobCardAssetType {
+  UNKNOWN
+  PROOF
+  APPROVAL
+}
+
+enum JobCardChangeRequestType {
+  CUSTOMER_REQUEST
+  INSTRUCTION_NOT_FOLLOWED
+}
+
+enum JobCardRepeatType {
+  NONE
+  LOGO
+  EXACT
+}
+
+enum JobCardStatus {
+  UNKNOWN
+  AWAITING_INFO
+  AWAITING_LAYOUT
+  AWAITING_APPROVAL
+  AWAITING_PAYMENT
+  IN_PRODUCTION
+  ON_HOLD
+  COMPLETE
+  CANCELLED
+  CLOSED
+}
+
+enum OrderBrandingColorType {
+  NONE
+  HEX
+  PANTONE
+  MARATHON
+}
+
+enum OrderBrandingLogoPositionType {
+  TOP_LEFT
+  TOP_RIGHT
+  TOP_CENTER
+  MIDDLE_LEFT
+  MIDDLE_CENTER
+  MIDDLE_RIGHT
+  BOTTOM_LEFT
+  BOTTOM_CENTER
+  BOTTOM_RIGHT
+}
+
+enum OrderBrandingLogoSizeType {
+  WIDTH
+  HEIGHT
+}
+
+enum OrderCollectionType {
+  COLLECTION_HEAD_OFFICE
+  BRANCH_DELIVERY_COLLECTION
+  COURIER
+}
+
+enum OrderErrorType {
+  UNKNOWN
+  ACCOUNT
+  CATALOGUE
+  REQUEST
+  SERVICE
+}
+
+enum OrderType {
+  STANDARD
+  DELIVERY
+  LOGO24
+}
+
+enum OrderWarningType {
+  NONE
+  PRICE_DISCREPANCY
+}
+
+enum PaymentType {
+  NONE
+}
+
+enum ResultTypeStatus {
+  OK
+}
+
+enum SalesOrderAssetType {
+  UNKNOWN
+  SALES_ORDER
+  TAX_INVOICE
+  COLLECTION_NOTE
+  PROOF_OF_COLLECTION
+}
+
+enum SalesOrderStatus {
+  UNKNOWN
+  NEW
+  RECEIVED_BY_WAREHOUSE
+  PICKED
+  RECEIVED_AT_BRANCH
+  READY_FOR_COLLECTION
+  DISPATCH_PENDING
+  DELIVERY_PENDING
+  DELIVERY_IN_TRANSIT
+  CLOSED
+  CANCELLED
+  READY_FOR_TRANSIT
+  IN_TRANSIT
+}
+
+enum SecurityType {
+  READ_ONLY
+  READ_WRITE
+}
+
+enum SharingSecurityAccess {
+  READ
+  READ_WRITE
+}
+
+enum StockLevelType {
+  STYLE
+  COLOR
+  VARIANT
+  UNKNOWN
+}
+
+enum XdpTransactionType {
+  RECEIPT
+  PICK
+  VOC
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The purpose of the `@listSize` directive is to either inform the static analysis about the size of returned lists (if that information is statically available), or to point the analysis to where to find that information."
+directive @listSize("The `assumedSize` argument can be used to statically define the maximum length of a list returned by a field." assumedSize: Int "The `requireOneSlicingArgument` argument can be used to inform the static analysis that it should expect that exactly one of the defined slicing arguments is present in a query. If that is not the case (i.e., if none or multiple slicing arguments are present), the static analysis may throw an error." requireOneSlicingArgument: Boolean! = true "The `sizedFields` argument can be used to define that the value of the `assumedSize` argument or of a slicing argument does not affect the size of a list returned by a field itself, but that of a list returned by one of its sub-fields." sizedFields: [String!] "The `slicingArgumentDefaultValue` argument can be used to define a default value for a slicing argument, which is used if the argument is not present in a query." slicingArgumentDefaultValue: Int "The `slicingArguments` argument can be used to define which of the field's arguments with numeric type are slicing arguments, so that their value determines the size of the list returned by that field. It may specify a list of multiple slicing arguments." slicingArguments: [String!]) on FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `Byte` scalar type represents non-fractional whole numeric values. Byte can represent values between 0 and 255."
+scalar Byte
+
+"The `Date` scalar represents an ISO-8601 compliant date type."
+scalar Date
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
+
+"The `Short` scalar type represents non-fractional signed whole 16-bit numeric values. Short can represent values between -(2^15) and 2^15 - 1."
+scalar Short
+
+scalar URL @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc3986")
+
+scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")
