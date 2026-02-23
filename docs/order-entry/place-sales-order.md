@@ -132,7 +132,7 @@ Result: 2 Orders Created (GROUP SPLITS BY STYLE + UNBRANDED)
 ├── Order 2: SO-2026-001235 (PEN_CLASSIC style - WITH branding)
 │   ├── Items: PEN-701-BU (200) = 200 units
 │   ├── From Group: "mixed-items"
-│   └── Branding: DP-A with company logo ✓\
+│   └── Branding: DP-A with company logo ✓
 ```
 
 **Why This Happens**: The system attempts to apply a single branding specification to multiple product styles. Since branding may be style-specific or have different setup requirements, it creates separate orders per style. The unbranded order is generated to ensure all items are accounted for and allows for proper handling of items that couldn't receive the intended branding.
@@ -761,7 +761,7 @@ All `placeOrder` mutations require valid authentication. For details on authenti
 ## Related Documentation
 
 - [Order Entry Overview](./order-entry-overview.md) - High-level order entry concepts
-- [Request Job Card Change](./request-job-card-change.md) - Modify existing orders
+- [Request Job Card Change](./request-change-jobcard.md) - Modify existing orders
 - [Dashboard - Sales Orders](./dashboard-sales-orders.md) - Retrieve order status
 - [Error Handling](../error-handling.md) - Error codes and debugging
 - [Authentication](../authentication.md) - Security and API access

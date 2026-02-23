@@ -160,7 +160,7 @@ The `/samples/bruno/Logo Library/` folder contains example requests for all Logo
 ## Related Documentation
 
 - **[Order Entry](../order-entry/)** - Use artworks when placing orders
-- **[Assets API](../assets.md)** - Retrieve artwork files and media
+- **[Assets API](../assets/assets.md)** - Retrieve artwork files and media
 - **[Error Handling](../error-handling.md)** - Error codes and troubleshooting
 - **[Authentication](../authentication.md)** - API authentication and security
 - **[Support](../support.md)** - Getting help and support resources

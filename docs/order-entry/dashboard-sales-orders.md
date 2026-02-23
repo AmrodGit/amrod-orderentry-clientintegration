@@ -580,7 +580,7 @@ All sales order queries require valid authentication. For details on authenticat
 ## Related Documentation
 
 - [Place Sales Order](./place-sales-order.md) - Create new sales orders
-- [Request Job Card Change](./request-job-card-change.md) - Modify existing orders
+- [Request Job Card Change](./request-change-jobcard.md) - Modify existing orders
 - [Order Entry Overview](./order-entry-overview.md) - High-level order management concepts
 - [Error Handling](../error-handling.md) - Comprehensive error handling guide
 - [Authentication](../authentication.md) - API authentication and security

@@ -21,7 +21,7 @@ Create and manage sales orders with flexible validation options. Validate order 
 ### 🔄 Request Job Card Changes
 Request modifications to existing job cards, including changes to specifications and associated assets.
 
-**Related Documentation**: [Request Job Card Change](./request-job-card-change.md)
+**Related Documentation**: [Request Job Card Change](./request-change-jobcard.md)
 
 **Key Features**:
 - Request job card modifications
@@ -45,9 +45,8 @@ Retrieve comprehensive information about sales orders, job cards, credit notes, 
 
 **Related Documentation**:
 - [Dashboard - Sales Orders](./dashboard-sales-orders.md)
-- [Dashboard - Job Cards](./dashboard-job-cards.md)
+- [Dashboard - Job Cards](./dashboard-jobcards.md)
 - [Dashboard - Credit Notes](./dashboard-credit-notes.md)
-- [Dashboard - Contacts](./dashboard-contacts.md)
 
 **Key Features**:
 - Query sales order status
@@ -92,7 +91,7 @@ Ensure you have valid API credentials and authentication tokens. See [Authentica
 
 ### Step 2: Choose Your Use Case
 - **Placing an Order**: Start with [Place Sales Order](./place-sales-order.md)
-- **Modifying an Order**: See [Request Job Card Change](./request-job-card-change.md)
+- **Modifying an Order**: See [Request Job Card Change](./request-change-jobcard.md)
 - **Tracking Orders**: Review [Dashboard - Sales Orders](./dashboard-sales-orders.md)
 
 ### Step 3: Use the API Schema

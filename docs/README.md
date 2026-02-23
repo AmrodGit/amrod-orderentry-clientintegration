@@ -53,7 +53,7 @@ Complete system for managing digital artworks and design assets.
 - Tag-based categorization
 - Sharing and access control
 
-#### 3. 🎨 [Assets API](./assets.md)
+#### 3. 🎨 [Assets API](./assets/assets.md)
 REST API for retrieving media assets, proofs, approvals, and artwork files.
 - **[Assets REST API](./assets.md)** - Complete asset retrieval and streaming guide
 

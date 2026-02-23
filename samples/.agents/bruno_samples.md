@@ -4,12 +4,12 @@
 
 ### Bruno
 - Version: 2.*
-- Application URL: https://bruno.com
+- Application URL: https://usebruno.com
 - Documentation: https://docs.usebruno.com/
 
 ## Samples Folder Structure
 
-The samples should be organized in a clear and consistent folder structure to facilitate easy navigation and understanding. The structure should reflect the fucntional areas of the GraphQL API and the specific use cases being demonstrated. In addition, an asset API sample should be included to demonstrate how to use the asset API for retrieving assets.
+The samples should be organized in a clear and consistent folder structure to facilitate easy navigation and understanding. The structure should reflect the functional areas of the GraphQL API and the specific use cases being demonstrated. In addition, an asset API sample should be included to demonstrate how to use the asset API for retrieving assets.
 The recommended structure is as follows:
 
 - samples/bruno/
