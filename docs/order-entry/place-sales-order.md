@@ -94,15 +94,13 @@ Input Request: ORD-2026-NO-BRAND
 │   └── PEN-701-RD (Style: PEN_CLASSIC, 200 units)
 │   └── Branding: NONE
 
-Result: 2 Orders Created
+Result: 1 Order Created
 ├── Order 1: SO-2026-001234 (BASIC_BAG style)
 │   └── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (100) = 250 units
-│   └── No branding
-├── Order 2: SO-2026-001235 (PEN_CLASSIC style)
 │   └── Items: PEN-701-BU (200) + PEN-701-RD (200) = 400 units
 │   └── No branding
 
-Note: Grouping in "items" has no effect. Orders are split by style only.
+Note: Grouping in "items" has no effect. All items are combined into a single order regardless of style because no branding is specified.
 ```
 
 **Key Point**: Without branding, the group ID is essentially meaningless for order creation.
@@ -157,12 +155,11 @@ Input Request: ORD-2026-COMPLEX
     ├── BAG-612-BU (Style: TOTE_BAG, 75 units)
     └── Branding: NONE
 
-Result: 3 Orders Created
+Result: 2 Orders Created
 ├── Order 1: SO-2026-001234 (BASIC_BAG - Branded)
 │   ├── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (50) = 150 units
 │   ├── From Group: "branded-bags"
 │   └── Branding: DP-A ✓
-├── Order 1: SO-2026-001234 (PEN_CLASSIC - Branded)
 │   ├── Items: PEN-701-BU (200) + PEN-701-RD (100) = 300 units
 │   ├── From Group: "branded-pens"
 │   └── Branding: LA ✓
@@ -213,7 +210,7 @@ Result: A Single order for all branding designs + a second order for unbranded i
 │   ├── PEN_CLASSIC (Style B)
 │   └── TOTE_BAG (Style C)
 │   └── Branding: Company logo standard
-Result: 3 separate orders, all with company branding applied
+Result: 2 separate orders. One for BASIC_BAG and PEN_CLASSIC as an unbranded order. TOTE_BAG is included in the second branded order.
 ```
 
 ### Matching Input Groups to Output Orders

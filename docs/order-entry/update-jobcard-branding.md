@@ -31,7 +31,7 @@ The Order Entry system provides two different operations for modifying job card 
 ```
 Order Creation
         ↓
-Job Card Created → WAITING_INFO
+Job Card Created → AWAITING_INFO
                         ↓
                    USE updateJobCardBrandingInfo
                    (provide branding details)
@@ -104,7 +104,7 @@ The `UpdateJobCardBrandingInfoInput` object contains the following fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `masterJobCardNumber` | `String` | Yes | The master job card number for which branding information is being updated. This identifies the job card group in the `WAITING_INFO` status. |
+| `masterJobCardNumber` | `String` | Yes | The master job card number for which branding information is being updated. This identifies the job card group in the `AWAITING_INFO` status. |
 | `jobCards` | `[JobCardBrandingDetailInput!]` | Yes | An array of job cards to update with branding details. Each element specifies a job card number and its branding specifications. |
 
 #### JobCardBrandingDetailInput
@@ -153,7 +153,7 @@ The mutation returns an `UpdateJobCardBrandingInfoPayload` object containing:
 **Scenario**: A job card has been created but is waiting for branding information to be provided before it can proceed to approval.
 
 **Steps**:
-1. Query the job card to confirm it's in `WAITING_INFO` status
+1. Query the job card to confirm it's in `AWAITING_INFO` status
 2. Prepare the branding specifications
 3. Submit the update with the master job card number and branding details
 
@@ -199,7 +199,7 @@ mutation {
 
 ### Use Case 2: Update Multiple Job Cards in Group
 
-**Scenario**: Multiple related job cards need different branding specifications but are all in the `WAITING_INFO` status.
+**Scenario**: Multiple related job cards need different branding specifications but are all in the `AWAITING_INFO` status.
 
 **Steps**:
 1. Query the master job card to identify related job cards
@@ -328,9 +328,9 @@ mutation {
       "errors": [
         {
           "__typename": "ConflictException",
-          "code": "JOB_CARD_NOT_WAITING_INFO",
-          "message": "Job card JC-2026-001234 is not in WAITING_INFO status.",
-          "errorDetail": "The job card must be in WAITING_INFO status to update branding information. Current status: AWAITING_APPROVAL"
+          "code": "JOB_CARD_NOT_AWAITING_INFO",
+          "message": "Job card JC-2026-001234 is not in AWAITING_INFO status.",
+          "errorDetail": "The job card must be in AWAITING_INFO status to update branding information. Current status: AWAITING_APPROVAL"
         }
       ],
       "resultPayloadType": null
@@ -354,7 +354,7 @@ If the update fails:
 Use this decision tree to determine which operation to use:
 
 ```
-Is the job card in WAITING_INFO status?
+Is the job card in AWAITING_INFO status?
 ├─ YES → Use updateJobCardBrandingInfo
 │        (provide initial branding information)
 │
@@ -367,7 +367,7 @@ Is the job card in WAITING_INFO status?
 ```
 
 **Quick Reference**:
-- **WAITING_INFO**: Use `updateJobCardBrandingInfo`
+- **AWAITING_INFO**: Use `updateJobCardBrandingInfo`
 - **AWAITING_APPROVAL, AWAITING_LAYOUT, AWAITING_PAYMENT**: Use `requestChangeJobCard`
 - **Other statuses**: Modifications may not be allowed
 
@@ -376,14 +376,14 @@ Is the job card in WAITING_INFO status?
 ### Before Updating
 
 ✅ **Do**:
-- Verify the job card is in `WAITING_INFO` status
+- Verify the job card is in `AWAITING_INFO` status
 - Prepare complete branding specifications including all required metadata
 - Gather all necessary information (logos, colors, DYE charges, etc.)
 - Test in validate-only mode first if available
 - Double-check master job card number and all related job card numbers
 
 ❌ **Don't**:
-- Update after the job card has moved beyond `WAITING_INFO` status
+- Update after the job card has moved beyond `AWAITING_INFO` status
 - Provide incomplete branding specifications
 - Forget required metadata for special branding methods
 - Assume all related job cards have the same branding needs
@@ -391,7 +391,7 @@ Is the job card in WAITING_INFO status?
 
 ### Update Workflow
 
-1. **Query Job Card** - Verify status is `WAITING_INFO`
+1. **Query Job Card** - Verify status is `AWAITING_INFO`
 2. **Prepare Branding** - Gather all specifications and metadata
 3. **Validate Details** - Ensure logos exist, colors are correct, metadata is complete
 4. **Submit Update** - Call the mutation with complete details
@@ -414,7 +414,7 @@ When dealing with multiple related job cards:
 
 ## Common Scenarios
 
-### Scenario 1: Job Card Status is No Longer WAITING_INFO
+### Scenario 1: Job Card Status is No Longer AWAITING_INFO
 
 **Problem**: You want to update branding but the job card is in a different status.
 
@@ -449,8 +449,8 @@ When dealing with multiple related job cards:
 
 **Solution**:
 1. Verify the current job card status via dashboard query
-2. If status is not `WAITING_INFO`, follow the status-appropriate operation
-3. If status is `WAITING_INFO` but error persists, check that:
+2. If status is not `AWAITING_INFO`, follow the status-appropriate operation
+3. If status is `AWAITING_INFO` but error persists, check that:
    - Master job card number is correct
    - Job card numbers in array match actual job cards
    - No concurrent updates are occurring
