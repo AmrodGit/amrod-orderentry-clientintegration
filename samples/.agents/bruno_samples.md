@@ -13,7 +13,7 @@ The samples should be organized in a clear and consistent folder structure to fa
 The recommended structure is as follows:
 
 - samples/bruno/
-- Each funtional area should be organized in a main folder with subfolders for each specific use case.
+- Each functional area should be organized in a main folder with subfolders for each specific use case.
 - Functional areas include:
   - Assets
   - Logo Library
