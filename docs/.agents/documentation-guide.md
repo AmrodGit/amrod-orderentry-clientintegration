@@ -5,7 +5,7 @@ The documentation for agents should be organized in a clear and logical manner t
 - docs/
   - .agents/ {This folder contains all documentation related to agents, including guides, API references, and best practices.}
       - documentation-guide.md {This file serves as the main guide for understanding and using the agents, including an overview of their capabilities, how to use them, and best practices.}
-  - {functional-area}/ {Each functional area of the agent's capabilities should have its own folder, such as "logo-library", "order-intake", etc.}
+  - {functional-area}/ {Each functional area of the agent's capabilities should have its own folder, such as "logo-library", "order-entry", etc.}
     - {entity-documents}.md {Within each functional area, there should be markdown files dedicated to specific entities or features, such as "manage-artwork.md", "manage-folders.md", etc.}
   - {error-handling.md} {A dedicated file for error handling best practices and common error scenarios.}
   - {authentication.md} {A dedicated file for authentication best practices and common authentication scenarios.}
@@ -17,8 +17,8 @@ The documentation for agents should be organized in a clear and logical manner t
 
     - logo-library
         A folder dedicated to documentation related to the Logo Library agent, including guides on managing artworks, folders, sharing, and tags.
-    - order-intake
-        A folder dedicated to documentation related to the Order Intake agent, including guides on managing sales orders, job cards, customers and dashboard information.
+    - order-entry
+        A folder dedicated to documentation related to the Order Entry agent, including guides on managing sales orders, job cards, customers and dashboard information.
     - assets
         A folder dedicated to documentation related to the Asset API, including guides on retrieving assets and understanding asset metadata.
 
@@ -90,9 +90,9 @@ The documentation for agents should be organized in a clear and logical manner t
 
     - artworkTags
 
-    ### Order Intake
+    ### Order Entry
 
-    The Order Intake functional area includes a set of GraphQL mutations and queries for managing sales orders, job cards, customers, and dashboard information. This includes placing sales orders, requesting job card changes, updating job card branding information, and retrieving dashboard data for sales orders, job cards, credit notes, and customer contacts.
+    The Order Entry functional area includes a set of GraphQL mutations and queries for managing sales orders, job cards, customers, and dashboard information. This includes placing sales orders, requesting job card changes, updating job card branding information, and retrieving dashboard data for sales orders, job cards, credit notes, and customer contacts.
 
     #### Place SalesOrder
 
@@ -201,3 +201,7 @@ JHB, DBN, CPT, PLA, BFN
 ### Contacts
 
 firstname: John, lastname: Doe, email: john.doe@example.com
+
+### Product Quantities
+
+Always use an even number between 10 and 500

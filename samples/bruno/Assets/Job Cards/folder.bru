@@ -1,0 +1,70 @@
+meta {
+  name: Job Cards
+  type: folder
+}
+
+docs {
+  # Job Card Assets
+
+  ## Overview
+  REST API samples for retrieving job card-related assets including proofs and approval documents.
+
+  ## Available Samples
+
+  ### Approval Assets
+  - **get-approval-asset.bru**: Retrieve approval documents
+  - Endpoint: `GET /assets/jobcards/approvals/{assetId}`
+
+  ### Proof Assets
+  - **get-jobcard-proof-asset.bru**: Retrieve job card proof files
+  - Endpoint: `GET /assets/jobcards/{jobCardNumber}/proofs/{assetId}`
+  - Use for: Complete proof files for review and approval
+
+  ### Proof Option Assets
+  - **get-jobcard-proof-option-asset.bru**: Retrieve individual proof variants
+  - Endpoint: `GET /assets/jobcards/{jobCardNumber}/proofs/options/{optionNumber}`
+  - Use for: Multi-variant proofs where customer selects from options
+
+  ## Asset Types
+  - Job card proofs (single or multi-variant)
+  - Approval documents
+  - Authorization records
+  - Layout specifications
+
+  ## Common Workflow: Retrieving Proofs
+
+  ### Single Proof
+  ```
+  1. Query GraphQL: jobCardByJobCardNumber
+  2. Check proofType = "SINGLE_PROOF"
+  3. Extract proofId and jobCardNumber
+  4. GET /assets/jobcards/{jobCardNumber}/proofs/{proofId}
+  ```
+
+  ### Multi-Variant Proof
+  ```
+  1. Query GraphQL: jobCardByJobCardNumber
+  2. Check proofType = "MULTI_VARIANT"
+  3. Determine numberOfOptions (e.g., 3)
+  4. Retrieve each option:
+     - GET /assets/jobcards/{jobCardNumber}/proofs/options/1
+     - GET /assets/jobcards/{jobCardNumber}/proofs/options/2
+     - GET /assets/jobcards/{jobCardNumber}/proofs/options/3
+  5. Display to customer for selection
+  ```
+
+  ## Response Formats
+  - Proofs: Typically PDF or image files (PNG, JPEG, TIFF)
+  - Approvals: Documents (PDF, etc.)
+  - Size: Usually medium to large files (implement streaming for downloads)
+
+  ## Error Handling
+  - **404**: Proof/approval not found or job card number is invalid
+  - **500**: Server error during retrieval
+  - Implement retry logic with exponential backoff
+
+  ## Related Documentation
+  - [Job Cards Dashboard](../../../order-entry/dashboard-jobcards.md)
+  - [Approve Job Card](../../../order-entry/approve-jobcard.md)
+  - [Assets REST API](../../../assets.md)
+}

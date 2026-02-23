@@ -353,6 +353,279 @@ query GetJobCardsWithPagination($first: Int, $after: String, $where: JobCardFilt
 }
 ```
 
+## Accessing Job Card Proofs
+
+Job card proofs are essential documents used in the production workflow, allowing for review and approval before finalizing manufacturing. Proofs can include multiple options (different versions or page ranges) for customer selection.
+
+### Query All Proofs for a Job Card
+
+Retrieve all proofs associated with a specific job card by querying the job card and accessing its `jobCardProofs` field:
+
+```graphql
+query GetJobCardWithProofs($jobCardNumber: String!) {
+  jobCardByJobCardNumber(jobCardNumber: $jobCardNumber) {
+    id
+    jobCardNumber
+    jobCardProofs {
+      id
+      assetId
+      version
+      created
+      url
+      numberOfOptions
+      jobCardProofOptions {
+        number
+        pageRange
+        isRecommended
+      }
+    }
+  }
+}
+```
+
+**Variables:**
+```json
+{
+  "jobCardNumber": "JOB-001234"
+}
+```
+
+**Response Example:**
+```json
+{
+  "data": {
+    "jobCardByJobCardNumber": {
+      "id": "job-card-id-12345",
+      "jobCardNumber": "JOB-001234",
+      "jobCardProofs": [
+        {
+          "id": "1",
+          "assetId": "proof-asset-001",
+          "version": 1,
+          "created": "2026-02-18T10:30:00Z",
+          "url": "https://assets.example.com/proofs/proof-asset-001",
+          "numberOfOptions": 2,
+          "jobCardProofOptions": [
+            {
+              "number": 1,
+              "pageRange": "1-5",
+              "isRecommended": true
+            },
+            {
+              "number": 2,
+              "pageRange": "1-10",
+              "isRecommended": false
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "assetId": "proof-asset-002",
+          "version": 2,
+          "created": "2026-02-19T14:15:00Z",
+          "url": "https://assets.example.com/proofs/proof-asset-002",
+          "numberOfOptions": 1,
+          "jobCardProofOptions": [
+            {
+              "number": 1,
+              "pageRange": "1-8",
+              "isRecommended": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+### Query Proof by ID with All Options
+
+Retrieve a specific proof and all of its available options by querying the job card and filtering for the proof you need:
+
+```graphql
+query GetProofWithAllOptions($jobCardNumber: String!) {
+  jobCardByJobCardNumber(jobCardNumber: $jobCardNumber) {
+    id
+    jobCardNumber
+    jobCardProofs {
+      id
+      assetId
+      version
+      created
+      url
+      numberOfOptions
+      jobCardProofOptions {
+        number
+        pageRange
+        isRecommended
+      }
+    }
+  }
+}
+```
+
+Then in your application logic, select the proof by matching the `assetId` or by the `version` number.
+
+**Variables:**
+```json
+{
+  "jobCardNumber": "JOB-001234"
+}
+```
+
+**Response Example:**
+```json
+{
+  "data": {
+    "jobCardByJobCardNumber": {
+      "id": "job-card-id-12345",
+      "jobCardNumber": "JOB-001234",
+      "jobCardProofs": [
+        {
+          "id": "1",
+          "assetId": "proof-asset-001",
+          "version": 1,
+          "created": "2026-02-18T10:30:00Z",
+          "url": "https://assets.example.com/proofs/proof-asset-001",
+          "numberOfOptions": 2,
+          "jobCardProofOptions": [
+            {
+              "number": 1,
+              "pageRange": "1-5",
+              "isRecommended": true
+            },
+            {
+              "number": 2,
+              "pageRange": "1-10",
+              "isRecommended": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+To download the proof file, use the `url` field from the response or the REST API endpoint described below.
+
+### Query Proof for Specific Option Number
+
+Retrieve the latest proof for a specific option number. This is useful when you want to access the most recent version of a particular proof option without needing to know the specific proof ID.
+
+**Important:** When querying by option number, the API always returns the **latest proof** containing that option number. This ensures you're always working with the most current version of the proof.
+
+#### REST API Endpoint
+
+```
+GET /assets/jobcards/{jobCardNumber}/proofs/options/{optionNumber}
+```
+
+**Parameters:**
+- `jobCardNumber` (path): The job card number (e.g., "JOB-001234")
+- `optionNumber` (path): The option number within the proof (e.g., 1, 2, 3)
+- `x-gateway-impersonate` (header, mandatory): Impersonation header for gateway access
+
+**Example Request:**
+```
+GET /assets/jobcards/JOB-001234/proofs/options/1
+```
+
+**Response:** Returns the asset file for the latest proof's option 1.
+
+#### Finding the Latest Proof with a Specific Option in GraphQL
+
+To find the latest proof containing a specific option number, first retrieve all proofs for the job card (as shown above), then use client-side logic to identify the latest proof that contains the desired option number. The REST API endpoint is recommended for this use case as it handles this automatically.
+
+**Client-Side Logic Example (pseudocode):**
+```javascript
+// From the GraphQL response, find proofs with the desired option number
+const desiredOptionNumber = 1;
+const latestProofWithOption = jobCardProofs
+  .filter(proof => proof.jobCardProofOptions.some(opt => opt.number === desiredOptionNumber))
+  .sort((a, b) => new Date(b.created) - new Date(a.created))[0];
+```
+
+### Downloading Proof Assets
+
+To download proof files, use the REST API asset endpoints. The `url` field from the JobCardProof GraphQL response contains a direct URL to the proof asset:
+
+```
+GET /assets/jobcards/{jobCardNumber}/proofs/{assetId}
+```
+
+**Parameters:**
+- `jobCardNumber` (path): The job card number
+- `assetId` (path): The proof asset ID (available as `assetId` field from jobCardProof)
+- `x-gateway-impersonate` (header, mandatory): Impersonation header for gateway access
+
+**Example:**
+```
+GET /assets/jobcards/JOB-001234/proofs/proof-asset-001
+```
+
+**For accessing a specific proof option directly (always returns latest proof):**
+
+```
+GET /assets/jobcards/{jobCardNumber}/proofs/options/{optionNumber}
+```
+
+**Parameters:**
+- `jobCardNumber` (path): The job card number
+- `optionNumber` (path): The option number within the proof (e.g., 1, 2, 3)
+- `x-gateway-impersonate` (header, optional): Impersonation header for gateway access
+
+**Example:**
+```
+GET /assets/jobcards/JOB-001234/proofs/options/1
+```
+
+**Important:** When accessing by option number, the API always returns the **latest proof** containing that option number.
+
+### Proof Workflow Example
+
+Here's a typical workflow for handling job card proofs:
+
+1. **Retrieve all proofs for a job card:**
+   ```graphql
+   query GetAllProofs($jobCardNumber: String!) {
+     jobCardByJobCardNumber(jobCardNumber: $jobCardNumber) {
+       id
+       jobCardNumber
+       jobCardProofs {
+         id
+         version
+         created
+         numberOfOptions
+         jobCardProofOptions {
+           number
+           pageRange
+           isRecommended
+         }
+       }
+     }
+   }
+   ```
+
+2. **Get the latest proof for a specific option number (use REST API):**
+   ```rest
+   GET /assets/jobcards/{jobCardNumber}/proofs/options/{optionNumber}
+   ```
+   This automatically returns the latest proof containing that option number.
+
+3. **Display proof details to customer:**
+   From the GraphQL response, you already have all proof details including options. Display the recommended option (`isRecommended: true`) prominently.
+
+4. **Download selected proof option (use REST API for direct file access):**
+   ```rest
+   GET /assets/jobcards/{jobCardNumber}/proofs/{assetId}
+   ```
+   Or use the latest proof for a specific option:
+   ```rest
+   GET /assets/jobcards/{jobCardNumber}/proofs/options/{optionNumber}
+   ```
+
 ## Job Card Fields Reference
 
 ### JobCard Type
@@ -368,6 +641,7 @@ The main job card object contains:
 | `jobCardBrandingDetail` | `JobCardBrandingDetail!` | Branding specifications and details |
 | `jobCardDate` | `JobCardDate` | Date-related information (due dates, lead times) |
 | `jobCardAssets` | `[JobCardAsset!]` | Associated asset files and documents |
+| `jobCardProofs` | `[JobCardProof!]` | Associated proof documents with options for customer approval |
 
 ### JobCardBrandingDetail Type
 
@@ -413,6 +687,32 @@ Asset files associated with a job card:
 | `type` | `JobCardAssetType!` | Type of asset (SPECIFICATION, ARTWORK, PROOF, etc.) |
 | `created` | `DateTime!` | Creation timestamp |
 | `modified` | `DateTime!` | Last modification timestamp |
+
+### JobCardProof Type
+
+Represents a proof of a job card, including metadata and available proof options:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `Int!` | Unique identifier for the proof |
+| `assetId` | `String!` | The asset identifier used to download the proof file |
+| `version` | `Int!` | The version number of the proof (increments with each new version) |
+| `created` | `DateTime!` | Creation timestamp of the proof |
+| `url` | `URL` | Direct URL to access the proof asset |
+| `numberOfOptions` | `Int!` | The number of selectable options available for this proof |
+| `jobCardProofOptions` | `[JobCardProofOption!]!` | List of selectable options within this proof |
+
+### JobCardProofOption Type
+
+Represents a selectable proofing option within a job card proof:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `number` | `Int!` | The option number within the proof (e.g., 1, 2, 3) |
+| `pageRange` | `String!` | The page range for this option (e.g., "1-5", "1-10") |
+| `isRecommended` | `Boolean!` | Indicates if this option is recommended for the customer |
+
+**Note on Option Number Access:** When accessing a proof by option number via the REST API endpoint `/assets/jobcards/{jobCardNumber}/proofs/options/{optionNumber}`, the API always returns the latest proof containing that option. This ensures you're always working with the most recent version of the proof option.
 
 ## Common Use Cases
 

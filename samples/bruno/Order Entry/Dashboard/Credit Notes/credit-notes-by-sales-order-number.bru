@@ -1,0 +1,82 @@
+meta {
+  name: Credit Notes by Sales Order Number
+  desc: Retrieve all credit notes associated with a specific sales order using the sales order number
+  type: graphql
+  seq: 5
+}
+
+docs {
+  # Credit Notes by Sales Order Number
+  
+  Retrieve all credit notes associated with a specific sales order using its sales order number.
+  
+  ## Use Case
+  When you have a sales order number and need to find all associated credit notes for refunds,
+  returns, or adjustments related to that specific order.
+  
+  ## Variables Required
+  - `salesOrderNumber`: The sales order number (e.g., "SO-2026-001234")
+  
+  ## Expected Response
+  Returns a paginated CreditNotesConnection with:
+  - `totalCount`: Total number of credit notes for this sales order
+  - `pageInfo`: Pagination metadata
+  - Array of credit notes containing:
+    - Credit note metadata (ID, number, internal ID)
+    - Date information (credtNoteDate)
+    - Financial details (totalExcl, tax)
+    - Line item details (SKU, quantity for each adjustment)
+  
+  ## Example Usage
+  Use this to display all adjustments and credits for a specific customer order in accounting
+  dashboards or order detail views.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetCreditNotesBySalesOrderNumber($salesOrderNumber: String!) {
+    creditNotes(
+      first: 100
+      where: {
+        SalesOrder: {
+          salesOrderNumber: {
+            eq: $salesOrderNumber
+          }
+        }
+      }
+    ) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          creditNoteNumber
+          credtNoteDate
+          totalExcl
+          tax
+          creditNoteDetails {
+            sku
+            quantity
+          }
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "salesOrderNumber": "SO-2026-001234"
+  }
+}

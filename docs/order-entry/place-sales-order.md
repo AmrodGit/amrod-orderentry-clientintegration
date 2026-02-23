@@ -66,6 +66,189 @@ When placing a sales order, ensure you provide the following required informatio
 - **Validate Only**: Whether to validate without placing (true/false)
 - **Apply Inclusive Branding** (optional): Whether to apply inclusive branding
 
+## Understanding Order Groups
+
+Order groups are a fundamental concept in the order placement system. They serve critical purposes in how orders are created, how branding is applied, and how multiple orders are generated from a single request.
+
+### What are Order Groups?
+
+An order group is a collection of product items with optional branding specifications. Each order group in your request has:
+- **Group ID**: A unique identifier within your request (e.g., "group-1", "group-2")
+- **Items**: Product variants with SKU and quantity
+- **Branding** (optional): Branding specifications to be applied to items in the group
+
+### Critical Concept: How Branding Affects Order Generation
+
+The presence of branding in a group is the key factor that determines how orders are generated and split. Without branding, grouping has minimal effect.
+
+#### Scenario 1: No Branding in Groups (Grouping Has No Effect)
+
+When **no branding is specified**, grouping variants from different product styles in a single group **has no effect** on the number of orders generated.
+
+```
+Input Request: ORD-2026-NO-BRAND
+├── Group: "items"
+│   ├── BAS-3000-G-Y (Style: BASIC_BAG, 100 units)
+│   ├── BAS-3000-G-BK (Style: BASIC_BAG, 100 units)
+│   ├── PEN-701-BU (Style: PEN_CLASSIC, 200 units)
+│   └── PEN-701-RD (Style: PEN_CLASSIC, 200 units)
+│   └── Branding: NONE
+
+Result: 2 Orders Created
+├── Order 1: SO-2026-001234 (BASIC_BAG style)
+│   └── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (100) = 250 units
+│   └── No branding
+├── Order 2: SO-2026-001235 (PEN_CLASSIC style)
+│   └── Items: PEN-701-BU (200) + PEN-701-RD (200) = 400 units
+│   └── No branding
+
+Note: Grouping in "items" has no effect. Orders are split by style only.
+```
+
+**Key Point**: Without branding, the group ID is essentially meaningless for order creation.
+
+#### Scenario 2: Branding Applied to Mixed Styles in Single Group (Group Splits by Style + Unbranded Order)
+
+When **branding is specified in a group containing items from different product styles**, the system:
+1. Creates a **separate order for each unique product style** found in the group
+2. Applies the branding to the last style-specific order
+3. Creates an **additional unbranded order** containing items that could not receive the branding
+
+This is a key concept: specifying branding on a mixed-style group causes the group to split, and an unbranded order is generated.
+
+```
+Input Request: ORD-2026-MIXED-BRAND
+├── Group: "mixed-items"
+│   ├── BAS-3000-G-Y (Style: BASIC_BAG, 100 units)
+│   ├── BAS-3000-G-BK (Style: BASIC_BAG, 50 units)
+│   ├── PEN-701-BU (Style: PEN_CLASSIC, 200 units)
+│   └── Branding: DP-A with company logo
+
+Result: 2 Orders Created (GROUP SPLITS BY STYLE + UNBRANDED)
+├── Order 1: SO-2026-001234 (BASIC_BAG style - UNBRANDED order)
+│   ├── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (50) = 150 units
+│   ├── From Group: "mixed-items"
+│   └── No Branding
+├── Order 2: SO-2026-001235 (PEN_CLASSIC style - WITH branding)
+│   ├── Items: PEN-701-BU (200) = 200 units
+│   ├── From Group: "mixed-items"
+│   └── Branding: DP-A with company logo ✓\
+```
+
+**Why This Happens**: The system attempts to apply a single branding specification to multiple product styles. Since branding may be style-specific or have different setup requirements, it creates separate orders per style. The unbranded order is generated to ensure all items are accounted for and allows for proper handling of items that couldn't receive the intended branding.
+
+#### Scenario 3: Multiple Groups with Mixed Branding (Organized by Group and Branding Status)
+
+When **multiple groups are submitted where some have branding and others don't**, the system creates multiple orders organized by:
+- **Groups with branding**: Each becomes a separate order(s), potentially splitting by style as described in Scenario 2
+- **Groups without branding**: Combined by product style across all non-branding groups
+
+```
+Input Request: ORD-2026-COMPLEX
+├── Group: "branded-bags"
+│   ├── BAS-3000-G-Y (Style: BASIC_BAG, 100 units)
+│   ├── BAS-3000-G-BK (Style: BASIC_BAG, 50 units)
+│   └── Branding: DP-A (Digital Print)
+├── Group: "branded-pens"
+│   ├── PEN-701-BU (Style: PEN_CLASSIC, 200 units)
+│   ├── PEN-701-RD (Style: PEN_CLASSIC, 100 units)
+│   └── Branding: LA (Logo Application)
+└── Group: "unbranded-misc"
+    ├── BAG-612-BU (Style: TOTE_BAG, 75 units)
+    └── Branding: NONE
+
+Result: 3 Orders Created
+├── Order 1: SO-2026-001234 (BASIC_BAG - Branded)
+│   ├── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (50) = 150 units
+│   ├── From Group: "branded-bags"
+│   └── Branding: DP-A ✓
+├── Order 1: SO-2026-001234 (PEN_CLASSIC - Branded)
+│   ├── Items: PEN-701-BU (200) + PEN-701-RD (100) = 300 units
+│   ├── From Group: "branded-pens"
+│   └── Branding: LA ✓
+└── Order 2: SO-2026-001235 (TOTE_BAG - Unbranded)
+    ├── Items: BAG-612-BU (75) = 75 units
+    ├── From Group: "unbranded-misc"
+    └── Branding: NONE
+
+Key: Orders are organized by input groups and their branding status.
+```
+
+### Grouping Strategies
+
+#### Strategy 1: Single Group, No Branding (Simplest)
+
+Use a single group without branding when you want all items processed together.
+
+```
+├── Group: "all-items"
+│   ├── Multiple SKUs from different styles
+│   └── No branding
+Result: Single Order
+```
+
+#### Strategy 2: Separate Groups by Branding Design
+
+When different items need different branding, use separate groups with distinct branding specifications.
+
+```
+├── Group: "branded-bags"
+│   ├── BASIC_BAG variants
+│   └── Branding: Design A
+├── Group: "branded-pens"
+│   ├── PEN_CLASSIC variants
+│   └── Branding: Design B
+└── Group: "unbranded-items"
+    ├── Other products
+    └── No branding
+Result: A Single order for all branding designs + a second order for unbranded items
+```
+
+#### Strategy 3: Mixed Styles with Shared Branding (Invalid and can cause unexpected order splitting)
+
+
+```
+├── Group: "company-branded"
+│   ├── BASIC_BAG (Style A)
+│   ├── PEN_CLASSIC (Style B)
+│   └── TOTE_BAG (Style C)
+│   └── Branding: Company logo standard
+Result: 3 separate orders, all with company branding applied
+```
+
+### Matching Input Groups to Output Orders
+
+The group ID and item details are used to correlate input requests to generated orders:
+
+1. **Review the group ID** in the input to understand what items were included
+2. **Check the item SKUs** in the response to see which items were processed
+3. **Correlate by style** to match branded vs. unbranded orders
+4. **Track multiple sales order numbers** if a single input group resulted in multiple output orders
+
+**Important**: When a single input group generates multiple orders (mixing styles with branding), multiple sales order numbers will be returned. Use the item SKUs in each order to correlate back to your input group.
+
+### Best Practices for Order Groups
+
+#### ✅ Do:
+- Design groups based on how items should be branded
+- Use separate groups when items need different branding
+- Test complex multi-group scenarios in validate-only mode first
+- Understand that branding presence determines order splitting
+- Track the correlation between input groups and output sales orders
+- Use descriptive group IDs for your internal tracking
+
+#### ❌ Don't:
+- Expect grouping to prevent style-based order splitting without understanding branding impact
+- Mix items from different styles in a single group unless you intend for them to split
+- Assume a single group = single order (it depends on the branding and styles present)
+- Ignore that specifying branding on mixed styles will create multiple orders plus an unbranded order
+- Forget to test multi-order scenarios in validate-only mode before placing
+- Miss the correlation between returned sales order numbers and your input groups
+
+## Branding Metadata
+
+For comprehensive information about branding metadata including foiling, debossing, silicone, and vinyl options, color selections, and DYE charge codes, refer to the [Branding Metadata](./branding-metadata.md) documentation.
+
 ## Usage Examples
 
 ### Example 1: Validate Order Without Placement
@@ -81,7 +264,7 @@ mutation {
       orderType: STANDARD
     }
     collection: {
-      collectionType: COURIER
+      collectionType: COLLECTION_HEAD_OFFICE
     }
     contact: {
       notifications: {
@@ -155,7 +338,7 @@ mutation {
       orderType: STANDARD
     }
     collection: {
-      collectionType: COURIER
+      collectionType: COLLECTION_HEAD_OFFICE
     }
     contact: {
       notifications: {
@@ -211,7 +394,7 @@ mutation {
       applyInclusiveBranding: true
     }
     collection: {
-      collectionType: COURIER
+      collectionType: COLLECTION_HEAD_OFFICE
     }
     contact: {
       notifications: {

@@ -88,7 +88,7 @@ For each color in the branding specification:
 
 #### BrandingMetadataInput
 
-For additional metadata such as foil colors:
+For additional metadata such as foil colors and other branding-specific configurations, refer to the [Branding Metadata](./branding-metadata.md) documentation for complete color options, DYE charge codes, and best practices.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -432,6 +432,28 @@ Errors may also occur due to invalid input data:
   }
 }
 ```
+
+## When to Use: Update vs. Request Change
+
+Use this decision tree to determine which operation to use:
+
+```
+Is the job card in WAITING_INFO status?
+├─ YES → Use updateJobCardBrandingInfo
+│        (provide initial branding information)
+│
+└─ NO → Is the job card in AWAITING_APPROVAL, AWAITING_LAYOUT, or AWAITING_PAYMENT?
+        ├─ YES → Use requestChangeJobCard
+        │        (request changes with a change reason)
+        │
+        └─ NO → Job card may not allow modifications
+                Check job card status and documentation
+```
+
+**Quick Reference**:
+- **WAITING_INFO**: Use `updateJobCardBrandingInfo`
+- **AWAITING_APPROVAL, AWAITING_LAYOUT, AWAITING_PAYMENT**: Use `requestChangeJobCard`
+- **Other statuses**: Modifications may not be allowed
 
 ## Best Practices
 

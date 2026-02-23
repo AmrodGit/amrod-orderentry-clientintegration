@@ -1,0 +1,172 @@
+meta {
+  name: Place Order (With Branding)
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation PlaceOrder($input: PlaceOrderInput!) {
+    placeOrder(input: $input) {
+      errors {
+        __typename
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+          fields {
+            fieldName
+            message
+          }
+        }
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+      placeOrderPayloadType {
+        orders {
+          orderNumber
+          salesOrderNumber
+          orderDate
+          totalExcl
+          totalIncl
+          leadTimeInDays
+          details {
+            sku
+            quantity
+            unitPrice
+            totalExcl
+            totalIncl
+          }
+        }
+        warnings {
+          code
+          message
+          warningType
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "orderNumber": "ORD-{{$timestamp}}-BRAND-001",
+      "options": {
+        "validateOnly": false,
+        "orderType": "STANDARD",
+        "applyInclusiveBranding": true
+      },
+      "collection": {
+        "collectionType": "COURIER"
+      },
+      "contact": {
+        "notifications": {
+          "order": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "contactNumber": "+27-21-987-6543"
+          },
+          "branding": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com"
+          }
+        }
+      },
+      "details": [
+        {
+          "id": "group-1",
+          "items": [
+            {
+              "sku": "PEN-701-BU",
+              "quantity": 250,
+              "price": 12.75
+            }
+          ],
+          "branding": [
+            {
+              "brandingCode": "LA",
+              "reference": "JOB-{{$timestamp}}-0001",
+              "position": "A",
+              "logoPosition": "TOP_CENTER",
+              "logos": [
+                "logo-id-1"
+              ],
+              "logoSize": 20.0,
+              "logoSizeType": "WIDTH",
+              "colors": [
+                {
+                  "colorType": "FOIL",
+                  "colorCode": "#FFD700"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+docs {
+  # Place Order (With Branding)
+  
+  Creates and submits a sales order with branding and customization details. This includes logo placement, colors, and branding positions on the products.
+  
+  ## Use Case
+  Use this mutation to place a complete order with branding specifications. This is used when products need to be customized with logos, specific colors, foil options, or other branding details.
+  
+  ## Required Information
+  - **orderNumber**: Unique identifier for the order (must be unique across all orders)
+  - **collectionType**: How the order will be collected (COURIER in this example)
+  - **Order Contact**: First name, last name, email, and contact number
+  - **Branding Contact** (optional): Separate contact for branding communications
+  - **Order Items**: At least one item with SKU, quantity, and price
+  - **Branding Details**: Each branding specification includes:
+    - **brandingCode**: Code for the branding method (e.g., "LA" for logo applied)
+    - **reference**: Job reference for tracking branding work
+    - **position**: Where on the product to apply branding
+    - **logoPosition**: Position of the logo (e.g., TOP_CENTER, TOP_LEFT, etc.)
+    - **logos**: Array of logo IDs to use for branding
+    - **logoSize**: Size of the logo
+    - **logoSizeType**: Unit of measurement (WIDTH, HEIGHT, etc.)
+    - **colors**: Color specifications including color type (FOIL, PRINT, etc.) and hex codes
+  
+  ## Expected Response
+  - `orders[0].orderNumber`: The order identifier you provided
+  - `orders[0].salesOrderNumber`: System-generated sales order number
+  - `orders[0].orderDate`: Timestamp when the order was created
+  - `orders[0].totalExcl`: Total price excluding tax
+  - `orders[0].totalIncl`: Total price including tax
+  - `orders[0].leadTimeInDays`: Estimated delivery time (may be longer with branding)
+  - `details`: Line items with pricing
+  - `warnings`: Any notes about the branding specifications
+  
+  ## Notes
+  - Set `applyInclusiveBranding: true` to include branding costs in the order total
+  - Provide valid logo IDs that exist in the logo library
+  - The reference field is useful for correlating with your branding job records
+  - Lead times typically increase when branding is required
+}
+

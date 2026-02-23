@@ -1,0 +1,89 @@
+meta {
+  name: Request Change Job Card
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+docs {
+  # Request Change Job Card
+
+  ## Overview
+  Request modifications to an existing job card that is in the approval workflow (AWAITING_APPROVAL, AWAITING_LAYOUT, or AWAITING_PAYMENT status).
+
+  ## Use Case
+  A customer requests a change to the logo position on their job card, or you need to correct an error in the branding specifications after the job card has been approved.
+
+  ## Variables
+  - `salesOrderNumber`: The sales order number (e.g., "SO-2026-001234")
+  - `jobCardNumber`: The job card number to modify (e.g., "JC-2026-001234")
+  - `changeRequestType`: Either "CUSTOMER_REQUEST" or "INSTRUCTION_NOT_FOLLOWED"
+
+  ## Response
+  - `errors`: Array of error messages if the request fails
+  - `resultPayloadType.status`: Status of the change request (SUCCESS or FAILED)
+
+  ## Important Notes
+  - Only job cards in AWAITING_APPROVAL, AWAITING_LAYOUT, or AWAITING_PAYMENT status can have changes requested
+  - All job cards in the request must belong to the same sales order
+  - Include detailed branding information for the changes
+  - See Branding Metadata documentation for metadata requirements (FoilColor, DYEName, SiliconeColor, VinylColor)
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:graphql {
+  mutation RequestJobCardChange($input: RequestChangeJobCardInput!) {
+    requestChangeJobCard(input: $input) {
+      errors {
+        __typename
+        ... on ConflictException {
+          code
+          message
+          errorDetail
+        }
+      }
+      resultPayloadType {
+        result
+        status
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "changeRequestType": "CUSTOMER_REQUEST",
+      "salesOrderNumber": "SO-2026-001234",
+      "jobCards": [
+        {
+          "jobCardNumber": "JC-2026-001234",
+          "brandingDetail": {
+            "brandingCode": "DP-A",
+            "position": "A",
+            "logoPosition": "TOP_RIGHT",
+            "logos": ["logo-id-12345"],
+            "logoSize": 25.5,
+            "logoSizeType": "WIDTH",
+            "reference": "CHG-20260219-001",
+            "colors": [
+              {
+                "code": "#FF0000",
+                "type": "HEX"
+              }
+            ],
+            "specialInstructions": "Customer requested logo moved to top right corner"
+          }
+        }
+      ]
+    }
+  }
+}

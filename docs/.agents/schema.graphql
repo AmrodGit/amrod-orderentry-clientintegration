@@ -507,12 +507,12 @@ type CreateXdpDataEntryPayload {
 type CreditNote implements Node {
   "The asset URI for the credit note."
   assetUri: URL!
+  "The date of the credit note."
+  creditNoteDate: Date!
   "The lines associated with the credit note."
   creditNoteDetails: [CreditNoteDetail!]! @cost(weight: "10")
   "The number of the credit note."
   creditNoteNumber: String!
-  "The date of the credit note."
-  credtNoteDate: DateTime!
   "The unique identifier of the credit note"
   id: ID!
   "The credit note identifier."
@@ -990,6 +990,15 @@ type JobCard implements Node {
   jobCardDetail: [JobCardDetail!] @cost(weight: "10")
   "The associated job card number."
   jobCardNumber: String!
+  """
+  Retrieves the collection of proofs associated with the specified job card.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of
+  JobCardProof objects associated with the job card, or null if no proofs are found.
+  """
+  jobCardProofs: [JobCardProof!] @cost(weight: "10")
   "The associated last modified date."
   lastModifiedDate: DateTime!
   """
@@ -1084,6 +1093,41 @@ type JobCardDetail {
   quantity: Int!
   "The sku for the job card detail."
   sku: String!
+}
+
+"Represents a proof of a job card, including metadata such as creation date, version, and associated options."
+type JobCardProof implements Node {
+  assetId: String!
+  "The date and time when the job card proof was created."
+  created: DateTime!
+  "The identifier of the job card proof."
+  id: ID!
+  "The job card proof's identifier."
+  internalId: Int!
+  """
+  Retrieves a collection of available proof options for the specified job card.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of job card
+  proof options, or null if no options are found.
+  """
+  jobCardProofOptions: [JobCardProofOption!] @cost(weight: "10")
+  "The number of options associated with this job card proof. This property is used to track the number of different options or variations that are linked to this proof, which is used to indicate alternate layouts."
+  numberOfOptions: Int!
+  "The URL to access the proof."
+  url: URL
+  "The version of the job card proof. This property is used to track the version of the proof, which is particularly relevant for layout proofs where multiple versions may exist. It helps in managing and differentiating between different iterations of the proof as changes are made."
+  version: Int!
+}
+
+"Represents a selectable proofing option for a job card, including page range and recommendation status."
+type JobCardProofOption {
+  "Indicates whether this proofing option is recommended. This property can be used to highlight preferred proofing options to users, guiding them towards the most suitable choice."
+  isRecommended: Boolean!
+  "The option number for the proofing option. This property is used to identify and differentiate between multiple proofing options that may be available for a single job card proof. It allows users to select specific options based on their preferences or requirements when reviewing proofs."
+  number: Int!
+  pageRange: String!
 }
 
 "A connection to a list of items."
@@ -2485,6 +2529,15 @@ type Query {
   A JobCard object representing the job card if found; otherwise, null.
   """
   jobCardByJobCardNumber("The unique identifier of the job card to retrieve. This value cannot be null or empty." jobCardNumber: String!): JobCard @cost(weight: "10")
+  """
+  Retrieves the job card proof asset associated with the specified identifier for the current customer.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the job card proof model if found;
+  otherwise, null.
+  """
+  jobCardProof("The unique identifier of the job card asset to retrieve." id: ID!): JobCardProof @cost(weight: "10")
   """
   Retrieves a paginated and filtered list of job cards based on the specified criteria.
   
@@ -4559,10 +4612,10 @@ configuration.
 input ApproveJobCardInput {
   "This is the unique JobCard number of the job card to be approved."
   jobCardNumber: String!
+  "This is the option number of the job card proof."
+  optionNumber: Int
   "This is the ID of the job card layout to be used for printing."
-  layoutId: ID!
-  "This is the option number of the job card layout to be used for printing."
-  layoutOptionNumber: Int!
+  proofId: ID!
 }
 
 input BooleanOperationFilterInput {
@@ -5411,7 +5464,6 @@ enum ArtworkType {
 
 enum JobCardAssetType {
   UNKNOWN
-  PROOF
   APPROVAL
 }
 

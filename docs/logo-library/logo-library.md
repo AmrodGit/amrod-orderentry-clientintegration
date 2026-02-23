@@ -9,6 +9,7 @@
 - [Query Artwork Folders](query-artwork-folders.md)
 - [Manage Artwork Tags](manage-artwork-tags.md)
 - [Query Artwork Tags](query-artwork-tags.md)
+- [Manage Sharing](manage-sharing.md)
 
 ## Purpose
 
@@ -68,6 +69,8 @@ For each shared entity, permissions can be granted as:
 This enables fine-grained control over how and with whom branding assets are distributed.
 
 > 💡 All shared objects are permission-aware. Users will only see or interact with assets they have access to.
+
+**For complete sharing documentation including detailed examples and best practices**, see [Manage Sharing](manage-sharing.md).
 
 ---
 

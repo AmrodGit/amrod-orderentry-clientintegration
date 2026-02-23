@@ -1,0 +1,226 @@
+{
+  "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Moyo Data Gateway",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://moyo-dgw.qa.amrod.co.za"
+    }
+  ],
+  "paths": {
+    "/assets/salesorders/{assetId}": {
+      "get": {
+        "tags": [
+          "Assets / SalesOrders / Asset"
+        ],
+        "summary": "GetAssetById",
+        "operationId": "GetAssetById",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "x-gateway-impersonate",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The asset was retrieved successfully."
+          },
+          "404": {
+            "description": "The asset was not found."
+          }
+        }
+      }
+    },
+    "/assets/logo-library/artwork/{assetId}": {
+      "get": {
+        "tags": [
+          "Assets / LogoLibrary / Artwork"
+        ],
+        "summary": "GetArtworkAssetById",
+        "operationId": "GetArtworkAssetById",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The artwork asset was retrieved successfully."
+          },
+          "404": {
+            "description": "The artwork asset was not found."
+          }
+        }
+      }
+    },
+    "/assets/jobcards/approvals/{assetId}": {
+      "get": {
+        "tags": [
+          "Assets / JobCards / Approval"
+        ],
+        "summary": "GetApprovalAssetById",
+        "operationId": "GetApprovalAssetById",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "x-gateway-impersonate",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/assets/jobcards/{jobCardNumber}/proofs/{assetId}": {
+      "get": {
+        "tags": [
+          "Assets / JobCards / Proof"
+        ],
+        "summary": "GetProofAssetById",
+        "operationId": "GetProofAssetById",
+        "parameters": [
+          {
+            "name": "jobCardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "x-gateway-impersonate",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The proof asset was retrieved successfully."
+          },
+          "404": {
+            "description": "The proof asset was not found."
+          }
+        }
+      }
+    },
+    "/assets/jobcards/{jobCardNumber}/proofs/options/{optionNumber}": {
+      "get": {
+        "tags": [
+          "Assets / JobCards / Proof"
+        ],
+        "summary": "GetProofAssetOptionById",
+        "operationId": "GetProofAssetOptionById",
+        "parameters": [
+          {
+            "name": "jobCardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "optionNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "x-gateway-impersonate",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The proof asset was retrieved successfully."
+          },
+          "404": {
+            "description": "The proof asset was not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IResult": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false
+      }
+    }
+  }
+}

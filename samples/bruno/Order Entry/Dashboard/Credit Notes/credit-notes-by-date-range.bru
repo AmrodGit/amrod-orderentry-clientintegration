@@ -1,0 +1,72 @@
+meta {
+  name: Credit Notes by Date Range
+  desc: Retrieve credit notes within a specific date range for financial reporting
+  type: graphql
+  seq: 4
+}
+
+docs {
+  # Credit Notes by Date Range
+  
+  Retrieve credit notes within a specific date range for financial reporting and reconciliation.
+  
+  ## Use Case
+  Generate financial reports for a specific period, reconcile accounts payable, or analyze credit
+  note activity within a defined timeframe.
+  
+  ## Variables Required
+  - `startDate`: Start date for the range in ISO-8601 format (e.g., "2026-01-01T00:00:00Z")
+  - `endDate`: End date for the range in ISO-8601 format (e.g., "2026-02-28T23:59:59Z")
+  
+  ## Expected Response
+  Returns a paginated CreditNotesConnection with:
+  - `totalCount`: Total number of credit notes in the date range
+  - Array of credit notes containing:
+    - Credit note metadata (ID, number)
+    - Date information (credtNoteDate)
+    - Financial details (totalExcl, tax)
+    - Line item details (SKU, quantity for each adjustment)
+  
+  ## Example Usage
+  Use this for month-end closes, period reports, or analyzing financial adjustments within a timeframe.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!) {
+    creditNotes(
+      first: 100
+      where: {
+        creditNoteDate: {
+          gte: $startDate
+          lte: $endDate
+        }
+      }
+    ) {
+      totalCount
+      nodes {
+        id
+        creditNoteNumber
+        credtNoteDate
+        totalExcl
+        tax
+        creditNoteDetails {
+          sku
+          quantity
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "startDate": "2026-01-01T00:00:00Z",
+    "endDate": "2026-02-28T23:59:59Z"
+  }
+}

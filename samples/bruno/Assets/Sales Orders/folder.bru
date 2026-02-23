@@ -1,0 +1,36 @@
+meta {
+  name: Sales Orders
+  type: folder
+}
+
+docs {
+  # Sales Order Assets
+
+  ## Overview
+  REST API samples for retrieving sales order-related assets.
+
+  ## Available Samples
+  - **get-sales-order-asset.bru**: Retrieve sales order assets by ID
+
+  ## Asset Types
+  - Order confirmations
+  - Invoices
+  - Order-related documents and attachments
+
+  ## Workflow
+  1. Query GraphQL: `salesOrderBySalesOrderNumber` with filters for assets
+  2. Extract `assetId` and `assetPath` from response
+  3. Use this endpoint to retrieve the asset file
+
+  ## Example
+  ```
+  GET {{ROOT_URL}}/assets/salesorders/so-asset-001
+  ```
+
+  ## Response
+  - Success (200): Asset file (binary - PDF, document, etc.)
+  - Not Found (404): Asset not found
+
+  ## Related Documentation
+  - [Sales Orders Dashboard](../../../order-entry/dashboard-sales-orders.md)
+}

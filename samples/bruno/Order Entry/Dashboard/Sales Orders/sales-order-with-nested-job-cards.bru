@@ -1,0 +1,92 @@
+meta {
+  name: Sales Order with Nested Job Cards
+  desc: Retrieve a sales order with all associated job cards and their branding details
+  type: graphql
+  seq: 4
+}
+
+docs {
+  # Sales Order with Nested Job Cards
+  
+  Retrieve a complete sales order including all associated job cards with branding specifications.
+  
+  ## Use Case
+  Access the full view of an order and all manufacturing jobs created for it, including their 
+  branding requirements, positions, logos, and schedule information.
+  
+  ## Variables Required
+  - `salesOrderNumber`: The sales order number (e.g., "SO-2026-001234")
+  
+  ## Expected Response
+  Returns a SalesOrder with:
+  - Order details (ID, number, customer reference, dates, status)
+  - Customer and contact information
+  - Line items (SKU, quantity, pricing)
+  - Nested jobCards array containing:
+    - Job card metadata (ID, number, status, creation date)
+    - Branding details (code, position, logo, colors)
+    - Job card dates (due dates, lead times)
+  
+  ## Example Usage
+  Use this to display a complete order with all associated manufacturing jobs in a single query,
+  reducing the need for multiple API calls. Perfect for order fulfillment dashboards.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetSalesOrderWithJobCards($salesOrderNumber: String!) {
+    salesOrderBySalesOrderNumber(salesOrderNumber: $salesOrderNumber) {
+      id
+      salesOrderNumber
+      customerReference
+      orderDate
+      status
+      totalExcl
+      tax
+      customer {
+        id
+        name
+        code
+      }
+      contact {
+        fullName
+        emailAddress
+      }
+      salesOrderDetails {
+        sku
+        quantity
+        unitPriceExcl
+        lineTotalExcl
+      }
+      jobCards {
+        id
+        jobCardNumber
+        status
+        created
+        isActive
+        jobCardBrandingDetail {
+          brandingCode
+          brandingPosition
+          logo
+          colors
+        }
+        jobCardDate {
+          dueDate
+          internalDueDate
+          leadTime
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "salesOrderNumber": "SO-2026-001234"
+  }
+}

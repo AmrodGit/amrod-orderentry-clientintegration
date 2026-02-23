@@ -16,14 +16,14 @@ Welcome to the Order Entry functional area documentation. This folder contains g
   - Real-world examples and best practices
 
 ### 🔄 Order Management
-- **[Request Job Card Change](./request-job-card-change.md)** - Modify existing orders and job cards
-- **[Update Job Card Branding](./update-job-card-branding.md)** - Update branding information
+- **[Approve Job Card](./approve-jobcard.md)** - Approve job cards and select proof layouts for manufacturing
+- **[Update Job Card Branding](./update-jobcard-branding.md)** - Provide branding information when job card is waiting (WAITING_INFO status)
+- **[Request Job Card Change](./request-change-jobcard.md)** - Modify existing orders and job cards during approval workflow
 
 ### 📊 Dashboard & Reporting
 - **[Dashboard - Sales Orders](./dashboard-sales-orders.md)** - Query and track sales orders
-- **[Dashboard - Job Cards](./dashboard-job-cards.md)** - View job card status and details
+- **[Dashboard - Job Cards](./dashboard-jobcards.md)** - View job card status and details
 - **[Dashboard - Credit Notes](./dashboard-credit-notes.md)** - Access credit note information
-- **[Dashboard - Contacts](./dashboard-contacts.md)** - Manage customer contacts
 
 ## Key Features Highlight
 
@@ -46,8 +46,9 @@ See [Place Sales Order - Validate Only Mode](./place-sales-order.md#2-validate-o
 | Get lead times for delivery | [Place Sales Order - Lead Time](./place-sales-order.md#key-features) |
 | Debug validation errors | [Place Sales Order - Error Handling](./place-sales-order.md#error-handling) |
 | Track order status | [Dashboard - Sales Orders](./dashboard-sales-orders.md) |
-| Request order changes | [Request Job Card Change](./request-job-card-change.md) |
-| Update branding info | [Update Job Card Branding](./update-job-card-branding.md) |
+| Provide job card branding | [Update Job Card Branding](./update-jobcard-branding.md) |
+| Approve job cards for manufacturing | [Approve Job Card](./approve-jobcard.md) |
+| Request order changes | [Request Job Card Change](./request-change-jobcard.md) |
 
 ## API Reference
 
@@ -63,12 +64,20 @@ See [Place Sales Order - Validate Only Mode](./place-sales-order.md#2-validate-o
 ## Testing & Examples
 
 ### Bruno Collection
-The `/samples/bruno/Order Entry/Sales Orders/` folder contains example requests for all Order Entry operations.
+The `/samples/bruno/Order Entry/` folder contains example requests for all Order Entry operations, organized by function:
+
+**Available Bruno Samples**:
+- **Place Orders** - Examples for creating and placing orders
+- **Dashboard** - Query examples for:
+  - Sales Orders (get by ID, by number, paginated list, with nested job cards and credit notes)
+  - Job Cards (get by ID, by number, paginated list, with assets and proofs)
+  - Credit Notes (get by ID, by number, paginated list, date range filtering, for specific orders)
 
 **To use Bruno examples**:
 1. Import the collection from `/samples/bruno/`
 2. Select your environment (Local, Dev, QA, UAT)
-3. Run requests to test API functionality
+3. Navigate to the Dashboard folder to explore query examples
+4. Run requests to test API functionality and understand parent-child relationships
 
 ## Related Documentation
 

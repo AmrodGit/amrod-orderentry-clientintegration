@@ -62,6 +62,17 @@ body:graphql:vars {
   }
 }
 
+script:post-response {
+  const uploadUri = res.body.data?.createArtwork?.artworkSession?.uploadUri;
+  const artworkId = res.body.data?.createArtwork?.artworkSession?.id;
+  if (uploadUri) {
+    bru.setEnvVar("UPLOAD_URI", uploadUri);
+  }
+  if (artworkId) {
+    bru.setEnvVar("CREATED_ARTWORK_ID", artworkId);
+  }
+}
+
 docs {
   # Create Artwork Session
   

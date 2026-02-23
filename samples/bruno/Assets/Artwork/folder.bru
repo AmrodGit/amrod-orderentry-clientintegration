@@ -1,0 +1,57 @@
+meta {
+  name: Artwork
+  type: folder
+}
+
+docs {
+  # Artwork Assets (Logo Library)
+
+  ## Overview
+  REST API samples for retrieving artwork and logo files from the Logo Library.
+
+  ## Available Samples
+  - **get-artwork-asset.bru**: Retrieve artwork assets by ID
+
+  ## Asset Types
+  - Logo designs
+  - Artwork files
+  - Design assets in various formats (PNG, SVG, PDF, TIFF, etc.)
+
+  ## Workflow
+  1. Query GraphQL: `artworkByArtworkNumber` or similar artwork queries
+  2. Retrieve artwork details including `artworkFiles`
+  3. Extract `assetId` from artwork files
+  4. Use this endpoint to retrieve the artwork file in original format
+
+  ## Example
+  ```
+  GET {{ROOT_URL}}/assets/logo-library/artwork/logo-abc-123
+  ```
+
+  ## File Formats Supported
+  - PNG (Portable Network Graphics) - Raster with transparency
+  - SVG (Scalable Vector Graphics) - Vector format
+  - PDF (Portable Document Format) - Document/design format
+  - TIFF (Tagged Image File Format) - High-quality raster
+  - Other formats as uploaded
+
+  ## Response
+  - Success (200): Artwork file (binary - image format varies)
+  - Not Found (404): Artwork asset not found
+
+  ## Use Cases
+  - Download logo files for external use
+  - Preview artwork before adding to orders
+  - Get artwork in original format for editing
+  - Retrieve artwork for brand asset management
+
+  ## Performance Tips
+  - Artwork files are typically larger - use streaming for downloads
+  - Cache frequently accessed artwork locally
+  - Consider pre-loading artwork for order placement workflows
+
+  ## Related Documentation
+  - [Logo Library Overview](../../../logo-library/logo-library.md)
+  - [Query Artwork](../../../logo-library/query-artwork.md)
+  - [Assets REST API](../../../assets.md)
+}

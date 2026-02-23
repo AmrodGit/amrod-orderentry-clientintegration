@@ -1,0 +1,71 @@
+meta {
+  name: Get Job Card by ID
+  desc: Retrieve a specific job card by its unique identifier
+  type: graphql
+  seq: 1
+}
+
+docs {
+  # Get Job Card by ID
+  
+  Retrieve a job card by its unique identifier including branding and schedule details.
+  
+  ## Use Case
+  When you have a job card ID and need to fetch its details including branding specifications,
+  scheduling information, and active status.
+  
+  ## Variables Required
+  - `id`: The unique identifier of the job card (e.g., "JC-001")
+  
+  ## Expected Response
+  Returns a JobCard object containing:
+  - Job card metadata (ID, number, sales order reference, creation date)
+  - Branding details (code, position, placement, logo, colors, dimensions)
+  - Job card schedule (due dates, lead times, internal due dates)
+  - Active and status flags
+  - Last modified timestamp
+  
+  ## Example Usage
+  Use this to retrieve specific job card details when you have the ID reference.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetJobCardById($id: ID!) {
+    jobCard(id: $id) {
+      id
+      jobCardNumber
+      salesOrderNumber
+      status
+      created
+      isActive
+      lastModifiedDate
+      jobCardBrandingDetail {
+        brandingCode
+        brandingPosition
+        brandingPlacement
+        logo
+        colors
+        brandingSizeWidth
+        brandingSizeHeight
+      }
+      jobCardDate {
+        dueDate
+        internalDueDate
+        leadTime
+        internalLeadTime
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "id": "JC-001"
+  }
+}

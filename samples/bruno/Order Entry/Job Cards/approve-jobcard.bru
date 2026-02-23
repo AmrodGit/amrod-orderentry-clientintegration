@@ -1,0 +1,79 @@
+meta {
+  name: Approve Job Card
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+docs {
+  # Approve Job Card
+
+  ## Overview
+  Approve a job card and select which proof option and layout configuration to use for manufacturing. This moves the job card from the approval workflow to the manufacturing workflow.
+
+  ## Use Case
+  After reviewing the job card proofs (possibly with the customer), you approve the job card and select the specific proof option and layout that should be used for production.
+
+  ## Variables
+  - `jobCardNumber`: The unique job card number to approve (e.g., "JC-2026-001234") - Required
+  - `optionNumber`: The proof option number (1, 2, 3, etc.) - Optional (omit if single proof)
+  - `proofId`: The ID of the job card proof to use for approval - Required
+
+  ## Response
+  - `errors`: Array of error messages if approval fails
+  - `resultPayloadType.result`: True if approval succeeded
+  - `resultPayloadType.status`: Status of the approval operation
+
+  ## Important Notes
+  - Job card must be in AWAITING_APPROVAL status
+  - Proof must exist and have the selected option number
+  - For multi-variant proofs, you must select one option
+  - After approval, job card moves to AWAITING_LAYOUT status
+  - Layout configuration depends on the branding specification
+
+  ## Proof Types
+  - **Single Proof**: One design option (select option 1)
+  - **Multi-Variant Proof**: Multiple design options (select the preferred option: 1, 2, 3, etc.)
+
+  ## Status Flow
+  - Before: Job card status = AWAITING_APPROVAL
+  - After: Job card status → AWAITING_LAYOUT (ready for manufacturing setup)
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:graphql {
+  mutation ApproveJobCard($input: ApproveJobCardInput!) {
+    approveJobCard(input: $input) {
+      errors {
+        __typename
+        ... on ConflictException {
+          code
+          message
+          errorDetail
+        }
+      }
+      resultPayloadType {
+        result
+        status
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "jobCardNumber": "JC-2026-001234",
+      "optionNumber": 1,
+      "proofId": "proof-asset-12345"
+    }
+  }
+}
