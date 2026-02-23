@@ -55,7 +55,7 @@ Complete system for managing digital artworks and design assets.
 
 #### 3. 🎨 [Assets API](./assets/assets.md)
 REST API for retrieving media assets, proofs, approvals, and artwork files.
-- **[Assets REST API](./assets.md)** - Complete asset retrieval and streaming guide
+- **[Assets REST API](./assets/assets.md)** - Complete asset retrieval and streaming guide
 
 **Key Features**:
 - Retrieve proofs for customer approval
