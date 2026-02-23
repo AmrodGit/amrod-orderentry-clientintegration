@@ -289,7 +289,7 @@ To view current sharing settings for an artwork or folder, query the `security` 
 
 ```graphql
 query {
-  artworkByArtworkId(id: "artwork-id-123") {
+  artworkById(id: "artwork-id-123") {
     name
     security {
       access              # Access level (PRIVATE, SHARED, PUBLIC)

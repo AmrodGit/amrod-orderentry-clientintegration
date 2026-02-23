@@ -32,7 +32,7 @@ Request modifications to existing job cards, including changes to specifications
 ### 🎨 Update Job Card Branding Information
 Modify branding details associated with job cards, including logos and brand specifications.
 
-**Related Documentation**: [Update Job Card Branding](./update-job-card-branding.md)
+**Related Documentation**: [Update Job Card Branding](./update-jobcard-branding.md)
 
 **Key Features**:
 - Update brand logos

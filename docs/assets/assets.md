@@ -81,7 +81,7 @@ GET /assets/logo-library/artwork/logo-abc-123
 - Accessing brand asset files
 
 **Related Queries**:
-Artwork assets are returned by Logo Library queries. See [Logo Library documentation](./logo-library) for complete artwork query examples.
+Artwork assets are returned by Logo Library queries. See [Logo Library documentation](../logo-library/README.md) for complete artwork query examples.
 
 ### 3. Job Card Approval Assets
 
@@ -419,10 +419,10 @@ The request lacks proper authentication.
 
 ## Related Documentation
 
-- [Order Entry Overview](./order-entry/) - For job card asset workflows
-- [Logo Library Documentation](./logo-library/) - For artwork asset information
-- [Dashboard Job Cards](./order-entry/dashboard-jobcards.md) - For proof query examples
-- [Approval Workflows](./order-entry/approve-jobcard.md) - For approval asset usage
+- [Order Entry Overview](../order-entry/) - For job card asset workflows
+- [Logo Library Documentation](../logo-library/) - For artwork asset information
+- [Dashboard Job Cards](../order-entry/dashboard-jobcards.md) - For proof query examples
+- [Approval Workflows](../order-entry/approve-jobcard.md) - For approval asset usage
 
 ## API Reference Summary
 
@@ -442,4 +442,4 @@ If you encounter issues retrieving assets:
 2. **Check Response Path**: Ensure you're using the correct endpoint for the asset type
 3. **Validate Job Card Number**: For job card assets, verify the job card number is correct
 4. **Review Permissions**: Ensure your account has access to the asset
-5. **Contact Support**: If issues persist, refer to [support documentation](./support.md)
+5. **Contact Support**: If issues persist, refer to [support documentation](../support.md)
