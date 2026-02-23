@@ -96,7 +96,7 @@ Input Request: ORD-2026-NO-BRAND
 
 Result: 1 Order Created
 ├── Order 1: SO-2026-001234 (BASIC_BAG style)
-│   └── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (100) = 250 units
+│   └── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (100) = 200 units
 │   └── Items: PEN-701-BU (200) + PEN-701-RD (200) = 400 units
 │   └── No branding
 

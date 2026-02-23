@@ -17,7 +17,7 @@ Welcome to the Order Entry functional area documentation. This folder contains g
 
 ### 🔄 Order Management
 - **[Approve Job Card](./approve-jobcard.md)** - Approve job cards and select proof layouts for manufacturing
-- **[Update Job Card Branding](./update-jobcard-branding.md)** - Provide branding information when job card is waiting (WAITING_INFO status)
+- **[Update Job Card Branding](./update-jobcard-branding.md)** - Provide branding information when job card is waiting (AWAITING_INFO status)
 - **[Request Job Card Change](./request-change-jobcard.md)** - Modify existing orders and job cards during approval workflow
 
 ### 📊 Dashboard & Reporting

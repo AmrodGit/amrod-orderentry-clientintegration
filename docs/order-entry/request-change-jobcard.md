@@ -438,7 +438,7 @@ Errors may also occur due to invalid input data:
 Use this decision tree to determine which operation to use:
 
 ```
-Is the job card in WAITING_INFO status?
+Is the job card in AWAITING_INFO status?
 ├─ YES → Use updateJobCardBrandingInfo
 │        (provide initial branding information)
 │
@@ -451,7 +451,7 @@ Is the job card in WAITING_INFO status?
 ```
 
 **Quick Reference**:
-- **WAITING_INFO**: Use `updateJobCardBrandingInfo`
+- **AWAITING_INFO**: Use `updateJobCardBrandingInfo`
 - **AWAITING_APPROVAL, AWAITING_LAYOUT, AWAITING_PAYMENT**: Use `requestChangeJobCard`
 - **Other statuses**: Modifications may not be allowed
 

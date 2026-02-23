@@ -3,7 +3,7 @@ script:pre-request {
   const var1 = bru.getEnvVar('CUSTOMER_CODE');
   const var2 = bru.getEnvVar('CONTACT_ID');
   
-  // Concatenate with '|'
+  // Concatenate with ';'
   const combined = `${var2};${var1}`;
   
   var btoa = require('btoa');
