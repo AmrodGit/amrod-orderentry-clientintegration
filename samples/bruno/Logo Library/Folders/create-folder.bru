@@ -4,6 +4,62 @@ meta {
   seq: 1
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateArtworkFolder($input: CreateArtworkFolderInput!) {
+    createArtworkFolder(input: $input) {
+     artworkFolder {
+        id
+        name
+        path
+      }
+      errors {
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "name": "Brand Assets - Q1 2025",
+      "parentId": null
+    }
+  }
+}
+
 docs {
   # Create Folder
   
@@ -35,73 +91,4 @@ docs {
   - Folder names cannot contain special characters
   - Creating nested folders requires knowing the parent folder ID
   - Permissions are inherited from the parent folder
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation CreateArtworkFolder($input: CreateArtworkFolderInput!) {
-    createArtworkFolder(input: $input) {
-      errors {
-        __typename
-        ... on ConflictException {
-          code
-          errorDetail
-          message
-        }
-        ... on ImpersonationRequiredException {
-          code
-          errorDetail
-          message
-        }
-        ... on InputValidationException {
-          code
-          errorDetail
-          message
-          parameterName
-        }
-      }
-      artworkFolderDetails {
-        canDelete
-        canEdit
-        canMove
-        canShare
-        id
-        internalId
-        name
-        path
-        owner {
-          contact {
-            code
-            emailAddress
-          }
-        }
-        security {
-          access
-          contact {
-            code
-            emailAddress
-          }
-          customer {
-            code
-            name
-          }
-        }
-      }
-    }
-  }
-  
-}
-
-body:graphql:vars {
-  {
-    "input": {
-      "name": "Brand Assets - Q1 2025",
-      "parentId": null
-    }
-  }
 }

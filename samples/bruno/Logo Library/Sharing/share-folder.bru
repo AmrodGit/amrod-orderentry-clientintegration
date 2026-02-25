@@ -4,6 +4,42 @@ meta {
   seq: 4
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation ShareFolder($input: ShareFolderInput!) {
+    shareFolder(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on InputValidationException {
+          message
+          parameterName
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "folderId": "QXJ0d29ya0ZvbGRlckRldGFpbHM6MQ==",
+      "contactIdsShare": [],
+      "contactIdsRevoke": [],
+      "customerCodesShare": ["AMR0002"],
+      "customerCodesRevoke": [],
+      "sharedAccess": "READ_ONLY"
+    }
+  }
+}
+
 docs {
   # Share Folder
   
@@ -35,44 +71,4 @@ docs {
   - Both sharing and revoking can be done in the same call
   - READ_ONLY allows viewing, READ_WRITE allows modification
   - Permissions cascade to all folder contents
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation ShareFolder($input: ShareFolderInput!) {
-    shareFolder(input: $input) {
-      errors {
-        ... on ConflictException {
-          message
-        }
-        ... on ImpersonationRequiredException {
-          message
-        }
-        ... on InputValidationException {
-          message
-          parameterName
-          validationError
-        }
-      }
-    }
-  }
-  
-}
-
-body:graphql:vars {
-  {
-    "input": {
-      "id": "QXJ0d29ya0ZvbGRlckRldGFpbHM6MQ==",
-      "contactIdsShare": [],
-      "contactIdsRevoke": [],
-      "customerCodesShare": ["AMR0002"],
-      "customerCodesRevoke": [],
-      "sharedAccess": "READ_ONLY"
-    }
-  }
 }

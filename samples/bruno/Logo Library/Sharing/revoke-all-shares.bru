@@ -4,6 +4,39 @@ meta {
   seq: 7
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation RevokeAllShares {
+    revokeAllShares {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+    }
+  }
+}
+
 docs {
   # Revoke All Shares
   
@@ -25,30 +58,4 @@ docs {
   - No items will be accessible to external parties after execution
   - All artworks and folders become private to the organization
   - Use with caution as this affects all team members' shares
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation RevokeAllShares {
-    revokeAllShares {
-      errors {
-        ... on ConflictException {
-          message
-        }
-        ... on ImpersonationRequiredException {
-          message
-        }
-        ... on InputValidationException {
-          message
-          parameterName
-          validationError
-        }
-      }
-    }
-  }
 }

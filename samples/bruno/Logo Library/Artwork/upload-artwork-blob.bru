@@ -4,6 +4,20 @@ meta {
   seq: 6
 }
 
+put {
+  url: {{UPLOAD_URI}}
+  body: file
+  auth: inherit
+}
+
+headers {
+  x-ms-blob-type: BlockBlob
+}
+
+body:file {
+  file: @file(C:\Users\{{USERNAME}}\Pictures\your-artwork-file.png) @contentType(image/png)
+}
+
 docs {
   # Upload Artwork Blob
   
@@ -32,18 +46,4 @@ docs {
   - The {{USERNAME}} placeholder in the file path should be replaced with your actual Windows username
   - The Content-Type in the @contentType() must match the mimeType specified in session creation
   - This is an HTTP PUT request, not a GraphQL mutation
-}
-
-put {
-  url: {{UPLOAD_URI}}
-  body: file
-  auth: inherit
-}
-
-headers {
-  x-ms-blob-type: BlockBlob
-}
-
-body:file {
-  file: @file(C:\Users\{{USERNAME}}\Pictures\your-artwork-file.png) @contentType(image/png)
 }

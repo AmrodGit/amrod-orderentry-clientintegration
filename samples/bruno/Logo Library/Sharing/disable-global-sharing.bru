@@ -4,6 +4,39 @@ meta {
   seq: 2
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DisableGlobalSharing {
+    disablesGlobalSharing {
+      errors {
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+      resultPayloadType {
+        result
+      }
+    }
+  }
+}
+
 docs {
   # Disable Global Sharing
   
@@ -25,30 +58,4 @@ docs {
   - This does not revoke existing shares; it just prevents new global sharing
   - Existing shared items remain shared
   - Individual item sharing will still be available
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation DisableGlobalSharing {
-    disableGlobalSharing {
-      errors {
-        ... on ConflictException {
-          message
-        }
-        ... on ImpersonationRequiredException {
-          message
-        }
-        ... on InputValidationException {
-          message
-          parameterName
-          validationError
-        }
-      }
-    }
-  }
 }

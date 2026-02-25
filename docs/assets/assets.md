@@ -87,9 +87,10 @@ Artwork assets are returned by Logo Library queries. See [Logo Library documenta
 
 For approval-related assets such as approval documents or authorization files.
 
-**Endpoint**: `GET /assets/jobcards/approvals/{assetId}`
+**Endpoint**: `GET /assets/jobcards/{jobCardNumber}/approvals/{assetId}`
 
 **Parameters**:
+- `jobCardNumber` (path, required): The job card number (e.g., "JC-2026-001234")
 - `assetId` (path, required): The unique approval asset ID returned by job card queries
 - `x-gateway-impersonate` (header, mandatory)
 
@@ -99,7 +100,7 @@ For approval-related assets such as approval documents or authorization files.
 
 **Example**:
 ```bash
-GET /assets/jobcards/approvals/approval-doc-456
+GET /assets/jobcards/JC-2026-001234/approvals/approval-doc-456
 ```
 
 **Use Cases**:

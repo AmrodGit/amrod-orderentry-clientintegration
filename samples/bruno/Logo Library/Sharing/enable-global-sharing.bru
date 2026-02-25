@@ -4,6 +4,37 @@ meta {
   seq: 1
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation EnableGlobalSharing($input: EnableGlobalSharingInput!) {
+    enableGlobalSharing(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on ConflictException {
+          message
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "forceEnable": false,
+      "securityType": "READ_ONLY"
+    }
+  }
+}
+
 docs {
   # Enable Global Sharing
   
@@ -29,40 +60,4 @@ docs {
   - Global sharing enables sharing for all current and future content
   - READ_ONLY allows viewing, READ_WRITE allows modification
   - Can be disabled using "Disable Global Sharing" mutation
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation EnableGlobalSharing($input: EnableGlobalSharingInput!) {
-    enableGlobalSharing(input: $input) {
-      errors {
-        ... on ConflictException {
-          message
-        }
-        ... on ImpersonationRequiredException {
-          message
-        }
-        ... on InputValidationException {
-          message
-          parameterName
-          validationError
-        }
-      }
-    }
-  }
-  
-}
-
-body:graphql:vars {
-  {
-    "input": {
-      "forceEnable": false,
-      "securityType": "READ_ONLY"
-    }
-  }
 }

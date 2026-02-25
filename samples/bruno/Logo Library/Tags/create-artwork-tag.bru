@@ -4,6 +4,52 @@ meta {
   seq: 1
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateArtworkTag($input: CreateArtworkTagInput!) {
+    createArtworkTag(input: $input) {
+      artworkTag {
+        color
+        id
+        name
+      }
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "color": "FF6B6B",
+      "name": "High Priority"
+    }
+  }
+}
+
 docs {
   # Create Artwork Tag
   
@@ -32,55 +78,4 @@ docs {
   - Tags are reusable across multiple artworks
   - Tag names are case-sensitive
   - Color is used for visual identification in the UI
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation CreateArtworkTag($input: CreateArtworkTagInput!) {
-    createArtworkTag(input: $input) {
-      artworkTag {
-        color
-        id
-        name
-      }
-      errors {
-        __typename
-        ... on BadRequestException {
-          code
-          errorDetail
-          message
-        }
-        ... on ConflictException {
-          code
-          errorDetail
-          message
-        }
-        ... on ImpersonationRequiredException {
-          code
-          errorDetail
-          message
-        }
-        ... on InputValidationException {
-          code
-          errorDetail
-          message
-          parameterName
-        }
-      }
-    }
-  }
-}
-
-body:graphql:vars {
-  {
-    "input": {
-      "color": "FF6B6B",
-      "name": "High Priority"
-    }
-  }
 }

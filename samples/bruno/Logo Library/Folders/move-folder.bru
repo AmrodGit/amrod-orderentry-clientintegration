@@ -4,6 +4,46 @@ meta {
   seq: 3
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation MoveArtworkFolder($input: MoveArtworkFolderInput!) {
+    moveArtworkFolder(input: $input) {
+      errors {
+        __typename
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+      }
+      resultPayloadType {
+        result
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "folderId": "QXJ0d29ya0ZvbGRlckRldGFpbHM6Mg==",
+      "parentId": "QXJ0d29ya0ZvbGRlckRldGFpbHM6MQ=="
+    }
+  }
+}
+
 docs {
   # Move Folder
   
@@ -33,49 +73,4 @@ docs {
   - Moving a folder updates the paths of all nested folders and artworks
   - Permissions are not changed when moving folders
   - Parent-child relationships are preserved
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation MoveArtworkFolder($input: MoveArtworkFolderInput!) {
-    moveArtworkFolder(input: $input) {
-      errors {
-        __typename
-        ... on ConflictException {
-          code
-          errorDetail
-          message
-        }
-        ... on ImpersonationRequiredException {
-          code
-          errorDetail
-          message
-        }
-        ... on InputValidationException {
-          code
-          errorDetail
-          message
-          parameterName
-        }
-      }
-      resultPayloadType {
-        result
-      }
-    }
-  }
-  
-}
-
-body:graphql:vars {
-  {
-    "input": {
-      "id": "QXJ0d29ya0ZvbGRlckRldGFpbHM6Mg==",
-      "parentId": "QXJ0d29ya0ZvbGRlckRldGFpbHM6MQ=="
-    }
-  }
 }

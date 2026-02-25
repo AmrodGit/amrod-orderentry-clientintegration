@@ -4,6 +4,43 @@ meta {
   seq: 3
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation ShareArtwork($input: ShareArtworkInput!) {
+    shareArtwork(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on InputValidationException {
+          code
+          message
+          parameterName
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "QXJ0d29ya0RldGFpbHM6MzA5MjM4",
+      "contactIdsShare": [],
+      "contactIdsRevoke": [],
+      "customerCodesShare": ["AMR0002"],
+      "customerCodesRevoke": [],
+      "sharedAccess": "READ_ONLY"
+    }
+  }
+}
+
 docs {
   # Share Artwork
   
@@ -34,44 +71,4 @@ docs {
   - Both sharing and revoking can be done in the same call
   - READ_ONLY allows viewing only, READ_WRITE allows modification
   - Sharing at customer level applies to all contacts in that customer
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation ShareArtwork($input: ShareArtworkInput!) {
-    shareArtwork(input: $input) {
-      errors {
-        ... on ConflictException {
-          message
-        }
-        ... on ImpersonationRequiredException {
-          message
-        }
-        ... on InputValidationException {
-          message
-          parameterName
-          validationError
-        }
-      }
-    }
-  }
-  
-}
-
-body:graphql:vars {
-  {
-    "input": {
-      "id": "QXJ0d29ya0RldGFpbHM6MzA5MjM4",
-      "contactIdsShare": [],
-      "contactIdsRevoke": [],
-      "customerCodesShare": ["AMR0002"],
-      "customerCodesRevoke": [],
-      "sharedAccess": "READ_ONLY"
-    }
-  }
 }

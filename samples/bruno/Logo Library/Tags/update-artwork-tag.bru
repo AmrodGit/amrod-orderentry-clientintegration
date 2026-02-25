@@ -4,6 +4,50 @@ meta {
   seq: 2
 }
 
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateArtworkTag($input: UpdateArtworkTagInput!) {
+    updateArtworkTag(input: $input) {
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+      }
+      resultPayloadType {
+        result
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "QXJ0d29ya1RhZ0RldGFpbHM6MjcxNg==",
+      "color": "4ECDC4",
+      "name": "For Review"
+    }
+  }
+}
+
 docs {
   # Update Artwork Tag
   
@@ -35,59 +79,4 @@ docs {
   - At least one property (name or color) should be provided for update
   - Changing tag properties does not affect artworks already tagged with it
   - All artworks with this tag will reflect the new name/color immediately
-}
-
-post {
-  url: {{ROOT_URL}}/graphql
-  body: graphql
-  auth: inherit
-}
-
-body:graphql {
-  mutation UpdateArtworkTag($input: UpdateArtworkTagInput!) {
-    updateArtworkTag(input: $input) {
-      errors {
-        __typename
-        ... on BadRequestException {
-          code
-          errorDetail
-          message
-        }
-        ... on ConflictException {
-          code
-          errorDetail
-          message
-        }
-        ... on ImpersonationRequiredException {
-          code
-          errorDetail
-          message
-        }
-        ... on InputValidationException {
-          code
-          errorDetail
-          message
-          parameterName
-        }
-        ... on NotFoundException {
-          code
-          errorDetail
-          message
-        }
-      }
-      resultPayloadType {
-        result
-      }
-    }
-  }
-}
-
-body:graphql:vars {
-  {
-    "input": {
-      "id": "QXJ0d29ya1RhZ0RldGFpbHM6MjcxNg==",
-      "color": "4ECDC4",
-      "name": "For Review"
-    }
-  }
 }
