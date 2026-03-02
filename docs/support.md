@@ -3,9 +3,8 @@
 
 ## 📧 Client Support Channel
 
-Once onboarding is completed, Amrod provides each client with a **dedicated support email address**. This address is monitored by:
+Once onboarding is completed, Amrod provides each client with access to **Jira**. Tickets are monitored by:
 
-- **Amrod Support Staff** – for general usage queries
 - **Amrod IT Technical Staff** – for technical troubleshooting and error analysis
 
 ---
@@ -27,7 +26,7 @@ For **technical issues**, such as unexpected API responses, errors, or faults:
 2. **Attach the `x-gateway-trace` ID** (see below)
 3. **Specify the environment** (e.g., production, staging)
 
-These should be directed to the **Amrod IT Technical Staff** via the provided support email.
+These should be logged for the **Amrod IT Technical Staff** via Jira.
 
 ---
 

@@ -14,34 +14,24 @@ Foiling is a premium branding method that applies metallic or colored foil to pr
 **Available Foil Colors**:
 | Color Name | Description |
 |------------|-------------|
-| Clear | Clear foil overlay |
-| Matt Gold | Matte gold finish |
-| Matt Silver | Matte silver finish |
-| Shiny Gold | Bright metallic gold |
-| Shiny Silver | Bright metallic silver |
-| White | White foil |
-| Green Pantone 335 C | Pantone green |
-| Orange Pantone 159 C | Pantone orange |
-| Red Pantone 7427 C | Pantone red |
-| Reflex Blue | Reflex blue foil |
-| Cyan | Cyan foil |
-| Shiny Black | Glossy black foil |
-| Copper Pantone 2315 C | Pantone copper |
-| Light Blue Pantone 5405 C | Pantone light blue |
-| Yellow | Yellow foil |
-| Rose Pattern | Rose patterned foil |
-| Shiny White | Glossy white foil |
-| Rose Gold Pantone 876 C | Pantone rose gold |
 | Black | Standard black foil |
-| Gold | Standard gold foil |
 | Blue | Standard blue foil |
+| Copper | Pantone copper Pantone 2315 C |
+| Gold | Standard gold foil |
+| Green | Pantone green Pantone 335 C |
+| Light Blue | Pantone light blue Pantone 5405 C |
+| Orange | Pantone orange Pantone 159 C |
+| Red | Pantone red Pantone 7427 C |
+| Rose Gold | Pantone rose gold Pantone 876 C |
+| Rose Pattern | Rose patterned foil |
 | Silver | Standard silver foil |
+| White | White foil |
 
 **Example - Foiling Branding**:
 ```graphql
 branding: [
   {
-    brandingCode: "FO"
+    brandingCode: "FL"
     position: "A"
     logoPosition: TOP_CENTER
     logos: ["logo-id-123"]
@@ -74,7 +64,7 @@ Debossing creates a recessed impression in the product surface, producing an ele
 ```graphql
 branding: [
   {
-    brandingCode: "EMB"
+    brandingCode: "BOS"
     position: "B"
     logoPosition: MIDDLE_CENTER
     logos: ["logo-id-456"]
@@ -99,7 +89,7 @@ Silicone branding applies colored rubber/silicone overlays to products, commonly
 - **Key**: `SiliconeColor`
 - **Value**: One of the available silicone color options (see below)
 - **Key**: `DYEName`
-- **Value**: **MUST BE `DIE-1`** (Only DIE-1 can be used for silicone branding due to size constraints)
+- **Value**: **MUST BE `DIE-1`** (Only DIE-1 can be used for silicone branding)
 
 **Available Silicone Colors**:
 | Color Name | Pantone Reference | Description |
@@ -128,7 +118,7 @@ Silicone branding applies colored rubber/silicone overlays to products, commonly
 ```graphql
 branding: [
   {
-    brandingCode: "SI"
+    brandingCode: "STP"
     position: "A"
     logoPosition: TOP_LEFT
     logos: ["logo-id-789"]
@@ -160,32 +150,13 @@ Vinyl branding applies adhesive vinyl decals to products, offering vibrant color
 **Available Vinyl Colors**:
 | Color Name | Description |
 |------------|-------------|
-| None | No color (placeholder) |
-| Clear | Transparent vinyl |
-| Matt Gold | Matte gold vinyl |
-| Matt Silver | Matte silver vinyl |
-| Shiny Gold | Glossy gold vinyl |
-| Shiny Silver | Glossy silver vinyl |
 | White | White vinyl |
-| Green Pantone 335 C | Pantone green vinyl |
-| Orange Pantone 159 C | Pantone orange vinyl |
-| Red Pantone 7427 C | Pantone red vinyl |
-| Reflex Blue | Reflex blue vinyl |
-| Cyan | Cyan vinyl |
-| Shiny Black | Glossy black vinyl |
-| Copper Pantone 2315 C | Pantone copper vinyl |
-| Light Blue Pantone 5405 C | Pantone light blue vinyl |
-| Yellow | Yellow vinyl |
-| Rose Gold | Rose gold vinyl |
-| Rose Pattern | Rose patterned vinyl |
-| Shiny White | Glossy white vinyl |
-| Rose Gold Pantone 876 C | Pantone rose gold vinyl |
 
 **Example - Vinyl Branding**:
 ```graphql
 branding: [
   {
-    brandingCode: "VIN"
+    brandingCode: "DA"
     position: "C"
     logoPosition: BOTTOM_RIGHT
     logos: ["logo-id-321"]
