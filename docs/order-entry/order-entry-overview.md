@@ -176,5 +176,4 @@ For support and additional resources, refer to [Support](../support.md).
 ## Related Functional Areas
 
 - [Logo Library](../logo-library/logo-library.md) - Manage artworks and designs for orders
-- [Dashboard](../dashboard/) - Comprehensive reporting and analytics
 

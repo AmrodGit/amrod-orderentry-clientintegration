@@ -88,8 +88,8 @@ When **no branding is specified**, grouping variants from different product styl
 ```
 Input Request: ORD-2026-NO-BRAND
 ├── Group: "items"
-│   ├── BAS-3000-G-Y (Style: BASIC_BAG, 100 units)
-│   ├── BAS-3000-G-BK (Style: BASIC_BAG, 100 units)
+│   ├── BAS-3000-G-Y (Style: BASIC_SHIRT, 100 units)
+│   ├── BAS-3000-G-BK (Style: BASIC_SHIRT, 100 units)
 │   ├── PEN-701-BU (Style: PEN_CLASSIC, 200 units)
 │   └── PEN-701-RD (Style: PEN_CLASSIC, 200 units)
 │   └── Branding: NONE
@@ -117,10 +117,10 @@ This is a key concept: specifying branding on a mixed-style group causes the gro
 ```
 Input Request: ORD-2026-MIXED-BRAND
 ├── Group: "mixed-items"
-│   ├── BAS-3000-G-Y (Style: BASIC_BAG, 100 units)
-│   ├── BAS-3000-G-BK (Style: BASIC_BAG, 50 units)
+│   ├── BAS-3000-G-Y (Style: BASIC_SHIRT, 100 units)
+│   ├── BAS-3000-G-BK (Style: BASIC_SHIRT, 50 units)
 │   ├── PEN-701-BU (Style: PEN_CLASSIC, 200 units)
-│   └── Branding: DP-A with company logo
+│   └── Branding: SA with company logo
 
 Result: 2 Orders Created (GROUP SPLITS BY STYLE + UNBRANDED)
 ├── Order 1: SO-2026-001234 (BASIC_BAG style - UNBRANDED order)
@@ -130,7 +130,7 @@ Result: 2 Orders Created (GROUP SPLITS BY STYLE + UNBRANDED)
 ├── Order 2: SO-2026-001235 (PEN_CLASSIC style - WITH branding)
 │   ├── Items: PEN-701-BU (200) = 200 units
 │   ├── From Group: "mixed-items"
-│   └── Branding: DP-A with company logo ✓
+│   └── Branding: PA with company logo ✓
 ```
 
 **Why This Happens**: The system attempts to apply a single branding specification to multiple product styles. Since branding may be style-specific or have different setup requirements, it creates separate orders per style. The unbranded order is generated to ensure all items are accounted for and allows for proper handling of items that couldn't receive the intended branding.
@@ -144,9 +144,9 @@ When **multiple groups are submitted where some have branding and others don't**
 ```
 Input Request: ORD-2026-COMPLEX
 ├── Group: "branded-bags"
-│   ├── BAS-3000-G-Y (Style: BASIC_BAG, 100 units)
-│   ├── BAS-3000-G-BK (Style: BASIC_BAG, 50 units)
-│   └── Branding: DP-A (Digital Print)
+│   ├── BAS-3000-G-Y (Style: BASIC_SHIRT, 100 units)
+│   ├── BAS-3000-G-BK (Style: BASIC_SHIRT, 50 units)
+│   └── Branding: SA (Digital Print)
 ├── Group: "branded-pens"
 │   ├── PEN-701-BU (Style: PEN_CLASSIC, 200 units)
 │   ├── PEN-701-RD (Style: PEN_CLASSIC, 100 units)
@@ -156,10 +156,10 @@ Input Request: ORD-2026-COMPLEX
     └── Branding: NONE
 
 Result: 2 Orders Created
-├── Order 1: SO-2026-001234 (BASIC_BAG - Branded)
+├── Order 1: SO-2026-001234 (BASIC_SHIRT - Branded)
 │   ├── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (50) = 150 units
 │   ├── From Group: "branded-bags"
-│   └── Branding: DP-A ✓
+│   └── Branding: SA ✓
 │   ├── Items: PEN-701-BU (200) + PEN-701-RD (100) = 300 units
 │   ├── From Group: "branded-pens"
 │   └── Branding: LA ✓

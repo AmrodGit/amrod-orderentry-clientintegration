@@ -32,7 +32,7 @@ The Logo Library supports the following MIME types for Artwork files:
 
 ### Limitations
 
-Artwork files must not exceed **50 MB** in size. Larger files will result in an error during upload.
+Artwork files must not exceed **20 MB** for Type `LOGO` and **150 MB** for Type `TEMPLATE` in size. Larger files will result in an error during upload.
 
 ### 1. Create Draft Artwork (`createArtwork`)
 

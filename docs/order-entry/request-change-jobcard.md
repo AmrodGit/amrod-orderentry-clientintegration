@@ -299,7 +299,7 @@ mutation RequestMultipleJobCardChanges {
 
 ### Example 3: Change with Foil Color Metadata
 
-For branding methods that support foiling (like embossing or foil stamping), you can include metadata:
+For branding method, Foiling, you can include metadata:
 
 ```graphql
 mutation RequestChangeWithFoilColor {
@@ -310,7 +310,7 @@ mutation RequestChangeWithFoilColor {
       {
         jobCardNumber: "JOB-015555"
         brandingDetail: {
-          brandingCode: "DP-B"
+          brandingCode: "FI"
           position: "C"
           logoPosition: TOP_CENTER
           logoSize: 20
@@ -576,9 +576,9 @@ During initial order entry, an incorrect logo size was used. You need to correct
 3. Submit a change request with `INSTRUCTION_NOT_FOLLOWED` type
 4. Include special instructions explaining the correction
 
-### Use Case 3: Update Foil Color for Embossed Logo
+### Use Case 3: Update Foil Color
 
-The foil color for an embossed branding method needs to be changed.
+The foil color for Foiling branding method needs to be changed.
 
 **Workflow:**
 1. Query the current job card
