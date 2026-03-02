@@ -1,3 +1,22 @@
+auth {
+  mode: oauth2
+}
+
+auth:oauth2 {
+  grant_type: client_credentials
+  access_token_url: {{IDP_TOKEN_URL}}
+  refresh_token_url: {{IDP_TOKEN_URL}}
+  client_id: {{IDP_CLIENT_ID}}
+  client_secret: {{IDP_CLIENT_SECRET}}
+  scope: {{IDP_SCOPES}}
+  credentials_placement: body
+  credentials_id: credentials
+  token_placement: header
+  token_header_prefix: Bearer
+  auto_fetch_token: true
+  auto_refresh_token: true
+}
+
 script:pre-request {
   // Read environment variables
   const var1 = bru.getEnvVar('CUSTOMER_CODE');
@@ -13,4 +32,12 @@ script:pre-request {
   // Set the custom header
   req.setHeader('x-gateway-impersonate', encoded);
   
+  // Generate OAuth2 Client Secret: base64(IDP_USERNAME:IDP_SECRET)
+  const idpUsername = bru.getEnvVar('IDP_USERNAME');
+  const idpSecret = bru.getEnvVar('IDP_SECRET');
+  const clientSecretString = `${idpUsername}:${idpSecret}`;
+  const encodedClientSecret = btoa(clientSecretString);
+  
+  // Set as environment variable for OAuth2 client_secret
+  bru.setEnvVar('IDP_CLIENT_SECRET', encodedClientSecret);
 }
