@@ -122,7 +122,7 @@ The `/samples/bruno/` folder contains organized request collections for all API 
 
 ### Using Bruno Samples
 1. Import the collection: `/samples/bruno/`
-2. Select your environment (Local, Dev, QA, UAT)
+2. Select your environment (`UAT`, `Production`)
 3. Set environment variables as needed
 4. Execute requests to test API functionality
 
@@ -132,22 +132,6 @@ The `/samples/bruno/` folder contains organized request collections for all API 
 - **GraphQL API**: GraphQL schema available at `{ENV_URL}/graphql/schema.graphql`
 - **Assets REST API**: Retrieve media assets (proofs, approvals, artwork) - See [Assets API Documentation](./assets.md)
 
-### Global Concepts
-
-#### Sample Data for Testing
-**Product SKUs**: BAG-612-BU, BAS-3000-G-Y, BAS-3000-P-BK, PEN-701-BU, GF-AM-1000-BU-0, etc.
-
-**Branding Codes**: DP-A, DP-B, LA, LB, LC, LG, PA, PB, PC, SA, SB, SC, SP, SUB-A, etc.
-
-**Branding Positions**: A, B, C, D, E, F, G
-
-**Collection Types**:
-- `COLLECTION_HEAD_OFFICE` - Central warehouse delivery
-- `BRANCH_DELIVERY` - Branch delivery (requires branch code: JHB, DBN, CPT, PLA, BFN)
-
-**Contact Sample**: John Doe (john.doe@example.com)
-
-**Product Quantities**: Use even numbers between 10 and 500
 
 ## ✅ Best Practices
 
@@ -219,6 +203,12 @@ docs/
 - Implemented parent-child relationship examples in API samples
 - Added Bruno samples with automatic environment variable extraction
 - Updated artwork upload workflow with session ID and upload URI management
+
+### 🌎 Available Environments
+| Environment | ENV_BASE_URI | Use Case |
+|-------------|-----|----------|
+| UAT | Shared during onboarding phase | User Acceptance Testing |
+| PROD | Shared once user acceptance testing is complete | Production Use |
 
 ---
 

@@ -408,6 +408,7 @@ When dealing with multiple related job cards:
 ## Related Operations
 
 - **[Request Job Card Change](./request-change-jobcard.md)** - Request modifications to job cards in approval workflow
+- **[Changing Job Card Branding Positions](./jobcard-branding-position-changes.md)** - Understand rules for changing branding positions between locations
 - **[Approve Job Card](./approve-jobcard.md)** - Approve job cards for manufacturing
 - **[Dashboard - Job Cards](./dashboard-jobcards.md)** - Query job cards and check status
 - **[Place Sales Order](./place-sales-order.md#branding-metadata)** - Reference for branding details and metadata

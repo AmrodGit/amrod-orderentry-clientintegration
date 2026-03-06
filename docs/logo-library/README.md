@@ -92,14 +92,6 @@ See [Manage Sharing](./manage-sharing.md) for detailed information.
 ### GraphQL Schema
 - **Main Schema**: `{ENV_BASE_URI}/graphql/schema.graphql`
 
-### Available Environments
-| Environment | ENV_BASE_URI | Use Case |
-|-------------|-----|----------|
-| Local | http://localhost:5000/ | Local development |
-| Dev | https://moyo-dgw.dev.amrod.co.za/ | Development testing |
-| QA | https://moyo-dgw.qa.amrod.co.za/ | Quality assurance |
-| UAT | https://moyo-dgw.uat.amrod.co.za/ | User acceptance testing |
-
 ## Testing & Examples
 
 ### Bruno Collection

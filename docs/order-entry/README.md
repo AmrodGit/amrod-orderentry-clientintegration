@@ -19,6 +19,7 @@ Welcome to the Order Entry functional area documentation. This folder contains g
 - **[Approve Job Card](./approve-jobcard.md)** - Approve job cards and select proof layouts for manufacturing
 - **[Update Job Card Branding](./update-jobcard-branding.md)** - Provide branding information when job card is waiting (AWAITING_INFO status)
 - **[Request Job Card Change](./request-change-jobcard.md)** - Modify existing orders and job cards during approval workflow
+- **[Changing Job Card Branding Positions](./jobcard-branding-position-changes.md)** - Understand rules and nuances for changing branding positions between locations
 
 ### 📊 Dashboard & Reporting
 - **[Dashboard - Sales Orders](./dashboard-sales-orders.md)** - Query and track sales orders
@@ -47,6 +48,7 @@ See [Place Sales Order - Validate Only Mode](./place-sales-order.md#2-validate-o
 | Debug validation errors | [Place Sales Order - Error Handling](./place-sales-order.md#error-handling) |
 | Track order status | [Dashboard - Sales Orders](./dashboard-sales-orders.md) |
 | Provide job card branding | [Update Job Card Branding](./update-jobcard-branding.md) |
+| Change branding position on a job card | [Changing Job Card Branding Positions](./jobcard-branding-position-changes.md) |
 | Approve job cards for manufacturing | [Approve Job Card](./approve-jobcard.md) |
 | Request order changes | [Request Job Card Change](./request-change-jobcard.md) |
 
@@ -54,12 +56,6 @@ See [Place Sales Order - Validate Only Mode](./place-sales-order.md#2-validate-o
 
 ### GraphQL Schema
 - **Main Schema**: `{ENV_BASE_URI}/graphql/schema.graphql`
-
-### Available Environments
-| Environment | ENV_BASE_URI | Use Case |
-|-------------|-----|----------|
-| UAT | TBC | User Acceptance Testing |
-| PROD | TBC | Production Use |
 
 ## Testing & Examples
 

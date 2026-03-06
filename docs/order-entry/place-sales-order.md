@@ -123,14 +123,14 @@ Input Request: ORD-2026-MIXED-BRAND
 │   └── Branding: SA with company logo
 
 Result: 2 Orders Created (GROUP SPLITS BY STYLE + UNBRANDED)
-├── Order 1: SO-2026-001234 (BASIC_BAG style - UNBRANDED order)
+├── Order 1: SO-2026-001234 (BASIC_SHIRT style - UNBRANDED order)
 │   ├── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (50) = 150 units
 │   ├── From Group: "mixed-items"
 │   └── No Branding
 ├── Order 2: SO-2026-001235 (PEN_CLASSIC style - WITH branding)
 │   ├── Items: PEN-701-BU (200) = 200 units
 │   ├── From Group: "mixed-items"
-│   └── Branding: PA with company logo ✓
+│   └── Branding: SA with company logo ✓
 ```
 
 **Why This Happens**: The system attempts to apply a single branding specification to multiple product styles. Since branding may be style-specific or have different setup requirements, it creates separate orders per style. The unbranded order is generated to ensure all items are accounted for and allows for proper handling of items that couldn't receive the intended branding.
@@ -143,7 +143,7 @@ When **multiple groups are submitted where some have branding and others don't**
 
 ```
 Input Request: ORD-2026-COMPLEX
-├── Group: "branded-bags"
+├── Group: "branded-shirts"
 │   ├── BAS-3000-G-Y (Style: BASIC_SHIRT, 100 units)
 │   ├── BAS-3000-G-BK (Style: BASIC_SHIRT, 50 units)
 │   └── Branding: SA (Digital Print)
@@ -158,7 +158,7 @@ Input Request: ORD-2026-COMPLEX
 Result: 2 Orders Created
 ├── Order 1: SO-2026-001234 (BASIC_SHIRT - Branded)
 │   ├── Items: BAS-3000-G-Y (100) + BAS-3000-G-BK (50) = 150 units
-│   ├── From Group: "branded-bags"
+│   ├── From Group: "branded-shirts"
 │   └── Branding: SA ✓
 │   ├── Items: PEN-701-BU (200) + PEN-701-RD (100) = 300 units
 │   ├── From Group: "branded-pens"

@@ -170,8 +170,7 @@ For support and additional resources, refer to [Support](../support.md).
 | `jobCardAssets` | Get assets associated with a job card |
 | `creditNotes` | List credit notes |
 | `creditNote` | Retrieve specific credit note |
-| `customerContacts` | List customer contacts |
-| `customerContact` | Retrieve specific customer contact |
+
 
 ## Related Functional Areas
 
