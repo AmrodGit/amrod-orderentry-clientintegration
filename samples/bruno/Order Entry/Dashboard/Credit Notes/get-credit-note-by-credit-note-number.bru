@@ -1,0 +1,61 @@
+meta {
+  name: Get Credit Note by Credit Note Number
+  desc: Retrieve a specific credit note using its credit note number with line item details
+  type: graphql
+  seq: 2
+}
+
+docs {
+  # Get Credit Note by Credit Note Number
+  
+  Retrieve a credit note using its credit note number with complete line item details.
+  
+  ## Use Case
+  When you have a credit note number from accounting or customer communication and need all details
+  including line-by-line adjustments for reconciliation and reporting.
+  
+  ## Variables Required
+  - `creditNoteNumber`: The credit note number (e.g., "CN-2026-001234")
+  
+  ## Expected Response
+  Returns a CreditNote object including:
+  - Credit note metadata (ID, number, internal ID)
+  - Date information (credtNoteDate)
+  - Financial summary (totalExcl, tax)
+  - Asset URI for accessing the PDF document
+  - Line item details (SKU, quantity for each adjustment)
+  
+  ## Example Usage
+  Use this when accounting systems or customer queries refer to credit note numbers.
+  Essential for order reconciliation and financial reporting.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetCreditNoteByNumber($creditNoteNumber: String!) {
+    creditNoteByCreditNoteNumber(creditNoteNumber: $creditNoteNumber) {
+      id
+      creditNoteNumber
+      credtNoteDate
+      totalExcl
+      tax
+      assetUri
+      internalId
+      creditNoteDetails {
+        sku
+        quantity
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "creditNoteNumber": "CN-2026-001234"
+  }
+}

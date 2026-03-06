@@ -1,0 +1,54 @@
+﻿query GetArtworkFolders {
+  artworkFolders {
+    canDelete
+    canEdit
+    canMove
+    canShare
+    id
+    name
+    owner {
+      contact {
+        code
+        emailAddress
+      }
+      customer {
+        code
+        name
+      }
+    }
+    path
+    security {
+      access
+    }
+    childFolders {
+      canDelete
+      canEdit
+      canMove
+      canShare
+      id
+      name
+      owner {
+        contact {
+          code
+          emailAddress
+        }
+        customer {
+          code
+          name
+        }
+      }
+      path
+      security {
+        access
+        contact {
+          code
+          emailAddress
+        }
+        customer {
+          code
+          name
+        }
+      }
+    }
+  }
+}

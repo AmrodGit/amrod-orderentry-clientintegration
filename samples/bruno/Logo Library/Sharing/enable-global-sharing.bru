@@ -1,0 +1,63 @@
+meta {
+  name: Enable Global Sharing
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation EnableGlobalSharing($input: EnableGlobalSharingInput!) {
+    enableGlobalSharing(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on ConflictException {
+          message
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "forceEnable": false,
+      "securityType": "READ_ONLY"
+    }
+  }
+}
+
+docs {
+  # Enable Global Sharing
+  
+  Enables global sharing for all artworks and folders owned by the customer.
+  
+  ## Use Case
+  Use this mutation to enable organization-wide sharing settings. When enabled, all artworks and folders can be shared with other customers at the specified access level. This is useful for collaboration across organizations.
+  
+  ## Variables
+  - **securityType**: The access level for global sharing (READ_ONLY or READ_WRITE)
+  - **forceEnable**: Whether to force enable global sharing even if restrictions exist (optional, default false)
+  
+  ## Expected Response
+  - `errors`: Array of errors if operation fails, including:
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid security type
+  
+  ## Prerequisites
+  - User must have appropriate permissions to modify customer sharing settings
+  - Organization must support global sharing
+  
+  ## Important Notes
+  - Global sharing enables sharing for all current and future content
+  - READ_ONLY allows viewing, READ_WRITE allows modification
+  - Can be disabled using "Disable Global Sharing" mutation
+}

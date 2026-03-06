@@ -1,0 +1,99 @@
+meta {
+  name: Update Job Card Branding
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:graphql {
+  mutation UpdateJobCardBrandingInfo($input: UpdateJobCardBrandingInfoInput!) {
+    updateJobCardBrandingInfo(input: $input) {
+      errors {
+        __typename
+        ... on ConflictException {
+          code
+          message
+          errorDetail
+        }
+      }
+      resultPayloadType {
+        result
+        status
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "masterJobCardNumber": "JC-2026-001234",
+      "jobCards": [
+        {
+          "jobCardNumber": "JC-2026-001234",
+          "brandingDetail": {
+            "brandingCode": "DP-A",
+            "position": "A",
+            "logoPosition": "TOP_CENTER",
+            "logos": ["logo-id-1"],
+            "logoSize": 20.0,
+            "logoSizeType": "WIDTH",
+            "reference": "BR-2026-0001",
+            "colors": [
+              {
+                "code": "#FF0000",
+                "type": "HEX"
+              }
+            ],
+            "metadata": [
+              {
+                "key": "DYEName",
+                "value": "DIE-1"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+
+docs {
+  # Update Job Card Branding Information
+  
+  ## Overview
+  Provide branding information to a job card that is in AWAITING_INFO status. This is the initial branding information submission before the job card moves to approval workflow.
+  
+  ## Use Case
+  A job card has been created but is waiting for branding details to be provided. Once you provide the branding information, the job card will progress to the next status in its workflow.
+  
+  ## Variables
+  - `masterJobCardNumber`: The primary job card number in the group (e.g., "JC-2026-001234")
+  - `jobCardNumber`: The specific job card to update (must be part of master group)
+  - Branding details: Complete branding specification including codes, logos, sizes, positions
+  
+  ## Response
+  - `errors`: Array of error messages if the update fails
+  - `resultPayloadType.result`: True if successful, False if failed
+  - `resultPayloadType.status`: Status of the update operation
+  
+  ## Important Notes
+  - Job card MUST be in WAITING_INFO status
+  - All job cards in the array must belong to the same master job card group
+  - Branding specification must be complete with all required fields
+  - For special branding methods (foiling, silicone, vinyl), include required metadata
+  - See Branding Metadata documentation for metadata requirements
+  
+  ## Status Flow
+  - Before: Job card status = WAITING_INFO
+  - After: Job card status → AWAITING_APPROVAL (if branding provided successfully)
+}

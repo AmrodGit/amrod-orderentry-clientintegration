@@ -1,0 +1,75 @@
+meta {
+  name: List Job Cards - Paginated
+  desc: Retrieve a paginated list of all job cards for the current customer
+  type: graphql
+  seq: 3
+}
+
+docs {
+  # List Job Cards - Paginated
+  
+  Retrieve a paginated list of all job cards for the current customer context.
+  
+  ## Use Case
+  Display a dashboard or production queue view of all manufacturing job cards with pagination
+  to manage large datasets and track production status across multiple orders.
+  
+  ## Variables Required
+  - `first`: Number of job cards to retrieve per page (e.g., 20, default: 50, max: 1000)
+  - Optional: `after` cursor for pagination to fetch next page
+  - Optional: `before` cursor for pagination to fetch previous page
+  
+  ## Expected Response
+  Returns a paginated JobCardsConnection with:
+  - `totalCount`: Total number of job cards available
+  - `pageInfo`: Pagination metadata (hasNextPage, startCursor, endCursor)
+  - `edges`: Array of job card edges with cursor and node data
+  - `node`: Job card with ID, number, status, creation date, branding code, logo, and due dates
+  
+  ## Example Usage
+  Use this to build production dashboards, manufacturing queues, or tracking systems with paginated job card lists.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query ListJobCards($first: Int) {
+    jobCards(first: $first) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          jobCardNumber
+          status
+          created
+          isActive
+          jobCardBrandingDetail {
+            brandingCode
+            logo
+          }
+          jobCardDate {
+            dueDate
+            leadTime
+          }
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "first": 20
+  }
+}

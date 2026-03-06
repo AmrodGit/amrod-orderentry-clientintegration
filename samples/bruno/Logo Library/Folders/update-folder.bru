@@ -1,0 +1,88 @@
+meta {
+  name: Update Folder
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateArtworkFolder($input: RenameArtworkFolderInput!) {
+    updateArtworkFolder(input: $input) {
+      errors {
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+      resultPayloadType {
+        result
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "folderId": "QXJ0d29ya0ZvbGRlckRldGFpbHM6Mg==",
+      "name": "Brand Assets - Updated 2025"
+    }
+  }
+}
+
+docs {
+  # Rename Folder
+  
+  Renames an existing folder in the artwork library.
+  
+  ## Use Case
+  Use this mutation to change the name of a folder. Useful when folder purposes change or for correcting naming issues.
+  
+  ## Variables
+  - **id**: The ID of the folder to rename (required)
+  - **name**: The new name for the folder (required, must be unique within parent)
+  
+  ## Expected Response
+  - `resultPayloadType.result`: Boolean indicating successful rename (true = renamed, false = failed)
+  - `errors`: Array of errors if rename fails, including:
+    - `ConflictException`: Name already exists in this location
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid folder ID or name format
+  
+  ## Prerequisites
+  - Folder must exist and be accessible to the current user
+  - User must have edit permissions on the folder
+  - New name must be unique within the folder's parent directory
+  
+  ## Important Notes
+  - Folder path is updated automatically when renamed
+  - All nested folders and artworks maintain their relationships
+  - Permissions are not affected by renaming
+  - Name must follow same rules as folder creation (no special characters)
+}

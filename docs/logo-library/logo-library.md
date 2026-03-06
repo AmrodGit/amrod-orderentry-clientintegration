@@ -2,16 +2,14 @@
 
 ## Table of Contents
 
-- [Artwork Retention](docs/artwork-retention.md)
-- [Error Handling](docs/error-handling.md)
-- [Authentication](docs/authentication.md)
-- [Support](docs/support.md)
-- [Manage Artwork](docs/manage-artwork.md)
-- [Query Artwork](docs/query-artwork.md)
-- [Manage Artwork Folders](docs/manage-artwork-folders.md)
-- [Query Artwork Folders](docs/query-artwork-folders.md)
-- [Manage Artwork Tags](docs/manage-artwork-tags.md)
-- [Query Artwork Tags](docs/query-artwork-tags.md)
+- [Artwork Retention](artwork-retention.md)
+- [Manage Artwork](manage-artwork.md)
+- [Query Artwork](query-artwork.md)
+- [Manage Artwork Folders](manage-artwork-folders.md)
+- [Query Artwork Folders](query-artwork-folders.md)
+- [Manage Artwork Tags](manage-artwork-tags.md)
+- [Query Artwork Tags](query-artwork-tags.md)
+- [Manage Sharing](manage-sharing.md)
 
 ## Purpose
 
@@ -71,6 +69,8 @@ For each shared entity, permissions can be granted as:
 This enables fine-grained control over how and with whom branding assets are distributed.
 
 > 💡 All shared objects are permission-aware. Users will only see or interact with assets they have access to.
+
+**For complete sharing documentation including detailed examples and best practices**, see [Manage Sharing](manage-sharing.md).
 
 ---
 

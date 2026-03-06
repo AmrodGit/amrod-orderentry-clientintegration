@@ -1,0 +1,47 @@
+meta {
+  name: Get Artwork Asset
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{ROOT_URL}}/assets/logo-library/artwork/logo-abc-123
+  body: none
+  auth: none
+}
+
+docs {
+  # Get Artwork Asset (Logo Library)
+  
+  ## Overview
+  Retrieve an artwork asset from the Logo Library by its asset ID. This endpoint returns the artwork file in its original format (PNG, SVG, PDF, etc.).
+  
+  ## Use Case
+  After querying artwork from the Logo Library and obtaining the asset ID, use this endpoint to retrieve the actual artwork file for preview, download, or use in orders.
+  
+  ## Variables
+  - `assetId`: The unique artwork asset ID returned by Logo Library queries (e.g., "logo-abc-123")
+  
+  ## Response
+  - **Success (200)**: The artwork asset file (image format: PNG, SVG, PDF, etc.)
+  - **Not Found (404)**: The artwork asset was not found
+  
+  ## Example Workflow
+  1. Query GraphQL: `query { artworkByArtworkNumber(...) { artworkFiles { assetId } } }`
+  2. Extract `assetId` from response
+  3. Use this endpoint: `GET /assets/logo-library/artwork/{assetId}`
+  
+  ## File Formats
+  The returned file can be in any supported artwork format:
+  - PNG (Portable Network Graphics)
+  - SVG (Scalable Vector Graphics)
+  - PDF (Portable Document Format)
+  - TIFF (Tagged Image File Format)
+  - Other formats depending on upload
+  
+  ## Notes
+  - Asset IDs come from Logo Library artwork queries
+  - Artwork files are typically larger and should be streamed
+  - This endpoint does not require special impersonation headers
+  - Cache artwork files locally if frequently accessed
+}

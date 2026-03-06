@@ -1,0 +1,80 @@
+meta {
+  name: Get Job Card by Job Card Number
+  desc: Retrieve a specific job card using its job card number with branding and asset details
+  type: graphql
+  seq: 2
+}
+
+docs {
+  # Get Job Card by Job Card Number
+  
+  Retrieve a job card using its job card number with complete branding and asset specifications.
+  
+  ## Use Case
+  When you have a job card number from manufacturing or production systems and need all details
+  including branding specifications, coloring options, and associated assets.
+  
+  ## Variables Required
+  - `jobCardNumber`: The job card number (e.g., "JOB-001234")
+  
+  ## Expected Response
+  Returns a JobCard object containing:
+  - Job card metadata (ID, number, parent sales order, status, creation date)
+  - Complete branding details (code, position, logo, colors, dimensions, special colors for foil/silicone/vinyl)
+  - Job card schedule (due dates, lead times)
+  - Associated assets (name, type, URL)
+  - Active status and timestamps
+  
+  ## Example Usage
+  Use this when manufacturing systems or production queries refer to job card numbers.
+  Essential for production floor access to branding requirements.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetJobCardByNumber($jobCardNumber: String!) {
+    jobCardByJobCardNumber(jobCardNumber: $jobCardNumber) {
+      id
+      jobCardNumber
+      salesOrderNumber
+      status
+      created
+      isActive
+      jobCardBrandingDetail {
+        brandingCode
+        brandingPosition
+        brandingPlacement
+        logo
+        colors
+        brandingSizeWidth
+        brandingSizeHeight
+        foilColor
+        siliconeColor
+        vinylColor
+      }
+      jobCardDate {
+        dueDate
+        internalDueDate
+        leadTime
+        internalLeadTime
+      }
+      jobCardAssets {
+        id
+        name
+        type
+        url
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "jobCardNumber": "JOB-001234"
+  }
+}

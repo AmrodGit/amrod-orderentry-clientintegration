@@ -1,0 +1,62 @@
+meta {
+  name: Get Current User Identity
+  type: graphql
+  seq: 1
+}
+
+docs {
+  This query retrieves the current authenticated user's identity information,
+  including their account type, associated customer, and the scope of customers
+  and contacts they can impersonate.
+  
+  Use this query to:
+  - Verify successful authentication
+  - Discover your impersonation scope (for Integrator accounts)
+  - Retrieve customer codes and contact IDs for future impersonation requests
+  - Understand your access level and account type
+  
+  Expected Response:
+  - identity: Your username or email address
+  - identityType: Your account type (Service, User, or Integrator)
+  - customer: Your primary customer (may be null)
+  - customerContact: Your contact information (may be null)
+  - impersonationScope: Array of customers you can impersonate with their contacts
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+    viewer {
+      identity
+      identityType
+      customer {
+        code
+        name
+      }
+      customerContact {
+        id
+        code
+        emailAddress
+        firstName
+        lastName
+      }
+      impersonationScope {
+        code
+        name
+        customerContacts {
+          id
+          code
+          emailAddress
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}
+

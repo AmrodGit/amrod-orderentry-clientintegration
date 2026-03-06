@@ -1,0 +1,77 @@
+meta {
+  name: Get Sales Order by Sales Order Number
+  desc: Retrieve a specific sales order using its sales order number
+  type: graphql
+  seq: 2
+}
+
+docs {
+  # Get Sales Order by Sales Order Number
+  
+  Retrieve complete details for a sales order using its sales order number (reference number).
+  
+  ## Use Case
+  When you have a sales order number from a confirmation email or invoice and want to fetch all details 
+  including line items, customer information, and financial details.
+  
+  ## Variables Required
+  - `salesOrderNumber`: The sales order number (e.g., "SO-2026-001234")
+  
+  ## Expected Response
+  Returns a SalesOrder object including:
+  - Order metadata (ID, number, customer reference)
+  - Customer and contact information with phone number
+  - Order line items with SKU, quantity, and pricing
+  - Financial summary (totals, tax, balance outstanding)
+  - Payment and active status
+  
+  ## Example Usage
+  Use this when ordering systems or customer queries refer to sales order numbers.
+  Ideal for customer service lookups and order reconciliation.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetSalesOrderByNumber($salesOrderNumber: String!) {
+    salesOrderBySalesOrderNumber(salesOrderNumber: $salesOrderNumber) {
+      id
+      salesOrderNumber
+      customerReference
+      orderDate
+      status
+      totalExcl
+      tax
+      balanceOutstanding
+      isPaid
+      isActive
+      customer {
+        id
+        name
+        code
+      }
+      contact {
+        fullName
+        emailAddress
+        telephoneNumber
+      }
+      salesOrderDetails {
+        rowNumber
+        sku
+        quantity
+        unitPriceExcl
+        lineTotalExcl
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "salesOrderNumber": "SO-2026-001234"
+  }
+}

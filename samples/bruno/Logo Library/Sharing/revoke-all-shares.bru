@@ -1,0 +1,61 @@
+meta {
+  name: Revoke All Shares
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation RevokeAllShares {
+    revokeAllShares {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+    }
+  }
+}
+
+docs {
+  # Revoke All Shares
+  
+  Revokes all sharing for all artworks and folders owned by the current customer.
+  
+  ## Use Case
+  Use this mutation to globally revoke all shares across the organization. This makes all artworks and folders private, accessible only to the owner's organization.
+  
+  ## Expected Response
+  - `errors`: Array of errors if operation fails, including:
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Validation error
+  
+  ## Prerequisites
+  - User must have appropriate permissions to modify sharing settings
+  
+  ## Important Notes
+  - This is a broad operation affecting ALL shared content
+  - No items will be accessible to external parties after execution
+  - All artworks and folders become private to the organization
+  - Use with caution as this affects all team members' shares
+}

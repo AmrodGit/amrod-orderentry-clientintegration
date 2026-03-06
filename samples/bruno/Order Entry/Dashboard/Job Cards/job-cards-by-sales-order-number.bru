@@ -1,0 +1,104 @@
+meta {
+  name: Job Cards by Sales Order Number
+  desc: Retrieve all job cards associated with a specific sales order using the sales order number
+  type: graphql
+  seq: 5
+}
+
+docs {
+  # Job Cards by Sales Order Number
+  
+  Retrieve all job cards associated with a specific sales order using its sales order number.
+  
+  ## Use Case
+  When you have a sales order number and need to view all manufacturing job cards created for
+  that order, including all branding specifications, assets, and production schedules.
+  
+  ## Variables Required
+  - `salesOrderNumber`: The sales order number (e.g., "SO-2026-001234")
+  
+  ## Expected Response
+  Returns a paginated JobCardsConnection with:
+  - `totalCount`: Total number of job cards for this sales order
+  - `pageInfo`: Pagination metadata
+  - Array of job cards containing:
+    - Job card metadata (ID, number, status, creation date)
+    - Complete branding specifications (code, position, logo, colors, special colors)
+    - Job card schedule (due dates, lead times)
+    - Associated assets (name, type, URL)
+    - Line item details (SKU, quantity to brand)
+  
+  ## Example Usage
+  Use this for order-level production dashboards to see all manufacturing jobs linked to a customer order,
+  tracking branding requirements and production timelines across multiple items.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetJobCardsBySalesOrderNumber($salesOrderNumber: String!) {
+    jobCards(
+      first: 100
+      where: {
+        SalesOrder: {
+          salesOrderNumber: {
+            eq: $salesOrderNumber
+          }
+        }
+      }
+    ) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          jobCardNumber
+          status
+          created
+          isActive
+          jobCardBrandingDetail {
+            brandingCode
+            brandingPosition
+            logo
+            colors
+            brandingSizeWidth
+            brandingSizeHeight
+            foilColor
+            siliconeColor
+            vinylColor
+          }
+          jobCardDate {
+            dueDate
+            internalDueDate
+            leadTime
+          }
+          jobCardAssets {
+            name
+            type
+            url
+          }
+          jobCardDetail {
+            sku
+            quantity
+          }
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "salesOrderNumber": "SO-2026-001234"
+  }
+}

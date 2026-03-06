@@ -1,0 +1,56 @@
+meta {
+  name: Query Artwork Tags
+  type: graphql
+  seq: 5
+}
+
+docs {
+  # Query Artwork Tags
+  
+  Retrieves all artwork tags available to the current user.
+  
+  ## Use Case
+  Use this query to retrieve the complete list of tags in the logo library. Shows tag names, colors, and ownership information. Useful for displaying tagging options when applying tags to artworks.
+  
+  ## Expected Response
+  - `artworkTags[]`: Array of tag objects including:
+    - `id`: Unique identifier for the tag
+    - `name`: Tag name
+    - `color`: Hex color code for the tag
+    - `canEdit`: Boolean indicating if user can edit this tag
+    - `owner`: Owner contact and customer information
+  
+  ## Notes
+  - Returns all tags accessible to the current user (owned and shared)
+  - No pagination needed as tag lists are typically manageable in size
+  - Tags are returned in no particular order
+  - Permissions are calculated based on user's access level
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetArtworkTags {
+    artworkTags {
+      canEdit
+      color
+      id
+      name
+      owner {
+        customer {
+          code
+          name
+        }
+        contact {
+          code
+          emailAddress
+        }
+      }
+    }
+  }
+}
+

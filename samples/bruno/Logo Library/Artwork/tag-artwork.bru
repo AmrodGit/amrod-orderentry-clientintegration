@@ -1,0 +1,84 @@
+meta {
+  name: Tag Artwork
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation TagArtwork($input: TagArtworkInput!) {
+    tagArtwork(input: $input) {
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+      }
+      resultPayloadType {
+        result
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "artworkId": "QXJ0d29ya0RldGFpbHM6MzA5MjM4",
+      "tagIds": ["QXJ0d29ya1RhZ0RldGFpbHM6MjcxMw==", "QXJ0d29ya1RhZ0RldGFpbHM6Mjg2NQ=="]
+    }
+  }
+}
+
+docs {
+  # Tag Artwork
+  
+  Applies or updates tags on an existing artwork for better organization and searchability. Multiple tags can be applied to a single artwork for categorization and filtering purposes.
+  
+  ## Use Case
+  Use this mutation to organize and categorize artworks using tags. Tags improve searchability and help organize artwork collections by subject matter, status, or other classification schemes. This operation replaces existing tags with the provided tags.
+  
+  ## Variables
+  - **artworkId**: The ID of the artwork to tag (required)
+  - **tagIds**: Array of tag IDs to apply to the artwork (required)
+    - Pass an empty array to remove all tags
+    - Multiple tags can be applied simultaneously
+  
+  ## Expected Response
+  - `resultPayloadType.result`: Boolean indicating successful tagging (true = success, false = failed)
+  - `errors`: Array of errors if tagging fails, including:
+    - `NotFoundException`: Artwork or tag not found
+    - `BadRequestException`: Invalid request format or data
+    - `InputValidationException`: Invalid tag IDs or artwork ID
+    - `ImpersonationRequiredException`: Insufficient permissions
+  
+  ## Prerequisites
+  1. Artwork must exist (use Query Artwork to find artwork IDs)
+  2. All tag IDs must exist (obtained via Query Artwork Tags)
+  3. User must have edit permissions on the artwork
+  4. Tags must be accessible to the user
+  
+  ## Important Notes
+  - This operation replaces all existing tags with the provided tag IDs
+  - To preserve existing tags while adding new ones, query current tags first
+  - Tag IDs are base64-encoded identifiers
+  - Tags improve query performance when used as filter criteria
+}

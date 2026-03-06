@@ -1,0 +1,74 @@
+meta {
+  name: Share Artwork
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation ShareArtwork($input: ShareArtworkInput!) {
+    shareArtwork(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on InputValidationException {
+          code
+          message
+          parameterName
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "QXJ0d29ya0RldGFpbHM6MzA5MjM4",
+      "contactIdsShare": [],
+      "contactIdsRevoke": [],
+      "customerCodesShare": ["AMR0002"],
+      "customerCodesRevoke": [],
+      "sharedAccess": "READ_ONLY"
+    }
+  }
+}
+
+docs {
+  # Share Artwork
+  
+  Shares or revokes artwork access with specific customers and contacts.
+  
+  ## Use Case
+  Use this mutation to grant or revoke access to specific artworks with individual customers or contacts. You can simultaneously share with new parties and revoke from existing ones in a single operation.
+  
+  ## Variables
+  - **id**: The ID of the artwork to share (required)
+  - **contactIdsShare**: Array of contact IDs to grant access to (optional)
+  - **contactIdsRevoke**: Array of contact IDs to revoke access from (optional)
+  - **customerCodesShare**: Array of customer codes to grant access to (optional)
+  - **customerCodesRevoke**: Array of customer codes to revoke access from (optional)
+  - **sharedAccess**: Access level (READ_ONLY or READ_WRITE)
+  
+  ## Expected Response
+  - `errors`: Array of errors if operation fails, including:
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid input parameters
+  
+  ## Prerequisites
+  - Artwork must exist and be owned by the current user's customer
+  - Contact IDs and customer codes must be valid
+  - User must have share permissions on the artwork
+  
+  ## Important Notes
+  - Both sharing and revoking can be done in the same call
+  - READ_ONLY allows viewing only, READ_WRITE allows modification
+  - Sharing at customer level applies to all contacts in that customer
+}

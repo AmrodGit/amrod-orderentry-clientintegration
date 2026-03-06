@@ -1,0 +1,148 @@
+meta {
+  name: Place Order (Validate Only)
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation PlaceOrder($input: PlaceOrderInput!) {
+    placeOrder(input: $input) {
+      errors {
+        __typename
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+          fields {
+            fieldName
+            message
+          }
+        }
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+      placeOrderPayloadType {
+        orders {
+          orderNumber
+          salesOrderNumber
+          totalExcl
+          totalIncl
+          leadTimeInDays
+          details {
+            sku
+            quantity
+            unitPrice
+            totalExcl
+            totalIncl
+          }
+        }
+        warnings {
+          code
+          message
+          warningType
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "orderNumber": "ORD-{{$timestamp}}-VAL-001",
+      "options": {
+        "validateOnly": true,
+        "orderType": "STANDARD"
+      },
+      "collection": {
+        "collectionType": "COURIER"
+      },
+      "contact": {
+        "notifications": {
+          "order": {
+            "firstName": "Jane",
+            "lastName": "Smith",
+            "email": "jane.smith@example.com",
+            "contactNumber": "+27-11-555-1234"
+          }
+        }
+      },
+      "details": [
+        {
+          "id": "group-1",
+          "items": [
+            {
+              "sku": "MUG-450-WH",
+              "quantity": 100,
+              "price": 8.99
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+docs {
+  # Place Order (Validate Only)
+  
+  Validates an order configuration without actually placing it in the system. This returns calculated pricing, lead times, and any validation/business rule errors without creating an order record.
+  
+  ## Use Case
+  Use this mutation for the following scenarios:
+  - **Pre-submission validation**: Check if your order data is correct before final submission
+  - **Pricing and availability check**: Retrieve calculated pricing and lead time estimates
+  - **Cart preview**: Show customers final costs and delivery dates before they commit
+  - **Debugging**: Identify validation errors and business rule violations without side effects
+  - **Configuration testing**: Verify SKUs, quantities, and contact information before placing
+  
+  ## Required Information
+  - **orderNumber**: Unique identifier for the request (used to match responses)
+  - **validateOnly**: Must be set to `true` to skip order creation
+  - **collectionType**: How the order will be collected
+  - **Order Contact**: First name, last name, email, and optional contact number
+  - **Order Items**: At least one item with SKU and quantity
+  
+  ## Expected Response
+  - `orders[0].orderNumber`: The order identifier you provided (no sales order number when validate only)
+  - `orders[0].totalExcl`: Calculated total price excluding tax
+  - `orders[0].totalIncl`: Calculated total price including tax
+  - `orders[0].leadTimeInDays`: Estimated delivery time in days
+  - `details`: Line items with calculated unit prices and totals
+  - `warnings`: Any non-critical warnings about pricing or availability
+  - `errors`: Any validation or business rule errors preventing order placement
+  
+  ## Important Notes
+  - **No order is created**: Set `validateOnly: true` means no order record is saved
+  - **No salesOrderNumber returned**: This field is only populated when the order is actually placed
+  - **Useful for UI feedback**: Use this to show real-time pricing and validation to users
+  - **Test before placing**: Always validate before calling again with `validateOnly: false`
+  - **Check for errors**: Review all errors in the response before attempting to place the actual order
+  - **Warnings are non-critical**: Warnings inform about pricing mismatches or other issues but don't prevent validation
+  
+  ## Next Steps
+  1. Review the response to verify pricing and lead times
+  2. Address any validation errors shown in the response
+  3. Once satisfied, resubmit with `validateOnly: false` to create the order
+}
+

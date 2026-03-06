@@ -1,0 +1,78 @@
+meta {
+  name: Commit Artwork
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CommitArtwork($input: CommitArtworkInput!) {
+    commitArtwork(input: $input) {
+      errors {
+        __typename
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+      }
+      resultPayloadType {
+        result
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{CREATED_ARTWORK_ID}}",
+      "tagIds": null
+    }
+  }
+}
+
+docs {
+  # Commit Artwork
+  
+  Commits the artwork after the blob has been successfully uploaded, finalizing the artwork creation process and optionally applying tags.
+  
+  ## Use Case
+  This is the final step in the artwork creation workflow. After successfully uploading the file blob, commit the artwork using the session ID to make it permanently available in the logo library.
+  
+  ## Variables
+  - **id**: The artwork session ID returned by "Create Artwork Session"
+  - **tagIds**: Optional array of tag IDs to apply to the artwork during commit. Can be null to apply tags later.
+  
+  ## Expected Response
+  - `resultPayloadType.result`: Boolean value indicating successful commit (true/false)
+  - `errors`: Array of validation, conflict, or permission errors if commit fails
+  
+  ## Prerequisites
+  1. Must have successfully created an artwork session via "Create Artwork Session"
+  2. Must have successfully uploaded the file blob via "Upload Artwork Blob"
+  3. Session ID must be obtained from the Create Artwork Session response
+  
+  ## Workflow Context
+  This completes the three-step artwork creation process:
+  1. Create Artwork Session → Get upload credentials
+  2. Upload Artwork Blob → Upload file to Azure Storage
+  3. Commit Artwork ← Finalize and make available (THIS STEP)
+}

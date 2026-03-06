@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Moyo Data Gateway - Order Intake",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

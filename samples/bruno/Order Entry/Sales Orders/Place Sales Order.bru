@@ -1,0 +1,95 @@
+meta {
+  name: Place Sales Order
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    updateJobCardBrandingInfo(
+      input: {
+        orderNumber: "SJ 020"
+        collection: { collectionType: COLLECTION_HEAD_OFFICE }
+        contact: {
+          notifications: {
+            order: {
+              email: "safeena@amrod.co.za"
+              firstName: "safeena"
+              lastName: "Juwale"
+            }
+          }
+        }
+        details: [{ id: "12739", items: [{ quantity: 1, sku: "BAS-3000-BL-M" }] }]
+        options: { orderType: STANDARD, validateOnly: true }
+      }
+    ) {
+      placeOrderPayloadType {
+        orders {
+          leadTimeInDays
+          leadTimeInHours
+          orderDate
+          orderNumber
+          salesOrderNumber
+          totalExcl
+          details {
+            items {
+              name
+              quantity
+              sku
+              unitPrice
+            }
+            id
+          }
+        }
+        warnings {
+          code
+          message
+          warningType
+        }
+      }
+      errors {
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+          additionalData {
+            key
+            value
+          }
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+          additionalData {
+            key
+            value
+          }
+        }
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+          additionalData {
+            key
+            value
+          }
+        }
+        ... on ServerError {
+          errorType
+          items
+          message
+          requestReference
+        }
+      }
+    }
+  }
+  
+}
