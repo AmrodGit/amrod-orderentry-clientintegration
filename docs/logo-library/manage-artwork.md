@@ -32,7 +32,7 @@ The Logo Library supports the following MIME types for Artwork files:
 
 ### Limitations
 
-Artwork files must not exceed **50 MB** in size. Larger files will result in an error during upload.
+Artwork files must not exceed **20 MB** for Type `LOGO` and **150 MB** for Type `TEMPLATE` in size. Larger files will result in an error during upload.
 
 ### 1. Create Draft Artwork (`createArtwork`)
 
@@ -84,9 +84,13 @@ mutation {
 
 After receiving the `uploadUri`, upload the binary file (e.g., PNG or SVG) to this URL using an HTTP PUT request.
 
+#### ⚠️ Critical Requirement: MIME Type Matching
+
+**The `mimeType` specified in the `createArtwork` mutation MUST exactly match the `Content-Type` header used in the PUT request.** If the MIME types do not match, the artwork upload will fail validation during the upload and the artwork will be deleted after 30 minutes. Take special note of the `image/jpg` vs `image/jpeg` as some browsers will interchange between the two regardless of the file extension.
+
 #### Example (cURL):
 ```bash
-curl -X PUT -T ./logo.png "https://upload-url-from-createArtwork"
+curl -X PUT -T ./logo.png -H "Content-Type: image/png" "https://upload-url-from-createArtwork"
 ```
 
 **Important:** You must complete this step before committing the artwork.

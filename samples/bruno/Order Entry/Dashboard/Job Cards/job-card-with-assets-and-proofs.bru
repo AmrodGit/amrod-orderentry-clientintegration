@@ -1,0 +1,97 @@
+meta {
+  name: Job Card with Assets and Proofs
+  desc: Retrieve a job card with all associated assets, proofs, and parent sales order details
+  type: graphql
+  seq: 4
+}
+
+docs {
+  # Job Card with Assets and Proofs
+  
+  Retrieve a complete job card including all associated assets, proofs, and parent sales order information.
+  
+  ## Use Case
+  Access comprehensive job card information for production including design specifications, proof versions,
+  and the parent sales order details - all in a single query for efficient production planning.
+  
+  ## Variables Required
+  - `jobCardNumber`: The job card number (e.g., "JOB-001234")
+  
+  ## Expected Response
+  Returns a JobCard with:
+  - Job card metadata and status
+  - Complete branding specifications
+  - Job card schedule (due dates, lead times)
+  - Associated assets (files, specifications, designs)
+  - Job card proofs with versions and proof options
+  - Line item details (SKU, quantity to brand)
+  - Parent sales order information (number, reference, status)
+  
+  ## Example Usage
+  Use this for comprehensive production workflows where manufacturing teams need design assets,
+  proof documents, quantity information, and parent order context all together.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetJobCardWithAssets($jobCardNumber: String!) {
+    jobCardByJobCardNumber(jobCardNumber: $jobCardNumber) {
+      id
+      jobCardNumber
+      salesOrderNumber
+      status
+      created
+      jobCardBrandingDetail {
+        brandingCode
+        brandingPosition
+        logo
+        colors
+        brandingSizeWidth
+        brandingSizeHeight
+      }
+      jobCardDate {
+        dueDate
+        internalDueDate
+        leadTime
+      }
+      jobCardAssets {
+        id
+        name
+        type
+        url
+        assetId
+      }
+      jobCardProofs {
+        id
+        url
+        version
+        numberOfOptions
+        jobCardProofOptions {
+          number
+          isRecommended
+          pageRange
+        }
+      }
+      jobCardDetail {
+        sku
+        quantity
+      }
+      salesOrder {
+        salesOrderNumber
+        customerReference
+        status
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "jobCardNumber": "JOB-001234"
+  }
+}

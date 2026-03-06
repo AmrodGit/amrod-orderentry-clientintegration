@@ -1,0 +1,53 @@
+meta {
+  name: Get Job Card Proof Asset
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{ROOT_URL}}/assets/jobcards/JC-2026-001234/proofs/proof-xyz-789
+  body: none
+  auth: inherit
+}
+
+docs {
+  # Get Job Card Proof Asset
+  
+  ## Overview
+  Retrieve a job card proof asset by job card number and asset ID. This endpoint returns the proof file for customer review and approval.
+  
+  ## Use Case
+  After querying job card proofs and obtaining the asset ID and job card number, use this endpoint to retrieve the actual proof file (typically PDF or image) for customer approval or archival.
+  
+  ## Variables
+  - `jobCardNumber`: The job card number (e.g., "JC-2026-001234") - Required
+  - `assetId`: The unique proof asset ID returned by job card proof queries (e.g., "proof-xyz-789") - Required
+  
+  ## Response
+  - **Success (200)**: The proof asset file (typically PDF or image format)
+  - **Not Found (404)**: The proof asset was not found
+  
+  ## Example Workflow
+  1. Query GraphQL: `query { jobCardByJobCardNumber("JC-2026-001234") { proofs { assetId } } }`
+  2. Extract `jobCardNumber` and `assetId` from response
+  3. Use this endpoint: `GET /assets/jobcards/{jobCardNumber}/proofs/{assetId}`
+  
+  ## Proof Types
+  - **Single Proof**: One design layout (retrieve directly)
+  - **Multi-Variant Proof**: Multiple design options (retrieve main proof or specific options)
+  
+  ## Authentication
+  - Optional: `x-gateway-impersonate` header for impersonation scenarios
+  
+  ## Use Cases
+  - Retrieving proof images for customer approval
+  - Downloading proofs for review
+  - Accessing variant-specific proof files
+  - Archiving proof documentation
+  
+  ## Notes
+  - Both jobCardNumber and assetId are required
+  - Proofs are typically large files - implement streaming for downloads
+  - Store proofs along with job card data for audit trails
+  - Consider caching frequently accessed proofs
+}

@@ -1,0 +1,69 @@
+meta {
+  name: Delete Folder
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DeleteArtworkFolder($input: DeleteArtworkFolderInput!) {
+    deleteArtworkFolder(input: $input) {
+      errors {
+        __typename
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+        }
+      }
+      resultPayloadType {
+        result
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "folderId": "QXJ0d29ya0ZvbGRlckRldGFpbHM6MQ=="
+    }
+  }
+}
+
+docs {
+  # Delete Folder
+  
+  Permanently deletes a folder from the artwork library. This operation removes the folder and all its contents recursively.
+  
+  ## Use Case
+  Use this mutation to remove folders from the logo library when they are no longer needed. This is a destructive operation that should be performed carefully.
+  
+  ## Variables
+  - **id**: The folder ID to delete (required)
+  
+  ## Expected Response
+  - `resultPayloadType.result`: Boolean indicating successful deletion (true = deleted, false = failed)
+  - `errors`: Array of errors if deletion fails, including:
+    - `ConflictException`: Folder cannot be deleted (e.g., contains artwork, in use)
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid folder ID
+  
+  ## Prerequisites
+  - Folder must exist and be accessible to the current user
+  - User must have delete permissions on the folder
+  - Consider if folder contains artworks that should be moved first
+  
+  ## Important Warning
+  - This operation permanently removes the folder and all nested content
+  - Cannot be undone; verify folder ID before deletion
+  - All artworks in the folder will also be deleted
+  - Use appropriate precautions for critical folders
+}

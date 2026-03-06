@@ -1,0 +1,62 @@
+meta {
+  name: Revoke Artwork Share
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation RevokeSharedArtwork($input: RevokeSharedArtworkInput!) {
+    revokeSharedArtwork(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        ... on InputValidationException {
+          message
+          parameterName
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "artworkId": "QXJ0d29ya0RldGFpbHM6MzA5MjM4"
+    }
+  }
+}
+
+docs {
+  # Revoke Artwork Share
+  
+  Revokes all existing shares for an artwork, making it private again.
+  
+  ## Use Case
+  Use this mutation to remove all sharing access to an artwork. This makes the artwork private and only accessible to the owner.
+  
+  ## Variables
+  - **id**: The ID of the artwork to revoke sharing for (required)
+  
+  ## Expected Response
+  - `errors`: Array of errors if operation fails, including:
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid artwork ID
+  
+  ## Prerequisites
+  - Artwork must exist and be owned by the current user's customer
+  - User must have share permissions on the artwork
+  
+  ## Important Notes
+  - This revokes ALL shares for the artwork
+  - Artwork becomes private after revocation
+  - All previously shared parties lose access
+}

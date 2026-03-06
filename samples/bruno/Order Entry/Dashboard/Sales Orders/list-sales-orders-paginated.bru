@@ -1,0 +1,68 @@
+meta {
+  name: List Sales Orders - Paginated
+  desc: Retrieve a paginated list of all sales orders for the current customer
+  type: graphql
+  seq: 3
+}
+
+docs {
+  # List Sales Orders - Paginated
+  
+  Retrieve a paginated list of all sales orders for the current customer context.
+  
+  ## Use Case
+  Display a dashboard or reporting view of all sales orders with pagination to manage large datasets efficiently.
+  
+  ## Variables Required
+  - `first`: Number of orders to retrieve per page (e.g., 20, default: 50, max: 1000)
+  - Optional: `after` cursor for pagination to fetch next page
+  - Optional: `before` cursor for pagination to fetch previous page
+  
+  ## Expected Response
+  Returns a paginated SalesOrdersConnection with:
+  - `totalCount`: Total number of sales orders available
+  - `pageInfo`: Pagination metadata (hasNextPage, startCursor, endCursor)
+  - `edges`: Array of sales order edges with cursor and node data
+  - `node`: Sales order with ID, number, reference, date, status, and financial info
+  
+  ## Example Usage
+  Use this to build paginated sales order lists for dashboards, reports, or customer order history views.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query ListSalesOrders($first: Int) {
+    salesOrders(first: $first) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          salesOrderNumber
+          customerReference
+          orderDate
+          status
+          totalExcl
+          isPaid
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "first": 20
+  }
+}

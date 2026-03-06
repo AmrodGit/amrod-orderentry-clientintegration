@@ -1,0 +1,125 @@
+meta {
+  name: Query Artwork Folders Contents
+  type: graphql
+  seq: 6
+}
+
+docs {
+  # Query Artwork Folders Contents
+  
+  Retrieves artwork files and folders within a specific folder path with cursor-based pagination.
+  
+  ## Use Case
+  Use this query to retrieve the contents (artworks and subfolders) of a specific folder in the logo library. Supports pagination for handling large folders with many artworks.
+  
+  ## Variables
+  - **folderPath**: The path to the folder to query (required, e.g., "/" for root, "/Brand Assets")
+  - **first**: Number of results to return per page (optional, default 50)
+  - **after**: Cursor for pagination to retrieve next page (optional)
+  
+  ## Expected Response
+  - `pageInfo.hasNextPage`: Boolean indicating more results are available
+  - `pageInfo.endCursor`: Cursor to use for retrieving the next page
+  - `nodes[]`: Array of items (artworks and subfolders) containing:
+    - **For Artworks:**
+      - `id`, `name`, `description`, `type`, `extension`, `mimeType`
+      - `created`, `size`, `sizeFormatted`, `checksum`, `url`, `thumbnailUrl`
+      - `owner`: Owner contact and customer information
+      - `tags`: Associated tag information
+      - Permission flags
+    - **For Folders:**
+      - `id`, `name`, `path`, `owner`, `security.access`
+      - Permission flags
+  
+  ## Prerequisites
+  - Folder path must exist and be accessible to the current user
+  - Use "/" for the root folder
+  - Use full path format like "/ParentFolder/ChildFolder"
+  
+  ## Important Notes
+  - Mix of folders and artworks can be returned in the same response
+  - Pagination is cursor-based for efficient navigation
+  - Default page size is 50 items
+  - Filter by folder path rather than folder ID
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetArtworkFolderContents(
+    $folderPath: String!
+    $first: Int
+    $after: String
+  ) {
+    artworkFolderContents(
+      folderPath: $folderPath
+      first: $first
+      after: $after
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        canDelete
+        canEdit
+        canMove
+        canShare
+        checksum
+        created
+        description
+        extension
+        id
+        internalId
+        mimeType
+        name
+        path
+        size
+        sizeFormatted
+        status
+        thumbnailUrl
+        type
+        url
+        owner {
+          contact {
+            code
+            emailAddress
+          }
+          customer {
+            code
+            name
+          }
+        }
+        security {
+          access
+          contact {
+            code
+            emailAddress
+          }
+          customer {
+            code
+            name
+          }
+        }
+        tags {
+          color
+          id
+          name
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "folderPath": "/",
+    "first": 10,
+    "after": null
+  }
+}

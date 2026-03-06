@@ -1,0 +1,74 @@
+meta {
+  name: Delete Artwork Tag
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DeleteArtworkTag($input: DeleteArtworkTagInput!) {
+    deleteArtworkTag(input: $input) {
+      resultPayloadType {
+        result
+      }
+      errors {
+        __typename
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on NotFoundException {
+          code
+          errorDetail
+          message
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "QXJ0d29ya1RhZ0RldGFpbHM6Mjg2OQ==",
+      "force": false
+    }
+  }
+}
+
+docs {
+  # Delete Artwork Tag
+  
+  Permanently deletes a tag from the logo library.
+  
+  ## Use Case
+  Use this mutation to remove tags that are no longer needed. This operation can optionally force deletion even if the tag is in use.
+  
+  ## Variables
+  - **id**: The ID of the tag to delete (required)
+  - **force**: Whether to force deletion if tag is in use (optional, default false)
+  
+  ## Expected Response
+  - `resultPayloadType.result`: Boolean indicating successful deletion (true = deleted, false = failed)
+  - `errors`: Array of errors if deletion fails, including:
+    - `ConflictException`: Tag is in use and force=false
+    - `ImpersonationRequiredException`: Insufficient permissions
+    - `InputValidationException`: Invalid tag ID
+    - `NotFoundException`: Tag not found
+  
+  ## Prerequisites
+  - Tag must exist and be accessible to the current user
+  - User must have appropriate permissions to delete tags
+  - Consider if tag is applied to artworks before deletion
+  
+  ## Important Notes
+  - If force=true, tag data is removed from all artworks it was applied to
+  - This operation is permanent and cannot be undone
+  - Other users may have artworks tagged with this tag
+}

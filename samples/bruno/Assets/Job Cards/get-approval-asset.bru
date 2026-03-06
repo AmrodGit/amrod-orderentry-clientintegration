@@ -1,0 +1,48 @@
+meta {
+  name: Get Job Card Approval Asset
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{ROOT_URL}}/assets/jobcards/approvals/approval-doc-456
+  body: none
+  auth: inherit
+}
+
+docs {
+  # Get Job Card Approval Asset
+  
+  ## Overview
+  Retrieve a job card approval asset by its asset ID. This endpoint returns the approval-related asset (typically a document or authorization file).
+  
+  ## Use Case
+  After querying job card approvals and obtaining the asset ID, use this endpoint to retrieve the actual approval document for archival, audit, or review purposes.
+  
+  ## Variables
+  - `assetId`: The unique approval asset ID returned by job card approval queries (e.g., "approval-doc-456")
+  
+  ## Response
+  - **Success (200)**: The approval asset file (typically PDF or document format)
+  - **Not Found (404)**: The approval asset was not found
+  
+  ## Example Workflow
+  1. Query GraphQL: `query { jobCardByJobCardNumber(...) { approvals { assetId } } }`
+  2. Extract `assetId` from response
+  3. Use this endpoint: `GET /assets/jobcards/approvals/{assetId}`
+  
+  ## Authentication
+  - Optional: `x-gateway-impersonate` header for impersonation scenarios
+  
+  ## Use Cases
+  - Retrieving approval documents
+  - Accessing authorization records
+  - Downloading approval confirmations
+  - Maintaining audit trails
+  
+  ## Notes
+  - Asset IDs are obtained from job card approval queries
+  - Approval documents may be sensitive and should be handled securely
+  - Implement proper access control and logging
+  - Cache approval documents per compliance requirements
+}

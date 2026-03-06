@@ -1,0 +1,18 @@
+query GetArtowrkTags {
+  artworkTags {
+    canEdit
+    color
+    id
+    name
+    owner {
+      customer {
+        code
+        name
+      }
+      contact {
+        code
+        emailAddress
+      }
+    }
+  }
+}

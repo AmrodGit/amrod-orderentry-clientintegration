@@ -1,0 +1,67 @@
+meta {
+  name: List Credit Notes - Paginated
+  desc: Retrieve a paginated list of all credit notes for the current customer
+  type: graphql
+  seq: 3
+}
+
+docs {
+  # List Credit Notes - Paginated
+  
+  Retrieve a paginated list of all credit notes for the current customer context.
+  
+  ## Use Case
+  Display a dashboard or accounting view of all credit notes with pagination to manage large datasets
+  and track adjustments, returns, and discounts across multiple orders.
+  
+  ## Variables Required
+  - `first`: Number of credit notes to retrieve per page (e.g., 20, default: 50, max: 1000)
+  - Optional: `after` cursor for pagination to fetch next page
+  - Optional: `before` cursor for pagination to fetch previous page
+  
+  ## Expected Response
+  Returns a paginated CreditNotesConnection with:
+  - `totalCount`: Total number of credit notes available
+  - `pageInfo`: Pagination metadata (hasNextPage, startCursor, endCursor)
+  - `edges`: Array of credit note edges with cursor and node data
+  - `node`: Credit note with ID, number, date, and financial information
+  
+  ## Example Usage
+  Use this to build accounting dashboards, credit note tracking systems, or financial reporting views.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query ListCreditNotes($first: Int) {
+    creditNotes(first: $first) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          creditNoteNumber
+          credtNoteDate
+          totalExcl
+          tax
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "first": 20
+  }
+}

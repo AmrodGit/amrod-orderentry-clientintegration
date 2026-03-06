@@ -1,0 +1,61 @@
+meta {
+  name: Get Job Card Proof Option Asset
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{ROOT_URL}}/assets/jobcards/JC-2026-001234/proofs/options/1
+  body: none
+  auth: inherit
+}
+
+docs {
+  # Get Job Card Proof Option Asset
+  
+  ## Overview
+  Retrieve a specific proof option variant from a multi-variant proof set using the job card number and option number. This endpoint returns a single variant from a proof that contains multiple design options.
+  
+  ## Use Case
+  When a job card has a multi-variant proof (containing multiple design options), use this endpoint to retrieve individual proof variants for comparison, customer selection, or iteration review.
+  
+  ## Variables
+  - `jobCardNumber`: The job card number (e.g., "JC-2026-001234") - Required
+  - `optionNumber`: The proof option number (integer: 1, 2, 3, etc.) - Required
+  
+  ## Response
+  - **Success (200)**: The specific proof option asset file
+  - **Not Found (404)**: The proof option was not found
+  
+  ## Example Workflow
+  1. Query GraphQL: `query { jobCardByJobCardNumber("JC-2026-001234") { proofs { numberOfOptions } } }`
+  2. Identify total number of proof options (e.g., 3 options available)
+  3. Iterate through proof options using this endpoint:
+     - `GET /assets/jobcards/JC-2026-001234/proofs/options/1`
+     - `GET /assets/jobcards/JC-2026-001234/proofs/options/2`
+     - `GET /assets/jobcards/JC-2026-001234/proofs/options/3`
+  
+  ## Multi-Variant Proofs
+  - **Option 1**: First design variant
+  - **Option 2**: Second design variant
+  - **Option 3**: Third design variant
+  - Continue numbering as needed for total variants
+  
+  ## Authentication
+  - Optional: `x-gateway-impersonate` header for impersonation scenarios
+  
+  ## Use Cases
+  - Building a proof gallery interface
+  - Allowing customers to preview and select from design variations
+  - Iterating through proof options for comparison
+  - Downloading specific proof variants
+  - Customer selection workflow
+  
+  ## Implementation Notes
+  - Always query the job card first to determine the number of available options
+  - Proof options are sequential starting from 1
+  - Option numbers are 1-indexed (not 0-indexed)
+  - Each option is retrieved separately with individual requests
+  - Consider parallel requests for faster multi-option retrieval (with rate limiting)
+  - Implement proper sequential numbering in UI (Option 1, Option 2, etc.)
+}

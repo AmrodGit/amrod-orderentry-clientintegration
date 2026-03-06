@@ -1,0 +1,151 @@
+meta {
+  name: Query Artwork
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query QueryArtwork(
+    $name: String
+    $description: String
+    $extensions: [String!]
+    $types: [ArtworkType!]
+    $statuses: [ArtworkQueryStatus!]
+    $tags: [String!]
+    $artworkIds: [ID!]
+    $first: Int
+    $last: Int
+    $after: String
+    $before: String
+  ) {
+    artworkQuery(
+      first: $first
+      last: $last
+      after: $after
+      before: $before
+      name: $name
+      description: $description
+      extensions: $extensions
+      types: $types
+      statuses: $statuses
+      tags: $tags
+      ids: $artworkIds
+    ) {
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      nodes {
+        canDelete
+        canEdit
+        canMove
+        canShare
+        checksum
+        created
+        description
+        extension
+        id
+        internalId
+        mimeType
+        name
+        path
+        size
+        sizeFormatted
+        thumbnailUrl
+        type
+        url
+        owner {
+          contact {
+            code
+            emailAddress
+          }
+          customer {
+            code
+            name
+          }
+        }
+        security {
+          access
+        }
+        tags {
+          color
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "first": 10,
+    "last": null,
+    "after": null,
+    "before": null,
+    "name": null,
+    "description": null,
+    "extensions": [
+      "png"
+    ],
+    "types": [
+      "LOGO"
+    ],
+    "statuses": [
+      "ACTIVE"
+    ],
+    "tags": null,
+    "artworkIds": null
+  }
+}
+
+docs {
+  # Query Artwork
+  
+  Queries artworks from the logo library based on various filter criteria including name, description, extensions, tags, types, and statuses. Supports cursor-based pagination for efficient retrieval of large result sets.
+  
+  ## Use Case
+  Use this query to search and retrieve artworks from the logo library. Filter by multiple criteria and paginate through results. The response includes comprehensive artwork metadata, ownership information, security settings, and associated tags.
+  
+  ## Filter Variables
+  - **name**: Filter by artwork name (partial match)
+  - **description**: Filter by artwork description (partial match)
+  - **extensions**: Array of file extensions to filter by (e.g., ["png", "jpg"])
+  - **types**: Array of artwork types (e.g., ["LOGO", "PRINT"])
+  - **tags**: Array of tag IDs to filter by
+  - **statuses**: Array of artwork statuses to filter by (ACTIVE, DELETED)
+  - **artworkIds**: Array of specific artwork IDs to retrieve
+  
+  ## Pagination Variables
+  - **first**: Number of results to return going forward (cursor-based pagination)
+  - **last**: Number of results to return going backward (cursor-based pagination)
+  - **after**: Cursor to paginate forward from
+  - **before**: Cursor to paginate backward from
+  
+  ## Expected Response
+  - `pageInfo.hasNextPage`: Boolean indicating if more results are available
+  - `pageInfo.hasPreviousPage`: Boolean indicating if previous results are available
+  - `pageInfo.startCursor`: Cursor to use for paginating to previous page
+  - `pageInfo.endCursor`: Cursor to use for retrieving next page
+  - `nodes[]`: Array of artwork objects with properties including:
+    - `id`, `name`, `description`, `type`, `extension`, `mimeType`
+    - `created`, `size`, `sizeFormatted`, `checksum`, `url`, `thumbnailUrl`
+    - `owner`: Contact and customer information
+    - `tags`: Associated tag details (id, name, color)
+    - `security.access`: Permission level for the artwork
+    - `canDelete`, `canEdit`, `canMove`, `canShare`: Permission flags
+  
+  ## Notes
+  - All filter variables are optional; omit unsupported filters by setting to null
+  - Use either first/last parameters for pagination or cursor-based navigation
+  - Response includes calculated permissions based on user's access level
+  - Default pagination uses first=10 to return 10 results
+}

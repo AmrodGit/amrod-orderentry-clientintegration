@@ -1,0 +1,99 @@
+meta {
+  name: Assets
+  type: folder
+}
+
+docs {
+  # Assets REST API Samples
+
+  ## Overview
+  This folder contains Bruno samples for retrieving media assets from the Amrod Order Entry system using the REST API. These endpoints are used to download asset files after obtaining asset IDs and paths from GraphQL queries.
+
+  ## Key Concept
+  - **GraphQL**: Returns asset metadata, IDs, and paths
+  - **REST API**: Retrieves the actual asset files using the IDs and paths
+
+  ## Asset Types & Subfolders
+
+  ### Sales Orders
+  - **File**: get-sales-order-asset.bru
+  - **Endpoint**: `GET /assets/salesorders/{assetId}`
+  - **Purpose**: Retrieve sales order-related assets (confirmations, invoices, documents)
+
+  ### Job Cards
+  - **get-approval-asset.bru**: Retrieve approval documents
+  - **get-jobcard-proof-asset.bru**: Retrieve proof files for customer review
+  - **get-jobcard-proof-option-asset.bru**: Retrieve individual proof variants from multi-option proofs
+
+  ### Artwork
+  - **File**: get-artwork-asset.bru
+  - **Endpoint**: `GET /assets/logo-library/artwork/{assetId}`
+  - **Purpose**: Retrieve artwork and logo files from Logo Library
+
+  ## General Workflow
+
+  ```
+  1. Query GraphQL for resource details
+     ↓
+  2. Extract asset ID and asset path from response
+     ↓
+  3. Use REST API endpoint to retrieve asset file
+     ↓
+  4. Handle response (download, preview, cache, etc.)
+  ```
+
+  ## Common Use Cases
+
+  ### Sales Order Assets
+  - Download order confirmation PDFs
+  - Retrieve order-related attachments
+  - Access order documentation
+
+  ### Job Card Proofs
+  - Display proofs for customer approval
+  - Download proof files for printing
+  - Build proof gallery interface for multi-variant proofs
+  - Select specific proof variant
+
+  ### Artwork Assets
+  - Download logo design files
+  - Preview artwork before use
+  - Retrieve artwork in original format
+
+  ### Approval Assets
+  - Retrieve approval documents
+  - Maintain audit trails
+  - Access authorization records
+
+  ## Best Practices
+
+  1. **Cache GraphQL Results**: Store asset IDs and paths locally to avoid repeated GraphQL queries
+  2. **Stream Large Files**: Don't load entire large files into memory
+  3. **Handle 404 Responses**: Implement proper error handling for missing or deleted assets
+  4. **Use Asset Paths When Available**: GraphQL returns both ID and path; prefer using path directly
+  5. **Implement Retry Logic**: For network failures, implement exponential backoff
+  6. **Respect Rate Limits**: Space out requests appropriately
+  7. **Secure Sensitive Assets**: Implement access control for approval and sensitive documents
+
+  ## Authentication
+  - Most endpoints support optional `x-gateway-impersonate` header
+  - Authentication is inherited from your API connection
+
+  ## Response Types
+  - **Success (200)**: Asset file (binary content)
+  - **Not Found (404)**: Asset doesn't exist or was deleted
+  - **Error (500)**: Server error during retrieval
+
+  ## Environment Base URL
+  Use the `{{ROOT_URL}}` environment variable which points to your configured environment:
+  - Local: `http://localhost:5000/`
+  - Dev: `https://moyo-dgw.dev.amrod.co.za/`
+  - QA: `https://moyo-dgw.qa.amrod.co.za/`
+  - UAT: `https://moyo-dgw.uat.amrod.co.za/`
+
+  ## Related Documentation
+  - [Assets REST API Documentation](../../assets/assets.md)
+  - [Order Entry - Job Cards Dashboard](../../order-entry/dashboard-jobcards.md)
+  - [Order Entry - Sales Orders Dashboard](../../order-entry/dashboard-sales-orders.md)
+  - [Logo Library - Query Artwork](../../logo-library/query-artwork.md)
+}

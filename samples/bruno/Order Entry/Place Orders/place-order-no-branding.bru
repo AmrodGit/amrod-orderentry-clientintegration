@@ -1,0 +1,139 @@
+meta {
+  name: Place Order (No Branding)
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation PlaceOrder($input: PlaceOrderInput!) {
+    placeOrder(input: $input) {
+      errors {
+        __typename
+        ... on InputValidationException {
+          code
+          errorDetail
+          message
+          parameterName
+          fields {
+            fieldName
+            message
+          }
+        }
+        ... on BadRequestException {
+          code
+          errorDetail
+          message
+        }
+        ... on ConflictException {
+          code
+          errorDetail
+          message
+        }
+        ... on UnauthorizedException {
+          code
+          errorDetail
+          message
+        }
+      }
+      placeOrderPayloadType {
+        orders {
+          orderNumber
+          salesOrderNumber
+          orderDate
+          totalExcl
+          totalIncl
+          leadTimeInDays
+          details {
+            sku
+            quantity
+            unitPrice
+            totalExcl
+            totalIncl
+          }
+        }
+        warnings {
+          code
+          message
+          warningType
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "orderNumber": "ORD-{{$timestamp}}-001",
+      "options": {
+        "validateOnly": false,
+        "orderType": "STANDARD"
+      },
+      "collection": {
+        "collectionType": "COURIER"
+      },
+      "contact": {
+        "notifications": {
+          "order": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "contactNumber": "+27-21-987-6543"
+          }
+        }
+      },
+      "details": [
+        {
+          "id": "group-1",
+          "items": [
+            {
+              "sku": "BAS-3000-G-Y",
+              "quantity": 200,
+              "price": 35.50
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+docs {
+  # Place Order (No Branding)
+  
+  Creates and submits a sales order without any branding or customization details. This is the simplest order placement scenario for standard products.
+  
+  ## Use Case
+  Use this mutation to place a basic sales order with no branding, logos, or custom details. Ideal for placing simple product orders where no customization is required.
+  
+  ## Required Information
+  - **orderNumber**: Unique identifier for the order (must be unique across all orders)
+  - **collectionType**: How the order will be collected (COURIER in this example)
+  - **Order Contact**: First name, last name, email, and optional contact number
+  - **Order Items**: At least one item with:
+    - **sku**: Product identifier
+    - **quantity**: Number of units (must be > 0)
+    - **price** (optional): Unit price for reference
+  
+  ## Expected Response
+  - `orders[0].orderNumber`: The order identifier you provided
+  - `orders[0].salesOrderNumber`: System-generated sales order number
+  - `orders[0].totalExcl`: Total price excluding tax
+  - `orders[0].totalIncl`: Total price including tax
+  - `orders[0].leadTimeInDays`: Estimated delivery time
+  - `details`: Line items with calculated unit prices and totals
+  - `warnings`: Any non-critical warnings about the order
+  
+  ## Notes
+  - Set `validateOnly: false` to actually create the order in the system
+  - Set `validateOnly: true` to get pricing and validation without creating the order
+  - The `orderNumber` must be unique and is used to match the response to your request
+  - Provide accurate SKUs to avoid validation errors
+}
+

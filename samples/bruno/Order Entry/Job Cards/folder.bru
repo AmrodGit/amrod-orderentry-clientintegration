@@ -1,0 +1,80 @@
+meta {
+  name: Job Cards
+  type: folder
+}
+
+docs {
+  # Job Cards Operations
+
+  ## Overview
+  This folder contains Bruno samples for managing job cards in the Order Entry system, including updating branding information, requesting changes, and approving for manufacturing.
+
+  ## Available Samples
+
+  ### 1. Update Job Card Branding
+  - **File**: update-jobcard-branding.bru
+  - **Purpose**: Provide branding information to a job card in WAITING_INFO status
+  - **Status Requirement**: WAITING_INFO only
+  - **Next Status**: AWAITING_APPROVAL
+  - **Use Case**: Initial branding setup when a job card is created but waiting for branding details
+
+  ### 2. Request Change Job Card
+  - **File**: request-change-jobcard.bru
+  - **Purpose**: Request modifications to a job card in the approval workflow
+  - **Status Requirements**: AWAITING_APPROVAL, AWAITING_LAYOUT, or AWAITING_PAYMENT
+  - **Use Cases**: Customer-requested changes or corrections during manufacturing preparation
+  - **Change Types**: CUSTOMER_REQUEST or INSTRUCTION_NOT_FOLLOWED
+
+  ### 3. Approve Job Card
+  - **File**: approve-jobcard.bru
+  - **Purpose**: Approve a job card and select proof option/layout for manufacturing
+  - **Status Requirement**: AWAITING_APPROVAL
+  - **Next Status**: AWAITING_LAYOUT
+  - **Use Case**: Customer approval of proofs and selection for manufacturing
+
+  ## Job Card Status Workflow
+
+  ```
+  Created
+      ↓
+  WAITING_INFO
+      ↓
+  [updateJobCardBrandingInfo] ← Provide branding
+      ↓
+  AWAITING_APPROVAL
+      ↓
+  [approveJobCard] ← Select proof & approve
+      ↓
+  AWAITING_LAYOUT
+      ↓
+  [requestChangeJobCard] ← Request changes if needed
+      ↓
+  AWAITING_PAYMENT
+      ↓
+  APPROVED/Manufacturing Started
+  ```
+
+  ## When to Use Each Operation
+
+  | Operation | Status | Purpose |
+  |-----------|--------|---------|
+  | **Update Branding** | WAITING_INFO | Provide initial branding information |
+  | **Approve** | AWAITING_APPROVAL | Select proof option and approve for manufacturing |
+  | **Request Change** | AWAITING_APPROVAL, AWAITING_LAYOUT, AWAITING_PAYMENT | Request modifications during approval workflow |
+
+  ## Best Practices
+
+  1. **Verify Status First**: Always query the job card to confirm current status before attempting operations
+  2. **Complete Branding Details**: Include all required branding information and metadata
+  3. **Reference Tracking**: Use meaningful reference IDs for audit trails
+  4. **Metadata Requirements**: For special branding methods (foiling, silicone, vinyl), include required metadata
+  5. **Error Handling**: Check response for ConflictException to identify status/validation issues
+
+  ## Related Documentation
+
+  - [Update Job Card Branding](../../order-entry/update-jobcard-branding.md)
+  - [Request Job Card Change](../../order-entry/request-change-jobcard.md)
+  - [Approve Job Card](../../order-entry/approve-jobcard.md)
+  - [Branding Metadata](../../order-entry/branding-metadata.md)
+  - [Job Cards Dashboard](../../order-entry/dashboard-jobcards.md)
+}

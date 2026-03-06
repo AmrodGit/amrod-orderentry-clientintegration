@@ -1,0 +1,43 @@
+meta {
+  name: Get Sales Order Asset
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ROOT_URL}}/assets/salesorders/so-asset-001
+  body: none
+  auth: inherit
+}
+
+docs {
+  # Get Sales Order Asset
+  
+  ## Overview
+  Retrieve a sales order asset by its asset ID using the REST API. This endpoint returns the asset file (typically a PDF or document).
+  
+  ## Use Case
+  After querying a sales order and obtaining the asset ID from GraphQL, use this endpoint to retrieve the actual asset file (such as order confirmation, invoice, or attached document).
+  
+  ## Variables
+  - `assetId`: The unique asset ID returned by GraphQL sales order queries (e.g., "so-asset-001")
+  
+  ## Response
+  - **Success (200)**: The asset file (binary content - image, PDF, document, etc.)
+  - **Not Found (404)**: The asset was not found
+  
+  ## Example Workflow
+  1. Query GraphQL: `query { salesOrderBySalesOrderNumber(...) { assets { assetId assetPath } } }`
+  2. Extract `assetId` from response
+  3. Use this endpoint: `GET /assets/salesorders/{assetId}`
+  
+  ## Headers
+  - `Content-Type`: Automatically set based on response
+  - Optional: `x-gateway-impersonate` for impersonation scenarios
+  
+  ## Notes
+  - Asset IDs are provided by GraphQL queries
+  - Use the assetPath directly if returned by GraphQL (preferred method)
+  - Large files should be streamed rather than loaded entirely into memory
+  - Implement proper error handling for 404 responses
+}

@@ -1,0 +1,69 @@
+meta {
+  name: Get Sales Order by ID
+  desc: Retrieve a specific sales order by its unique identifier
+  type: graphql
+  seq: 1
+}
+
+docs {
+  # Get Sales Order by ID
+  
+  Retrieve complete details for a specific sales order using its unique identifier.
+  
+  ## Use Case
+  When you have a sales order ID and need to fetch its full details including customer information, 
+  contact details, and financial information (totals, tax, outstanding balance).
+  
+  ## Variables Required
+  - `id`: The unique identifier of the sales order (e.g., "SO-001")
+  
+  ## Expected Response
+  Returns a SalesOrder object containing:
+  - Basic order information (ID, number, reference, dates)
+  - Order status and payment status
+  - Financial details (totals, tax, discounts)
+  - Customer and contact information
+  - Last modified timestamp
+  
+  ## Example Usage
+  Use this query to display detailed order information in a customer portal or admin dashboard.
+}
+
+post {
+  url: {{ROOT_URL}}/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetSalesOrderById($id: ID!) {
+    salesOrder(id: $id) {
+      id
+      salesOrderNumber
+      customerReference
+      orderDate
+      status
+      totalExcl
+      tax
+      balanceOutstanding
+      isPaid
+      isActive
+      lastModifiedDate
+      customer {
+        id
+        name
+        code
+      }
+      contact {
+        fullName
+        emailAddress
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "id": "SO-001"
+  }
+}
