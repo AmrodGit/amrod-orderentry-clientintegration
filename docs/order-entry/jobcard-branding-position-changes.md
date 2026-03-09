@@ -36,6 +36,22 @@ The branding method for the new position must be identical to the current method
 
 **Key Point**: The exact method code (e.g., `SA`, `SC`, `DP-A`) determines pricing and manufacturing process. Methods cannot be interchanged within the same position change operation.
 
+### Rule 3: Colour Count Must Remain the Same
+
+If a branding method has a colour restriction, the number of colours **cannot be changed** when modifying the position. A 1-colour print must remain 1-colour; a 2-colour print must remain 2-colour, etc.
+
+**Important**: Colour count changes have significant pricing implications. Each colour adds manufacturing complexity and material costs. Changing the number of colours requires a complete re-branding, not just a position change.
+
+**Example — Colour Restrictions**:
+- ❌ Cannot change from 1-colour `SA` to 2-colour `SA` (colour count increased)
+- ✅ Can change 1-colour `SA` from position A to position C (same colour count)
+- ✅ Can change 2-colour `SC` from position B to position D (same colour count)
+
+**When Colour Count Matters**:
+- Screen/Pad print methods — Often have colour count restrictions
+
+**Key Point**: The colours array in the branding detail must remain identical in both count and specification when changing positions. This ensures manufacturing processes, costs, and quality standards remain consistent with the original quote.
+
 ## When Changing Positions
 
 ### Use updateJobCardBrandingInfo (AWAITING_INFO Status)
@@ -49,8 +65,9 @@ If the job card has already progressed to `AWAITING_APPROVAL`, `AWAITING_LAYOUT`
 When requesting a position change:
 1. **Verify the current position** — Query the job card to see which position currently has branding
 2. **Confirm method matches** — Ensure the new position uses the exact same branding method
-3. **Check position availability** — Verify the target position is not in use
-4. **Submit the change request** — Include the reason for the position change
+3. **Check colour count** — Verify the new position maintains the same number of colours as the current branding
+4. **Check position availability** — Verify the target position is not in use
+5. **Submit the change request** — Include the reason for the position change
 
 ## Examples
 
@@ -180,6 +197,16 @@ Mixing methods or changing methods can have significant pricing implications, wh
 2. If you need a different method, create a separate branding entry for a different position
 3. Contact support if you need to change the manufacturing method
 
+### ConflictException: Colour Count Mismatch
+
+**Cause**: The branding detail specifies a different number of colours than the current branding.
+
+**Solution**:
+1. Query the job card to confirm the current colour count
+2. Ensure the colours array in your request matches the number and specification of current colours
+3. If you need to change the colour count, create a separate branding entry for a different position
+4. Contact support if you need to change colour specifications for the current position
+
 ### ConflictException: Invalid Position
 
 
@@ -204,6 +231,9 @@ Do you have a job card with branding at a position you want to change?
 ├─ Is the branding method identical to the current method?
 │  └─ NO → Cannot change. Keep the same method when changing positions.
 │
+├─ Is the colour count identical to the current branding?
+│  └─ NO → Cannot change. Keep the same number of colours when changing positions.
+│
 └─ YES to all questions → Change is allowed. Submit requestChangeJobCard
 ```
 
@@ -212,6 +242,7 @@ Do you have a job card with branding at a position you want to change?
 ✅ **Do**:
 - Verify the target position is empty before changing
 - Keep the branding method identical when changing positions
+- Verify the colour count remains the same as the current branding
 - Query the job card details before submitting changes
 - Include a clear reason for the position change in your request
 - Test changes in a lower environment first
@@ -220,6 +251,7 @@ Do you have a job card with branding at a position you want to change?
 ❌ **Don't**:
 - Assume position availability without checking
 - Try to change the branding method when changing positions
+- Change the number of colours when changing positions
 - Mix different screen print methods (SA, SC, SB) — they're not interchangeable
 - Change positions without understanding pricing implications
 - Skip error responses — they indicate validation failures
@@ -245,6 +277,16 @@ If position B is occupied, select position C, D, E, F, or G instead.
 **Answer**: This requires special handling:
 1. If there's an empty position, add the new method/position combination to that position
 2. If all positions are occupied, you may need to request a complete re-branding (contact support)
+
+### Scenario 4: "Can I change from 1-colour to 2-colour branding?"
+**Answer**: No. Colour count cannot be changed when modifying positions. A 1-colour print must stay 1-colour; a 2-colour print must stay 2-colour.
+
+**Why**: Each colour adds manufacturing complexity, material costs, and setup time. Colour count changes affect pricing and require a complete re-branding, not just a position change.
+
+**What to do**: If you need different colour specifications:
+1. If there's an empty position, add a separate branding entry with the new colour count
+2. If all positions are occupied, contact support to request a complete re-branding with updated colour specifications
+3. Always verify current colour count before submitting a position change request
 
 ## Related Operations
 
