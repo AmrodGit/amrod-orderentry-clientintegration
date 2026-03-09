@@ -3,7 +3,7 @@
 
 ## Overview
 
-The Logo Library API is protected by secure authentication mechanisms that ensure only authorized users can access or manage artwork. It supports:
+The Amrod Order Entry Client Integration API is protected by secure authentication mechanisms that ensure only authorized users can access or manage artwork. It supports:
 
 - **OAuth 2.0** – For secure access token-based authentication
 - **Impersonation** – For managing artwork on behalf of another account (typically used by integrators)

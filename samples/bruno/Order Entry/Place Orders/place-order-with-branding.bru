@@ -14,17 +14,6 @@ body:graphql {
   mutation PlaceOrder($input: PlaceOrderInput!) {
     placeOrder(input: $input) {
       errors {
-        __typename
-        ... on InputValidationException {
-          code
-          errorDetail
-          message
-          parameterName
-          fields {
-            fieldName
-            message
-          }
-        }
         ... on BadRequestException {
           code
           errorDetail
@@ -35,26 +24,46 @@ body:graphql {
           errorDetail
           message
         }
-        ... on UnauthorizedException {
+        ... on InputValidationException {
           code
           errorDetail
           message
+          parameterName
+        }
+        ... on ServerError {
+          errorType
+          items
+          message
+          requestReference
         }
       }
       placeOrderPayloadType {
         orders {
+          leadTimeInDays
+          leadTimeInHours
+          orderDate
           orderNumber
           salesOrderNumber
-          orderDate
           totalExcl
-          totalIncl
-          leadTimeInDays
           details {
-            sku
-            quantity
-            unitPrice
-            totalExcl
-            totalIncl
+            id
+            items {
+              name
+              quantity
+              sku
+              unitPrice
+            }
+            branding {
+              brandingCode
+              brandingPosition
+              brandingUnitPriceExcl
+              description
+              dyeChargeExcl
+              dyeChargeName
+              printQuantity
+              setupChargeCode
+              setupChargeExcl
+            }
           }
         }
         warnings {
@@ -169,4 +178,3 @@ docs {
   - The reference field is useful for correlating with your branding job records
   - Lead times typically increase when branding is required
 }
-
