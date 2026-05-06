@@ -23,7 +23,7 @@ docs {
   - `totalCount`: Total number of credit notes in the date range
   - Array of credit notes containing:
     - Credit note metadata (ID, number)
-    - Date information (credtNoteDate)
+    - Date information (creditNoteDate)
     - Financial details (totalExcl, tax)
     - Line item details (SKU, quantity for each adjustment)
   
@@ -52,7 +52,7 @@ body:graphql {
       nodes {
         id
         creditNoteNumber
-        credtNoteDate
+        creditNoteDate
         totalExcl
         tax
         creditNoteDetails {

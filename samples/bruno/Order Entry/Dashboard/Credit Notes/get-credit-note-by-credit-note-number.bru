@@ -20,7 +20,7 @@ docs {
   ## Expected Response
   Returns a CreditNote object including:
   - Credit note metadata (ID, number, internal ID)
-  - Date information (credtNoteDate)
+  - Date information (creditNoteDate)
   - Financial summary (totalExcl, tax)
   - Asset URI for accessing the PDF document
   - Line item details (SKU, quantity for each adjustment)
@@ -41,7 +41,7 @@ body:graphql {
     creditNoteByCreditNoteNumber(creditNoteNumber: $creditNoteNumber) {
       id
       creditNoteNumber
-      credtNoteDate
+      creditNoteDate
       totalExcl
       tax
       assetUri
