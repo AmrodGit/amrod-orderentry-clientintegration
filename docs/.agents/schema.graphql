@@ -12,6 +12,26 @@ interface Node {
   id: ID!
 }
 
+"A connection to a list of items."
+type ActiveProductionJobsConnection {
+  "A list of edges."
+  edges: [ActiveProductionJobsEdge!]
+  "A flattened list of the nodes."
+  nodes: [ProductionJob!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type ActiveProductionJobsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ProductionJob!
+}
+
 "Represents a address."
 type Address {
   "The address code."
@@ -324,12 +344,39 @@ type Branch @authorize(roles: [ "DG-Read" ]) {
   timestamp: Long!
 }
 
+"Represents a branding department master data entity."
+type BrandingDepartment implements Node {
+  "The code that uniquely identifies the branding department within the organization."
+  code: String!
+  "The date and time when the branding department record was created."
+  created: DateTime!
+  "The unique identifier for the branding department."
+  id: ID!
+  "The date and time when the branding department record was last modified."
+  modified: DateTime!
+  "The display name of the branding department."
+  name: String!
+  "The identifier used to reference this branding department in the source system or external integrations."
+  sourceIdentifier: String!
+  "The timestamp used for optimistic concurrency control and change tracking in the data layer."
+  timestamp: Long!
+}
+
 "Represents a branding method."
 type BrandingMethod implements Node @authorize(roles: [ "DG-Read" ]) {
   "The checksum for change tracking."
   checksum: String
   "The branding method code."
   code: String
+  """
+  Retrieves the color type associated with the specified branding method.
+  
+  
+  **Returns:**
+  A value of type BrandingMethodColorType representing the color type of the branding method. Returns
+  BrandingMethodColorType.NoColor if the color type is not defined.
+  """
+  colorType: BrandingMethodColorType! @cost(weight: "10")
   "The creation date and time of the branding method."
   created: DateTime!
   "The unique identifier for the branding method."
@@ -340,9 +387,83 @@ type BrandingMethod implements Node @authorize(roles: [ "DG-Read" ]) {
   modified: DateTime!
   "The branding method name."
   name: String
-  "The sort index for the branding method."
-  sortIndex: Int!
   "The source identifier."
+  sourceIdentifier: String
+  "The timestamp for concurrency checking."
+  timestamp: Long!
+}
+
+"Represents a branding option."
+type BrandingOption @authorize(roles: [ "DG-Read" ]) {
+  "Gets the branding process for this option."
+  brandingProcess: BrandingProcess @cost(weight: "10")
+  "The checksum for change tracking."
+  checksum: String
+  "The unique identifier for the branding option."
+  id: Int!
+  "Gets the inclusive branding options."
+  inclusiveBrandingOptions: [InclusiveBranding!] @cost(weight: "10")
+  "The maximum colors for the branding option"
+  maximumColors: Int
+  "The maximum order quantity for the branding option"
+  maximumOrderQuantity: Int
+  "The minimum order quantity for the branding option"
+  minimumOrderQuantity: Int
+  "The maximum print height for the branding option"
+  printHeight: Float!
+  "The print width for the branding option"
+  printWidth: Float!
+}
+
+"Represents a branding position."
+type BrandingPosition @authorize(roles: [ "DG-Read" ]) {
+  "Gets the branding options available for this position."
+  brandingOptions: [BrandingOption!]! @cost(weight: "10")
+  "The branding service code."
+  brandingServiceCode: String
+  "The checksum used for change tracking."
+  checksum: String
+  "An optional comment associated with the position."
+  comment: String
+  "The component assigned to the position."
+  component: Int
+  "The unique identifier of the position."
+  id: Int!
+  "Indicates whether this position can be customized."
+  isCustomizable: Boolean!
+  "Indicates whether this position is mandatory."
+  isRequired: Boolean!
+  "Indicates whether a template must be assigned to this position."
+  isTemplateRequired: Boolean!
+  "The multiplier applied to the position."
+  multiplier: Int!
+  "The display name of the position."
+  name: String
+  "The position code or reference."
+  position: String
+  "The print height of the position."
+  printHeight: Int!
+  "The print width of the position."
+  printWidth: Int!
+}
+
+"Represents a branding process."
+type BrandingProcess @authorize(roles: [ "DG-Read" ]) {
+  "Gets the branding process for this option."
+  brandingMethod: BrandingMethod @cost(weight: "10")
+  "The checksum for change tracking."
+  checksum: String
+  "The code for the branding process."
+  code: String
+  "The source created date for the branding process."
+  created: DateTime!
+  "The grouping for the branding process."
+  grouping: String
+  "The unique identifier for the branding process."
+  id: Int!
+  "The last modified date for the branding process."
+  modified: DateTime!
+  "The source identifier for the branding process."
   sourceIdentifier: String
   "The timestamp for concurrency checking."
   timestamp: Long!
@@ -457,13 +578,25 @@ type CreditNote implements Node @authorize(roles: [ "DG-Dashboard" ]) {
   assetUri: URL!
   "The date of the credit note."
   creditNoteDate: Date!
-  "The lines associated with the credit note."
-  creditNoteDetails: [CreditNoteDetail!]! @cost(weight: "10")
+  """
+  Asynchronously retrieves the collection of details associated with the specified credit note.
+  
+  
+  **Returns:**
+  A collection of credit note details for the specified credit note, or null if no details are found.
+  """
+  creditNoteDetails: [CreditNoteDetail!] @cost(weight: "10")
   "The number of the credit note."
   creditNoteNumber: String!
   "The unique identifier of the credit note"
   id: ID!
-  "The credit note identifier."
+  """
+  Gets the internal identifier of the specified credit note.
+  
+  
+  **Returns:**
+  The internal identifier of the specified credit note.
+  """
   internalId: Int!
   "The tax for the credit note."
   tax: Float!
@@ -636,7 +769,7 @@ type CustomerContact implements Node @authorize(roles: [ "DG-Read" ]) {
   "The source identifier for the contact."
   sourceIdentifier: String!
   "The status associated with the contact."
-  status: EnumLookup @cost(weight: "10")
+  status: ContactStatus! @cost(weight: "10")
   "Gets or sets a value indicating whether the contact is a sync user."
   syncUser: Boolean!
   "The telephone number of the contact."
@@ -832,6 +965,26 @@ type Gender implements Node @authorize(roles: [ "DG-Read" ]) {
   timestamp: Long!
 }
 
+"Represents an inclusive branding method."
+type InclusiveBranding @authorize(roles: [ "DG-Read" ]) {
+  "Gets or sets the display name associated with the object."
+  displayName: String!
+  "The unique identifier for the inclusive branding."
+  id: Int!
+  "Indicates whether this position is mutually exclusive."
+  isMutuallyExclusive: Boolean!
+  "The maximum number of colors allowed for this inclusive branding method, if applicable."
+  maximumColors: Int
+  "The minimum order quantity for this inclusive branding method."
+  minimumOrderQuantity: Int!
+  "The price associated with this inclusive branding method."
+  price: Decimal
+  "The print code associated with this inclusive branding method."
+  printCode: String
+  "The type of inclusive branding method."
+  type: Int!
+}
+
 "Represents an exception that is thrown when input validation fails for a specific parameter."
 type InputValidationException implements Error {
   "Gets or sets additional data associated with the object as key-value pairs."
@@ -873,7 +1026,7 @@ type JobCard implements Node @authorize(roles: [ "DG-Dashboard" ]) {
   A task that represents the asynchronous operation. The task result contains the branding details for the specified
   job card.
   """
-  jobCardBrandingDetail: JobCardBrandingDetail! @cost(weight: "10")
+  jobCardBrandingDetail: JobCardBrandingDetail @cost(weight: "10")
   """
   Retrieves the date information associated with the specified job card for the current customer.
   
@@ -1118,7 +1271,7 @@ type MoveArtworkToFolderPayload {
   resultPayloadType: ResultPayloadType
 }
 
-"Mutation type for creating and managing folders."
+"Mutation for managing job cards."
 type Mutation @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) {
   """
   Approves a job card based on the provided input and user context.
@@ -1441,6 +1594,8 @@ type OwnerCustomer @authorize(roles: [ "DG-Order-Entry" ]) {
 
 "Represents the packaging details of a product."
 type Packaging @authorize(roles: [ "DG-Read" ]) {
+  "The packaging comment"
+  comment: String
   "The conversion quantity for the packaging."
   conversionQuantity: Int!
   "The creation date and time of the packaging."
@@ -1527,12 +1682,65 @@ type PlaceOrderPayloadType {
   warnings: [OrderWarning!]!
 }
 
+"Represents the cost details for a product."
+type Price @authorize(roles: [ "DG-Read" ]) {
+  "The creation date and time."
+  created: DateTime!
+  "The unique identifier for the cost."
+  id: Int!
+  "The last modified date and time."
+  modified: DateTime!
+  "The source identifier."
+  sourceIdentifier: String
+  "The timestamp."
+  timestamp: Long!
+  "The value of the price."
+  value: Decimal!
+}
+
 "Represents a product style."
 type Product implements Node @authorize(roles: [ "DG-Read" ]) {
   "The creation date and time of the product."
   created: DateTime!
+  """
+  Retrieves the default e-commerce details for a specified product.
+  
+  
+  **Returns:**
+  A ProductECommerceDetail object representing the e-commerce details of the product,  or null if no preferences are available.
+  """
+  defaultECommerceDetail: ProductECommerceDetail @cost(weight: "10")
+  """
+  Retrieves the e-commerce details for a product based on the specified color segment.
+  
+  
+  **Returns:**
+  A ProductECommerceDetail object containing the e-commerce details for the product and color segment,
+  or null if no matching details are found.
+  """
+  eCommerceDetailByColor("The code of the color segment. If provided, it is used to filter the e-commerce details. Can be null if segmentColorId is specified." segmentColorCode: String """
+  The identifier of the color segment. If provided, it is used to filter the e-commerce details. Can be null if
+              segmentColorCode is specified.
+  """ segmentColorId: ID): ProductECommerceDetail @cost(weight: "10")
+  """
+  Retrieves the gender associated with the specified product, if available.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the gender associated with the product,
+  or null if the product does not have a gender.
+  """
+  gender: Gender @cost(weight: "10")
   "The unique identifier for the product."
   id: ID!
+  """
+  Gets the internal identifier of the product.
+  
+  
+  **Returns:**
+  The internal identifier of the product.
+  """
+  internalId: Int!
   "The introduction date of the product."
   introductionDate: Date
   "Gets or sets a value indicating whether the product is active."
@@ -1543,18 +1751,119 @@ type Product implements Node @authorize(roles: [ "DG-Read" ]) {
   isMadeToOrder: Boolean!
   "Gets or sets a value indicating whether the product is physical."
   isPhysical: Boolean!
+  """
+  Retrieves the collection of matching styles for the specified product.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of matching styles for the
+  product, or null if no matching styles are found.
+  """
+  matchingStyles(where: ProductMatchingStyleFilterInput @cost(weight: "10")): [ProductMatchingStyle!] @cost(weight: "10")
   "The last modified date and time of the product."
   modified: DateTime!
   "The name of the product."
   name: String!
+  """
+  Retrieves the collection of assets associated with the specified product.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of product
+  assets associated with the specified product.
+  """
+  productAssets(where: ProductAssetFilterInput @cost(weight: "10")): [ProductAsset!]! @cost(weight: "10")
+  """
+  Retrieves the brand information for a specified product.
+  
+  
+  **Returns:**
+  A ProductBrand object representing the brand of the product, or null if the product
+  does not have a brand.
+  """
+  productBrand: ProductBrand @cost(weight: "10")
+  """
+  Retrieves the collection of media items associated with the specified product.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of product
+  media items for the specified product. The collection is empty if no media items are found.
+  """
+  productMedia(where: ProductImageFilterInput @cost(weight: "10")): [ProductMedia!]! @cost(weight: "10")
   "The sold-as style code of the product."
   soldAsStyleCode: String!
   "The source identifier for the product."
   sourceIdentifier: String
+  """
+  Gets the stock level of the product.
+  
+  
+  **Returns:**
+  The stock level of the product.
+  """
+  stockLevel: StockLevel @cost(weight: "10")
   "The style code of the product."
   styleCode: String!
   "The timestamp for the product."
   timestamp: Long!
+  """
+  Retrieves the product type for the specified product using the provided lookup service.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the product type if found; otherwise,
+  Unknown.
+  """
+  type: ProductType! @cost(weight: "10")
+  """
+  Gets the variants associated with the product.
+  
+  
+  **Returns:**
+  A collection of variants associated with the product.
+  """
+  variants: [Variant!]! @cost(weight: "10")
+}
+
+"Represents a asset associated with a catalog item."
+type ProductAsset @authorize(roles: [ "DG-Read" ]) {
+  """
+  Retrieves the asset type for the specified product asset using the provided lookup service.
+  
+  
+  **Returns:**
+  A value of the ProductAssetType enumeration representing the asset type. Returns ProductAssetType.Unknown if the
+  type cannot be resolved.
+  """
+  type: ProductAssetType! @cost(weight: "10")
+  """
+  Resolves the absolute URL for the specified product asset using the configured asset service and cache base URL.
+  
+  
+  **Returns:**
+  A URI representing the resolved asset URL if successful; otherwise, null if the asset does not exist, the base URL
+  is not configured, or the asset URI is invalid.
+  """
+  url: URL @cost(weight: "10")
+}
+
+"Represents the attribute details for a product."
+type ProductAttribute @authorize(roles: [ "DG-Read" ]) {
+  "Gets or sets the data type associated with the attribute."
+  datatype: String
+  "Gets or sets the grouping for the attribute."
+  grouping: String
+  "The product attribute identifier."
+  internalId: Int!
+  "Gets or sets the name of the attribute associated with the entity."
+  name: String
+  "Gets or sets the title of the attribute."
+  title: String
+  "Gets or sets the numeric value associated with the property."
+  valueNumeric: Decimal
+  "Gets or sets the text value associated with the property."
+  valueText: String
 }
 
 "Represents a product brand."
@@ -1619,6 +1928,67 @@ type ProductCategory implements Node @authorize(roles: [ "DG-Read" ]) {
   timestamp: Long!
 }
 
+"""
+Represents the e-commerce details of a product, including metadata such as timestamps,  web-friendly name, and
+description.
+"""
+type ProductECommerceDetail @authorize(roles: [ "DG-Read" ]) {
+  """
+  Retrieves the behavior associated with the specified product e-commerce detail.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the behavior associated with the
+  specified product e-commerce detail.
+  """
+  behavior: Behavior! @cost(weight: "10")
+  """
+  Retrieves a collection of companion products for the specified e-commerce product detail.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The result contains an enumerable collection of companion
+  products. The collection may be empty if no companion products are found.
+  """
+  companionProducts: [Product!]! @cost(weight: "10")
+  "The date and time when the entity was created."
+  created: DateTime!
+  "The tag identifier."
+  internalId: Int!
+  "The date and time when the entity was last modified."
+  modified: DateTime!
+  "The web friendly name of the Product."
+  name: String
+  """
+  Retrieves the promotion details for the specified product.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the promotion details associated with
+  the specified product.
+  """
+  promotion: Promotion! @cost(weight: "10")
+  """
+  Retrieves a collection of products that are related to the specified e-commerce product detail.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The result contains an enumerable collection of related
+  products. The collection may be empty if no related products are found.
+  """
+  relatedProducts: [Product!]! @cost(weight: "10")
+  """
+  Retrieves the segment color associated with the specified product.
+  
+  
+  **Returns:**
+  A CancellationToken) object representing the segment color associated with the product,  or null if the product does not have an associated segment color.
+  """
+  segmentColor: SegmentColor @cost(weight: "10")
+  "The timestamp for the product web preferences."
+  timestamp: Long!
+}
+
 "Represents a product item group."
 type ProductItemGroup implements Node @authorize(roles: [ "DG-Read" ]) {
   "The checksum for change tracking."
@@ -1641,6 +2011,289 @@ type ProductItemGroup implements Node @authorize(roles: [ "DG-Read" ]) {
   sourceIdentifier: String
   "The timestamp for concurrency control."
   timestamp: Long!
+}
+
+"Represents a matching style relationship for a product."
+type ProductMatchingStyle @authorize(roles: [ "DG-Read" ]) {
+  """
+  Retrieves the related product that this matching style points to.
+  
+  
+  **Returns:**
+  The related product referenced by MatchingStyleId, or null if not found.
+  """
+  matchingProduct: Product @cost(weight: "10")
+  """
+  Asynchronously retrieves the matching style type for the specified product matching style.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the matching style type for the
+  specified product matching style. Returns ProductMatchingStyleType.Unknown if the type cannot be determined.
+  """
+  type: ProductMatchingStyleType! @cost(weight: "10")
+}
+
+"Represents a matching style relationship for a product."
+type ProductMatchingStyleVariant @authorize(roles: [ "DG-Read" ]) {
+  """
+  Asynchronously retrieves the product that matches the specified style variant.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the matching product if found;
+  otherwise, null.
+  """
+  matchingProduct: Product @cost(weight: "10")
+  """
+  Asynchronously retrieves the variant that matches the specified product matching style.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the matching variant if found;
+  otherwise, null.
+  """
+  matchingVariant: Variant @cost(weight: "10")
+  """
+  Asynchronously retrieves the matching style type for the specified product matching style variant.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the matching style type for the
+  specified variant, or ProductMatchingStyleType.Unknown if the type cannot be determined.
+  """
+  type: ProductMatchingStyleType! @cost(weight: "10")
+}
+
+"Represents a media item associated with a product, including its identifying name and related metadata."
+type ProductMedia implements Node {
+  """
+  Retrieves all available asset URLs for the specified product media, including all supported image dimension
+  templates or the video template as applicable.
+  
+  
+  **Returns:**
+  A collection of URIs representing the asset URLs for each supported dimension template, or null if the media type
+  cannot be resolved.
+  """
+  allUrlTemplateDimensions("An optional parameter indicating the source of the product image, which may affect the URL construction logic based on internal or external usage. If null, a default source is used." productImageSource: ProductImageSource): [URL!] @cost(weight: "10")
+  "Gets or sets the timestamp indicating when this media item was created."
+  created: DateTime!
+  "Gets or sets the unique identifier for the entity."
+  id: ID!
+  """
+  Asynchronously retrieves the media type for the specified product media.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the resolved media type for the product
+  media, or ProductMediaType.None if the type cannot be determined.
+  """
+  mediaType: ProductMediaType! @cost(weight: "10")
+  """
+  Asynchronously retrieves the MIME type string associated with the specified product media.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the MIME type string if available;
+  otherwise, null.
+  """
+  mimeType: String @cost(weight: "10")
+  "Gets or sets the timestamp indicating when this media item was last modified."
+  modified: DateTime!
+  "Gets or sets the name associated with this instance."
+  name: String!
+  """
+  Asynchronously resolves the absolute URL for the specified product media asset, applying the appropriate dimension
+  template and asset options.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the absolute URI of the product media
+  asset, or null if the media type cannot be resolved.
+  """
+  url("An optional image dimension template to apply when generating the URL. If null, a default template is used." productImageDimensionTemplate: ProductImageDimensionTemplate "An optional parameter indicating the source of the product image, which may affect the URL construction logic based on internal or external usage. If null, a default source is used." productImageSource: ProductImageSource): URL @cost(weight: "10")
+}
+
+"A connection to a list of items."
+type ProductMediasConnection {
+  "A list of edges."
+  edges: [ProductMediasEdge!]
+  "A flattened list of the nodes."
+  nodes: [ProductMedia!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "Identifies the total count of items in the connection."
+  totalCount: Int! @cost(weight: "10")
+}
+
+"An edge in a connection."
+type ProductMediasEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ProductMedia!
+}
+
+"Represents a component variant within a giftset, including its relationship metadata."
+type ProductSetContent @authorize(roles: [ "DG-Read" ]) {
+  "Indicates whether the component is automatically added."
+  isAutoAddition: Boolean!
+  "Indicates whether the component is brandable."
+  isBrandable: Boolean!
+  "Indicates whether the component is included in stock level calculations."
+  isIncludedInStockLevel: Boolean!
+  "Indicates whether the component is manufactured."
+  isManufactured: Boolean!
+  "Indicates whether the component is priced on the highest variant."
+  isPricedOnHighestVariant: Boolean!
+  "Indicates whether the component is visible on orders."
+  isVisibleOnOrder: Boolean!
+  "Indicates whether the component is visible on quotes."
+  isVisibleOnQuote: Boolean!
+  "Indicates whether the component is visible on the website."
+  isVisibleOnWebsite: Boolean!
+  "Indicates whether the component is a warehouse item."
+  isWarehouseItem: Boolean!
+  "Indicates whether the component has a zero price."
+  isZeroPrice: Boolean!
+  "The quantity multiplier for the component."
+  multiplier: Byte!
+  """
+  Gets the variant associated with the product set content.
+  
+  
+  **Returns:**
+  The variant associated with the product set content.
+  """
+  variant: Variant @cost(weight: "10")
+}
+
+"""
+Represents an active production job record used to track and manage production operations.
+This record is cached and includes tracking information for manufacturing jobs including quantities, materials, and scheduling details.
+"""
+type ProductionJob implements Node {
+  "The date when action is required or the job should be actioned."
+  actionDate: Date
+  """
+  Asynchronously retrieves the branding method associated with the specified production job.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the branding method model if found;
+  otherwise, null.
+  """
+  brandingMethod: BrandingMethod @cost(weight: "10")
+  "A checksum or hash value used to verify data integrity and detect changes to the production job details."
+  checksum: String
+  """
+  Asynchronously retrieves the child production jobs associated with the specified parent production job.
+  
+  
+  **Returns:**
+  A collection of ProductionJob models representing the child jobs of the specified parent. The collection will be
+  empty if no child jobs are found.
+  """
+  children: [ProductionJob!]! @cost(weight: "10")
+  "The date and time when the production job was created."
+  created: DateTime!
+  """
+  Asynchronously retrieves the details associated with the specified production job.
+  
+  
+  **Returns:**
+  An enumerable collection of production job details. The collection will be empty if no details are found.
+  """
+  details: [ProductionJobDetail!]! @cost(weight: "10")
+  "The unique identifier for the production job."
+  id: ID!
+  "The type of ink used for printing in this production job."
+  inkType: String
+  "The production job number or identifier used for tracking and reference."
+  jobNumber: String!
+  "The date and time when the production job was last modified."
+  modified: DateTime!
+  """
+  Asynchronously retrieves the parent production job associated with the specified production job, if one exists.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the parent production job if it exists;
+  otherwise, null.
+  """
+  parent: ProductionJob @cost(weight: "10")
+  "The number of distinct colors used in the printing process for this job."
+  printColorCount: Int
+  "The quantity of items to be printed as part of this production job."
+  printQuantity: Int!
+  "The scheduled due date for completing the production job."
+  productionDueDate: Date
+  "The date and time when the production job was removed or marked as deleted."
+  removedAt: DateTime
+  "The sales order number associated with this production job."
+  salesOrder: String!
+  "The current status of the production job (e.g., pending, in-progress, completed)."
+  status: String
+  "The number of stitches applied during the production process, if applicable."
+  stitchCount: Int
+  "A timestamp used for optimistic concurrency control and row versioning."
+  timestamp: Long!
+  "The total quantity of units to be produced in this job."
+  unitQuantity: Int!
+}
+
+"Represents a detail line item for a production job, specifying the variant and quantity to be produced."
+type ProductionJobDetail {
+  "The unique identifier for this production job detail record."
+  id: Int!
+  "The number of units to be produced for the specified variant."
+  quantity: Int!
+  """
+  Asynchronously retrieves the variant associated with the specified production job detail.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the variant model if found; otherwise,
+  null.
+  """
+  variant: Variant @cost(weight: "10")
+}
+
+"""
+Represents a production machine used in manufacturing operations.
+This model is cached and provides details about machine configuration, capabilities, and operational status.
+"""
+type ProductionMachine implements Node {
+  "Indicates whether the production machine is currently operational and available for use."
+  active: Boolean!
+  """
+  Asynchronously retrieves the branding department associated with the specified production machine.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the branding department model if found;
+  otherwise, null.
+  """
+  brandingDepartment: BrandingDepartment @cost(weight: "10")
+  "A checksum value used to verify data integrity and detect changes to the machine configuration."
+  checksum: String
+  "The maximum number of colors that the machine is capable of processing simultaneously."
+  colorLimitation: Int
+  "The logical grouping or category to which this machine belongs for organizational purposes."
+  grouping: String
+  "The unique identifier for the production machine."
+  id: ID!
+  "The display name of the production machine."
+  name: String!
+  "The reference number assigned to this machine within the facility."
+  number: Int
+  "The time in minutes required to set up the machine for production."
+  setupMinutes: Int
+  "The identifier from the source system that tracks this machine."
+  sourceIdentifier: String!
+  "The production target for the machine, typically measured in units per time period."
+  target: Float
 }
 
 "A connection to a list of items."
@@ -1687,8 +2340,19 @@ type Promotion implements Node @authorize(roles: [ "DG-Read" ]) {
   timestamp: Long!
 }
 
-"Provides GraphQL queryable methods for retrieving artwork file types."
-type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard", "DG-Order-Entry" ]) {
+"""
+Provides query operations for retrieving credit notes for the current customer, including retrieval by unique
+identifier and querying with pagination and filtering.
+"""
+type Query @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Dashboard" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Dashboard", "DG-Order-Entry" ]) {
+  """
+  Retrieves a paginated list of active production jobs from the production job service.
+  
+  
+  **Returns:**
+  A connection object containing the active production jobs and pagination information.
+  """
+  activeProductionJobs("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: ActiveProductionJobFilterInput @cost(weight: "10")): ActiveProductionJobsConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
   """
   Retrieves the details of an artwork by its unique identifier.
   
@@ -1779,7 +2443,7 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   **Returns:**
   Products that match the search term.
   """
-  autocompleteProduct("The search term to use." searchTerm: String!): [AutocompleteProduct!]! @cost(weight: "10")
+  autocompleteProduct("Whether to exclude res the specified product class." excludeProductClass: Boolean! = false "The product class code to filter by." productClassCode: String "The search term to use." searchTerm: String!): [AutocompleteProduct!]! @cost(weight: "10")
   """
   Searches for product variants by code, name and SKU.
   
@@ -1787,7 +2451,7 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   **Returns:**
   Product variants that match the search term.
   """
-  autocompleteVariant("The search term to use." searchTerm: String!): [AutocompleteVariant!]! @cost(weight: "10")
+  autocompleteVariant("Whether to exclude results from the specified product class." excludeProductClass: Boolean! = false "The product class code to filter by." productClassCode: String "The search term to use." searchTerm: String!): [AutocompleteVariant!]! @cost(weight: "10")
   """
   Retrieves a behavior by its code.
   
@@ -1812,6 +2476,23 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   A collection of all behaviors.
   """
   behaviors: [Behavior!]! @cost(weight: "10")
+  """
+  Retrieves the branding department associated with the specified identifier asynchronously.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the branding department model if found;
+  otherwise, null.
+  """
+  brandingDepartment("The unique identifier of the branding department to retrieve. Must be a positive integer." id: ID!): BrandingDepartment @cost(weight: "10")
+  """
+  Retrieves a collection of branding departments that match the specified filtering criteria.
+  
+  
+  **Returns:**
+  An enumerable collection of branding department models that satisfy the query conditions.
+  """
+  brandingDepartments(where: BrandingDepartmentFilterInput @cost(weight: "10")): [BrandingDepartment!]! @cost(weight: "10")
   """
   Retrieves a branding method by its code.
   
@@ -1891,15 +2572,7 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   **Returns:**
   A CreditNote object representing the credit note if found; otherwise, null.
   """
-  creditNote("The unique identifier of the credit note to retrieve." creditNoteId: ID!): CreditNote @cost(weight: "10")
-  """
-  Retrieves a credit note by its unique credit note number.
-  
-  
-  **Returns:**
-  A CreditNote object representing the credit note if found; otherwise, null.
-  """
-  creditNoteByCreditNoteNumber("The unique identifier of the credit note to retrieve. Cannot be null or empty." creditNoteNumber: String!): CreditNote @cost(weight: "10")
+  creditNote("The unique identifier of the credit note to retrieve." id: ID!): CreditNote @cost(weight: "10")
   """
   Retrieves a paginated and filtered list of credit notes associated with a specific sales order number.
   
@@ -2030,14 +2703,6 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   """
   jobCardAsset("The unique identifier of the job card asset to retrieve." id: ID!): JobCardAsset @cost(weight: "10")
   """
-  Retrieves a job card based on the specified job card number.
-  
-  
-  **Returns:**
-  A JobCard object representing the job card if found; otherwise, null.
-  """
-  jobCardByJobCardNumber("The unique identifier of the job card to retrieve. This value cannot be null or empty." jobCardNumber: String!): JobCard @cost(weight: "10")
-  """
   Retrieves the job card proof asset associated with the specified identifier for the current customer.
   
   
@@ -2164,6 +2829,33 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   """
   productCategoryById("The identifier of the product category." id: ID!): ProductCategory @cost(weight: "10")
   """
+  Asynchronously retrieves a production job by its unique identifier.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the production job model if found;
+  otherwise, null.
+  """
+  productionJob("The unique identifier of the production job to retrieve. Must be a positive integer." id: ID!): ProductionJob @cost(weight: "10")
+  """
+  Retrieves a production machine by its unique identifier asynchronously.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the production machine model if found;
+  otherwise, null.
+  """
+  productionMachine("The unique identifier of the production machine to retrieve. Must be a positive integer." id: ID!): ProductionMachine @cost(weight: "10")
+  """
+  Asynchronously retrieves a collection of production machines that match the specified filtering criteria.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of production
+  machine models that satisfy the filtering criteria. The collection will be empty if no machines are found.
+  """
+  productionMachines(where: ProductionMachineFilterInput @cost(weight: "10")): [ProductionMachine!]! @cost(weight: "10")
+  """
   Retrieves a product item group by its code.
   
   
@@ -2187,6 +2879,23 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   A collection of all product item groups.
   """
   productItemGroups: [ProductItemGroup!]! @cost(weight: "10")
+  """
+  Retrieves the product media associated with the specified identifier.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the product media if found; otherwise,
+  null.
+  """
+  productMedia("The unique identifier of the product media to retrieve." id: ID!): ProductMedia @cost(weight: "10")
+  """
+  Retrieves a paginated list of product media items with support for filtering and paging.
+  
+  
+  **Returns:**
+  A connection object containing the paginated product media items and related paging information.
+  """
+  productMedias("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: ProductImageFilterInput @cost(weight: "10")): ProductMediasConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
   """
   Retrieves a paginated list of products, optionally filtered by product category, code or name.
   
@@ -2242,7 +2951,7 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   **Returns:**
   A collection of all regions.
   """
-  regions: [Region!]! @cost(weight: "10")
+  regions(where: RegionFilterInput @cost(weight: "10")): [Region!]! @cost(weight: "10")
   """
   Retrieves a sales channel by its code.
   
@@ -2285,33 +2994,6 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   """
   salesOrderAsset("The unique identifier of the sales order asset to retrieve." id: ID!): SalesOrderAsset @cost(weight: "10")
   """
-  Retrieves a sales order based on the specified customer reference.
-  
-  
-  **Returns:**
-  A SalesOrder object representing the sales order associated with the given customer reference, or
-  null if no matching order is found.
-  """
-  salesOrderByCustomerReference("The unique reference identifier for the customer. Cannot be null or empty." customerReference: String!): SalesOrder @cost(weight: "10")
-  """
-  Retrieves a sales order based on the specified invoice number.
-  
-  
-  **Returns:**
-  A task that represents the asynchronous operation. The task result contains the sales order associated with the
-  specified invoice number, or null if no matching sales order is found.
-  """
-  salesOrderByInvoiceNumber("The invoice number of the sales order to retrieve. Cannot be null or empty." invoiceNumber: String!): SalesOrder @cost(weight: "10")
-  """
-  Retrieves a sales order by its sales order number.
-  
-  
-  **Returns:**
-  A SalesOrder object representing the sales order, or null if the sales order is not
-  found.
-  """
-  salesOrderBySalesOrderNumber("The unique identifier for the sales order to retrieve." salesOrderNumber: String!): SalesOrder @cost(weight: "10")
-  """
   Retrieves a paginated and filtered list of sales orders.
   
   
@@ -2342,7 +3024,7 @@ type Query @authorize(roles: [ "DG-Order-Entry" ]) @authorize(roles: [ "DG-Order
   **Returns:**
   A paginated list of sales persons.
   """
-  salesPersons("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): SalesPersonsConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  salesPersons("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int where: SalesPersonFilterInput @cost(weight: "10")): SalesPersonsConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 50, sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
   """
   Retrieves a paginated list of sales persons by region.
   
@@ -2761,25 +3443,59 @@ type SalesOrder implements Node @authorize(roles: [ "DG-Dashboard" ]) {
   A task that represents the asynchronous operation. The task result contains a collection of assets linked to the
   sales order. The collection may be empty if no assets are associated.
   """
-  assets(where: SalesOrderAssetFilterInput @cost(weight: "10")): [SalesOrderAsset]! @cost(weight: "10")
+  assets(where: SalesOrderAssetFilterInput @cost(weight: "10")): [SalesOrderAsset!] @cost(weight: "10")
   "The associated outstanding balance."
   balanceOutstanding: Decimal!
-  "The branch associated with the sales order."
+  """
+  Retrieves the collection branch associated with the specified sales order, if one is defined.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the collection branch if specified;
+  otherwise, null.
+  """
   collectionBranch: Branch @cost(weight: "10")
-  "The contact associated with the sales order."
+  """
+  Retrieves the customer contact information associated with the specified sales order.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the customer contact information if
+  found; otherwise, null.
+  """
   contact: CustomerContact @cost(weight: "10")
-  "The customer associated with the sales order."
+  """
+  Retrieves the collection of credit notes associated with the specified sales order.
+  
+  
+  **Returns:**
+  A collection of credit notes associated with the specified sales order, or null if no credit notes are found.
+  """
+  creditNotes: [CreditNote!] @cost(weight: "10")
+  """
+  Retrieves the customer associated with the specified sales order asynchronously.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the customer model if found; otherwise,
+  null.
+  """
   customer: Customer @cost(weight: "10")
   "The associated customer reference number."
   customerReference: String!
-  "The delivery associated with the sales order."
-  deliveryDetail: SalesOrderDeliveryDetail @cost(weight: "10")
   "The associated VAT exclusive discount."
   discountExcl: Decimal!
   "The identifier for the sales order."
   id: ID!
-  "The internal lines associated with the sales order."
-  internalDetails: [SalesOrderInternalDetail]! @cost(weight: "10")
+  """
+  Retrieves the collection of internal details associated with the specified sales order asynchronously.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of internal
+  details for the sales order, or null if no details are found.
+  """
+  internalDetails: [SalesOrderInternalDetail!] @cost(weight: "10")
   "The Sales order's  identifier."
   internalId: Int!
   "The associated internal line count."
@@ -2800,21 +3516,40 @@ type SalesOrder implements Node @authorize(roles: [ "DG-Dashboard" ]) {
   A task that represents the asynchronous operation. The task result contains a collection of job cards linked to the
   specified sales order. The collection will be empty if no job cards are found.
   """
-  jobCards: [JobCard!]! @cost(weight: "10")
+  jobCards: [JobCard!] @cost(weight: "10")
   "The associated last modified date."
   lastModifiedDate: DateTime!
   "The associated line count for the sales order."
   lineCount: Int!
   "The associated order date."
   orderDate: Date!
-  "The packaging associated with the sales order."
-  packaging: Packaging @cost(weight: "10")
+  """
+  Retrieves the packaging information associated with the specified sales order.
+  
+  
+  **Returns:**
+  A collection of SalesOrderPackaging models representing the packaging information for the specified sales order, or
+  null if no packaging information is found.
+  """
+  packaging: [SalesOrderPackaging!] @cost(weight: "10")
   "The associated packaging count for the sales order."
   packagingCount: Int!
-  "The payment associated with the sales order."
-  paymentHistory: [SalesOrderPaymentHistory]! @cost(weight: "10")
-  "The lines associated with the sales order."
-  salesOrderDetails: [SalesOrderDetail]! @cost(weight: "10")
+  """
+  Retrieves the payment history associated with the specified sales order.
+  
+  
+  **Returns:**
+  A collection of payment history records for the specified sales order, or null if no payment history exists.
+  """
+  paymentHistory: [SalesOrderPaymentHistory!] @cost(weight: "10")
+  """
+  Asynchronously retrieves the collection of details associated with the specified sales order.
+  
+  
+  **Returns:**
+  A collection of sales order details for the specified sales order, or null if no details are found.
+  """
+  salesOrderDetails: [SalesOrderDetail!] @cost(weight: "10")
   "The associated sales order number."
   salesOrderNumber: String!
   """
@@ -2854,24 +3589,6 @@ type SalesOrderAsset implements Node @authorize(roles: [ "DG-Dashboard" ]) {
   url: URL
 }
 
-"Represents a sales order delivery detail."
-type SalesOrderDeliveryDetail @authorize(roles: [ "DG-Dashboard" ]) {
-  "The courier for sales order delivery detail."
-  courier: String
-  "The courier contact number for sales order delivery detail."
-  courierContactNumber: String
-  "The service for sales order delivery detail."
-  service: String!
-  "The total excluding VAT for sales order delivery detail."
-  totalExcl: Decimal!
-  "The waybill for sales order delivery detail."
-  waybill: String!
-  "The weight for sales order delivery detail."
-  weight: Float!
-  "The unit of measurement associated with the sales order delivery detail."
-  weightUnitOfMeasure: UnitOfMeasure @cost(weight: "10")
-}
-
 "Represents a sales order detail."
 type SalesOrderDetail @authorize(roles: [ "DG-Dashboard" ]) {
   "The tax amount for the sales order detail."
@@ -2906,6 +3623,17 @@ type SalesOrderInternalDetail @authorize(roles: [ "DG-Dashboard" ]) {
   unitDiscountExcl: Decimal!
   "The unit price excluding VAT for the sales order internal detail."
   unitPriceExcl: Decimal!
+}
+
+"Represents the packaging details of a product."
+type SalesOrderPackaging @authorize(roles: [ "DG-Dashboard" ]) {
+  dimUnitOfMeasure: Int!
+  height: Float!
+  length: Float!
+  number: Int!
+  weight: Float!
+  weightUnitOfMeasure: Int!
+  width: Float!
 }
 
 "Represents a sales order payment history."
@@ -3161,8 +3889,9 @@ type StockIncomingLevel @authorize(roles: [ "DG-Read" ]) {
 type StockLevel implements Node @authorize(roles: [ "DG-Read" ]) {
   "The available stock quantity."
   available: Int!
-  "The product variant Code."
-  code: String
+  code: String @cost(weight: "10")
+  "The confirmed reserved stock quantity."
+  confirmedReserved: Int!
   "The unique identifier for the stock level."
   id: ID!
   """
@@ -3183,22 +3912,38 @@ type StockLevel implements Node @authorize(roles: [ "DG-Read" ]) {
   inventoryFree: Int!
   "The date and time when the stock level was last modified."
   modified: DateTime!
+  product: Product @cost(weight: "10")
+  """
+  Retrieves projected stock levels for the specified stock level variant.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of stock projections for
+  the specified variant. Returns an empty collection if the variant identifier is null.
+  """
+  projections: [StockProjection!]! @cost(weight: "10")
   "The reserved stock quantity."
   reserved: Int!
-  "The product segmented color code."
-  segmentColorCode: String
-  "The product variant sku."
-  sku: String
-  "The product sold as code."
-  soldAsCode: String
+  segmentColorCode: String @cost(weight: "10")
+  sku: String @cost(weight: "10")
+  soldAsCode: String @cost(weight: "10")
   "The source identifier."
   sourceIdentifier: String!
-  "The stock level type code."
-  stockLevelType: StockLevelType!
-  "The product style code."
-  styleCode: String
+  styleCode: String @cost(weight: "10")
   "The timestamp of the stock level."
   timestamp: Long!
+  "The total incoming stock quantity."
+  totalIncoming: Int!
+  """
+  Gets the stock level type associated with the specified stock level.
+  
+  
+  **Returns:**
+  A value of type StockLevelType representing the type of the specified stock level. Returns StockLevelType.Unknown
+  if the type cannot be determined.
+  """
+  type: StockLevelType! @cost(weight: "10")
+  variant: Variant @cost(weight: "10")
   """
   Retrieves the level for all variants of the Parent product stock level.
   
@@ -3254,6 +3999,21 @@ type StockLevelsEdge {
   cursor: String!
   "The item at the end of the edge."
   node: StockLevel!
+}
+
+"""
+Represents a projection of stock quantities for a specific date, including incoming, opening, and projected
+inventory levels.
+"""
+type StockProjection {
+  "The quantity of stock expected to be received by the projected date. This includes any incoming inventory that"
+  incomingQuantity: Int!
+  "The quantity of stock available at the beginning of the projection period. This represents the inventory level"
+  openingQuantity: Int!
+  "The date for which the stock projection is calculated. This represents the future date when the projected"
+  projectedDate: Date!
+  "The projected quantity of stock available on the projected date, calculated based on the opening quantity and"
+  projectedQuantity: Int!
 }
 
 type TagArtworkPayload {
@@ -3354,19 +4114,45 @@ type UpdateJobCardBrandingInfoPayload {
 
 "Represents a variant of a product style."
 type Variant implements Node @authorize(roles: [ "DG-Read" ]) {
+  """
+  Retrieves the list of product attributes associated with the specified variant.
+  
+  
+  **Returns:**
+  A list of product attributes associated with the specified variant, or null if no attributes are found.
+  """
+  attributes(where: ProductAttributeFilterInput @cost(weight: "10")): [ProductAttribute!] @cost(weight: "10")
+  """
+  Retrieves the collection of branding positions associated with the specified variant asynchronously.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of
+  BrandingPosition objects for the specified variant.
+  """
+  brandingPositions: [BrandingPosition!]! @cost(weight: "10")
   "The code for the variant."
   code: String!
   "The creation date and time of the variant."
   created: DateTime!
   """
-  Retrieves the default warehouse preferences for a given product variant.
+  Retrieves the e-commerce detail information for the specified variant using the provided web preference service.
   
   
   **Returns:**
-  A VariantWarehousePreference object representing the warehouse preferences for the specified variant.
-  If no preferences are explicitly defined for the variant, a new instance with default values is returned.
+  A task that represents the asynchronous operation. The task result contains the e-commerce detail for the variant,
+  or null if no detail is available.
   """
-  defaultWarehousePreferences: VariantWarehousePreference @cost(weight: "10")
+  eCommerceDetail: VariantECommerceDetail @cost(weight: "10")
+  """
+  Retrieves the collection of component variants that make up the specified giftset variant.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains an enumerable collection of component
+  variants, or null if no components are found.
+  """
+  giftsetComponents(where: ProductSetContentFilterInput @cost(weight: "10")): [ProductSetContent!] @cost(weight: "10")
   "The unique identifier for the variant."
   id: ID!
   """
@@ -3385,6 +4171,15 @@ type Variant implements Node @authorize(roles: [ "DG-Read" ]) {
   isNew: Boolean!
   "Variant's first landed date at the Woodmead facility."
   landedDate: Date
+  """
+  Retrieves the collection of matching style variants for the specified product variant.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of matching style
+  variants, or null if no matches are found.
+  """
+  matchingStyles(where: ProductMatchingStyleVariantFilterInput @cost(weight: "10")): [ProductMatchingStyleVariant!] @cost(weight: "10")
   "The minimum order quantity for the variant."
   minimumOrderQuantity: Int
   "The last modified date and time of the variant."
@@ -3406,6 +4201,14 @@ type Variant implements Node @authorize(roles: [ "DG-Read" ]) {
   """
   packagingByType("The type of packaging requested." packagingType: String!): Packaging @cost(weight: "10")
   """
+  The prices associated with the variant.
+  
+  
+  **Returns:**
+  The prices associated with the variant.
+  """
+  prices(where: PriceFilterInput @cost(weight: "10")): [Price!] @cost(weight: "10")
+  """
   Gets the product associated with the variant.
   
   
@@ -3413,6 +4216,15 @@ type Variant implements Node @authorize(roles: [ "DG-Read" ]) {
   The product associated with the variant.
   """
   product: Product! @cost(weight: "10")
+  """
+  Retrieves the collection of media items associated with the specified product variant.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains a collection of product media items for
+  the specified variant. The collection is empty if no media items are found.
+  """
+  productMedia(where: ProductImageFilterInput @cost(weight: "10")): [ProductMedia!]! @cost(weight: "10")
   """
   Gets the segment color associated with the variant.
   
@@ -3433,14 +4245,6 @@ type Variant implements Node @authorize(roles: [ "DG-Read" ]) {
   sku: String!
   "The source identifier for the variant."
   sourceIdentifier: String
-  """
-  Gets the stock class of the product.
-  
-  
-  **Returns:**
-  The stock class of the variant.
-  """
-  stockClass: StockClass! @cost(weight: "10")
   "The stock class identifier associated with the variant."
   stockClassId: Int!
   """
@@ -3453,29 +4257,51 @@ type Variant implements Node @authorize(roles: [ "DG-Read" ]) {
   stockLevel: StockLevel @cost(weight: "10")
   "The timestamp for the variant."
   timestamp: Long!
+}
+
+"""
+Represents the e-commerce details of a variant, including metadata such as timestamps,  web-friendly name, and
+description.
+"""
+type VariantECommerceDetail @authorize(roles: [ "DG-Read" ]) {
   """
-  Retrieves the warehouse preferences for a given product variant and division.
+  Retrieves the behavior associated with the specified e-commerce variant detail.
   
   
   **Returns:**
-  A VariantWarehousePreference object containing the warehouse preferences for the specified variant
-  and division. If no preferences are found, a default preference object is returned.
+  A task that represents the asynchronous operation. The task result contains the behavior associated with the
+  specified variant.
   """
-  warehousePreferences("The division code to use when retrieving preferences. If null or whitespace, a default value of \"Amrod\" is used." division: String!): VariantWarehousePreference @cost(weight: "10")
-}
-
-"Represents the warehouse preferences for a specific product variant."
-type VariantWarehousePreference @authorize(roles: [ "DG-Read" ]) {
-  "Gets or sets a value indicating whether the entity is active."
-  active: Boolean
-  "Gets or sets the name of the company associated with the entity."
-  company: String
-  "Gets or sets a value indicating whether the item is conveyorable."
-  isConveyorable: Boolean
-  "Gets or sets a value indicating whether the item is classified as dangerous goods."
-  isDangerousGoods: Boolean
-  "Gets or sets a value indicating whether the item is considered high value."
-  isHighValue: Boolean
+  behavior: Behavior! @cost(weight: "10")
+  "The date and time when the entity was created."
+  created: DateTime!
+  """
+  Returns the product description for the specified e-commerce variant, optionally encoded according to the specified
+  text encoding.
+  
+  
+  **Returns:**
+  A string containing the product description in the requested encoding, or null if the description is not available.
+  """
+  description("""
+  The text encoding to use for the returned description. If set to TextHtml, the description is returned as
+              HTML-encoded text; otherwise, plain text is returned. If null or unrecognized, plain text is returned.
+  """ textEncoding: TextEncoding): String @cost(weight: "10")
+  "The date and time when the entity was last modified."
+  modified: DateTime!
+  "The web friendly name of the Variant."
+  name: String
+  """
+  Retrieves the promotion associated with the specified e-commerce variant detail.
+  
+  
+  **Returns:**
+  A task that represents the asynchronous operation. The task result contains the promotion associated with the
+  specified variant.
+  """
+  promotion: Promotion! @cost(weight: "10")
+  "The timestamp for the product web preferences."
+  timestamp: Long!
 }
 
 "A connection to a list of items."
@@ -3611,6 +4437,20 @@ union UpdateGlobalSharingError = UnauthorizedException | NotFoundException | Con
 
 union UpdateJobCardBrandingInfoError = ConflictException
 
+input ActiveProductionJobFilterInput {
+  and: [ActiveProductionJobFilterInput!]
+  or: [ActiveProductionJobFilterInput!]
+  timestamp: GatewayTimestampOperationFilterInput
+  status: GatewayStringOperationFilterInput
+  actionDate: GatewayDateOperationFilterInput
+  productionDueDate: GatewayDateOperationFilterInput
+  jobNumber: GatewayStringOperationFilterInput
+  salesOrder: GatewayStringOperationFilterInput
+  parent: ProductJobParentOperationFilterInput
+  removedAt: GatewayNullDateOperationFilterInput
+  brandingMethod: BrandingMethodFilterInput
+}
+
 """
 Represents the input required to approve a job card, including details about the job card and its layout
 configuration.
@@ -3635,6 +4475,13 @@ input BrandingColorDetailInput {
   code: String!
   "The type of branding color, which indicates the purpose or category of the color used in the order branding."
   type: OrderBrandingColorType!
+}
+
+input BrandingDepartmentFilterInput {
+  and: [BrandingDepartmentFilterInput!]
+  or: [BrandingDepartmentFilterInput!]
+  code: GatewayStringOperationFilterInput
+  name: GatewayStringOperationFilterInput
 }
 
 """
@@ -3670,9 +4517,7 @@ input BrandingDetailInput {
   "The branding position code according to the branding specification, which indicates where the branding should be applied."
   position: String!
   "The reference identifier for the branding job."
-  reference: String!
-  "The repeat branding details, which may include information on how the branding should be repeated or applied across multiple items."
-  repeat: BrandingRepeatDetailInput
+  reference: String
   "The special instructions for the branding, which may include specific requirements or notes related to the branding."
   specialInstructions: String
 }
@@ -3685,12 +4530,31 @@ input BrandingMetadataInput {
   value: String
 }
 
-"Represents the details of a repeat order branding, including its type and reference information."
-input BrandingRepeatDetailInput {
-  "The reference identifier for the repeat branding, which may correspond to a previous job instance."
-  reference: String!
-  "Indicates the type of repeat branding for the order, such as a logo or exact match."
-  type: JobCardRepeatType!
+"Restricts the filter operations available when filtering sales orders by status."
+input BrandingMethodColorTypeEnumOperationFilterInput {
+  and: [BrandingMethodColorTypeEnumOperationFilterInput!]
+  or: [BrandingMethodColorTypeEnumOperationFilterInput!]
+  eq: SalesOrderStatus @cost(weight: "10")
+  neq: SalesOrderStatus @cost(weight: "10")
+  in: [SalesOrderStatus] @cost(weight: "10")
+  nin: [SalesOrderStatus] @cost(weight: "10")
+}
+
+input BrandingMethodFilterInput {
+  and: [BrandingMethodFilterInput!]
+  or: [BrandingMethodFilterInput!]
+  code: BrandingMethodStringOperationFilterInput
+  name: BrandingMethodStringOperationFilterInput
+  colorType: BrandingMethodColorTypeEnumOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering branding methods."
+input BrandingMethodStringOperationFilterInput {
+  and: [BrandingMethodStringOperationFilterInput!]
+  or: [BrandingMethodStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
 }
 
 "Input type for committing a new artwork."
@@ -3736,7 +4600,7 @@ input CreateArtworkTagInput {
   name: String!
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the filter operations available when filtering credit notes by date range."
 input CreditNoteDateRangeOperationFilterInput {
   and: [CreditNoteDateRangeOperationFilterInput!]
   or: [CreditNoteDateRangeOperationFilterInput!]
@@ -3751,7 +4615,7 @@ input CreditNoteFilterInput {
   or: [CreditNoteFilterInput!]
   creditNoteNumber: CreditNoteStringOperationFilterInput
   creditNoteDate: CreditNoteDateRangeOperationFilterInput
-  SalesOrder: SalesOrderFilterInput
+  salesOrder: SalesOrderFilterInput
 }
 
 "Restricts the filter operations available when filtering credit notes."
@@ -3791,17 +4655,83 @@ input EnableGlobalSharingInput {
   securityType: SecurityType!
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the boolean filter operations available for gateway filters."
 input GatewayBoolOperationFilterInput {
   and: [GatewayBoolOperationFilterInput!]
   or: [GatewayBoolOperationFilterInput!]
   eq: Boolean @cost(weight: "10")
 }
 
+"Restricts the date filter operations available for gateway filters."
+input GatewayDateOperationFilterInput {
+  and: [GatewayDateOperationFilterInput!]
+  or: [GatewayDateOperationFilterInput!]
+  eq: Date @cost(weight: "10")
+  lt: Date @cost(weight: "10")
+  gt: Date @cost(weight: "10")
+  gte: Date @cost(weight: "10")
+  lte: Date @cost(weight: "10")
+}
+
+"Restricts the decimal filter operations available for gateway filters."
+input GatewayDecimalOperationFilterInput {
+  and: [GatewayDecimalOperationFilterInput!]
+  or: [GatewayDecimalOperationFilterInput!]
+  gt: Decimal @cost(weight: "10")
+  gte: Decimal @cost(weight: "10")
+  eq: Decimal @cost(weight: "10")
+  lt: Decimal @cost(weight: "10")
+  lte: Decimal @cost(weight: "10")
+}
+
+"Restricts the integer filter operations available for gateway filters."
+input GatewayIntOperationFilterInput {
+  and: [GatewayIntOperationFilterInput!]
+  or: [GatewayIntOperationFilterInput!]
+  gt: Int @cost(weight: "10")
+  gte: Int @cost(weight: "10")
+  eq: Int @cost(weight: "10")
+  lt: Int @cost(weight: "10")
+  lte: Int @cost(weight: "10")
+}
+
 "Restricts the filter operations available when filtering suppliers."
+input GatewayNullDateOperationFilterInput {
+  and: [GatewayNullDateOperationFilterInput!]
+  or: [GatewayNullDateOperationFilterInput!]
+  eq: DateTime @cost(weight: "10")
+  neq: DateTime @cost(weight: "10")
+}
+
+"Restricts the string filter operations available for gateway filters."
 input GatewayStringOperationFilterInput {
   and: [GatewayStringOperationFilterInput!]
   or: [GatewayStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input GatewayTimestampOperationFilterInput {
+  and: [GatewayTimestampOperationFilterInput!]
+  or: [GatewayTimestampOperationFilterInput!]
+  gt: Long @cost(weight: "10")
+  gte: Long @cost(weight: "10")
+  lt: Long @cost(weight: "10")
+  lte: Long @cost(weight: "10")
+}
+
+input GenderFilterInput {
+  and: [GenderFilterInput!]
+  or: [GenderFilterInput!]
+  code: GenderStringOperationFilterInput
+  name: GatewayStringOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input GenderStringOperationFilterInput {
+  and: [GenderStringOperationFilterInput!]
+  or: [GenderStringOperationFilterInput!]
   contains: String @cost(weight: "10")
   eq: String @cost(weight: "10")
   in: [String] @cost(weight: "10")
@@ -3821,7 +4751,7 @@ input JobCardBrandingDetailInput {
   jobCardNumber: String!
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the filter operations available when filtering job cards by date."
 input JobCardDateTimeOperationFilterInput {
   and: [JobCardDateTimeOperationFilterInput!]
   or: [JobCardDateTimeOperationFilterInput!]
@@ -3832,14 +4762,14 @@ input JobCardDateTimeOperationFilterInput {
 input JobCardFilterInput {
   and: [JobCardFilterInput!]
   or: [JobCardFilterInput!]
-  SalesOrder: SalesOrderFilterInput
-  JobCardNumber: JobCardStringOperationFilterInput
-  Status: JobCardStatusEnumOperationFilterInput
+  salesOrder: SalesOrderFilterInput
+  jobCardNumber: JobCardStringOperationFilterInput
+  status: JobCardStatusEnumOperationFilterInput
   isActive: GatewayBoolOperationFilterInput
   created: JobCardDateTimeOperationFilterInput
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the filter operations available when filtering job cards by status."
 input JobCardStatusEnumOperationFilterInput {
   and: [JobCardStatusEnumOperationFilterInput!]
   or: [JobCardStatusEnumOperationFilterInput!]
@@ -3849,13 +4779,41 @@ input JobCardStatusEnumOperationFilterInput {
   nin: [JobCardStatus] @cost(weight: "10")
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the filter operations available when filtering job cards."
 input JobCardStringOperationFilterInput {
   and: [JobCardStringOperationFilterInput!]
   or: [JobCardStringOperationFilterInput!]
   contains: String @cost(weight: "10")
   eq: String @cost(weight: "10")
   in: [String] @cost(weight: "10")
+}
+
+input ListGenderFilterTypeFilterInput {
+  all: GenderFilterInput @cost(weight: "10")
+  none: GenderFilterInput @cost(weight: "10")
+  some: GenderFilterInput @cost(weight: "10")
+  any: Boolean @cost(weight: "10")
+}
+
+input ListPriceFilterTypeFilterInput {
+  all: PriceFilterInput @cost(weight: "10")
+  none: PriceFilterInput @cost(weight: "10")
+  some: PriceFilterInput @cost(weight: "10")
+  any: Boolean @cost(weight: "10")
+}
+
+input ListRegionFilterTypeFilterInput {
+  all: RegionFilterInput @cost(weight: "10")
+  none: RegionFilterInput @cost(weight: "10")
+  some: RegionFilterInput @cost(weight: "10")
+  any: Boolean @cost(weight: "10")
+}
+
+input ListStockProjectionFilterTypeFilterInput {
+  all: StockProjectionFilterInput @cost(weight: "10")
+  none: StockProjectionFilterInput @cost(weight: "10")
+  some: StockProjectionFilterInput @cost(weight: "10")
+  any: Boolean @cost(weight: "10")
 }
 
 "Input type for moving a folder."
@@ -3972,18 +4930,188 @@ input PlaceOrderInput {
   orderNumber: String!
 }
 
+input PriceFilterInput {
+  and: [PriceFilterInput!]
+  or: [PriceFilterInput!]
+  region: RegionFilterInput
+  tier: TierFilterInput
+  value: GatewayDecimalOperationFilterInput
+}
+
+input ProductAssetFilterInput {
+  and: [ProductAssetFilterInput!]
+  or: [ProductAssetFilterInput!]
+  type: ProductAssetTypeEnumOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering by product asset type."
+input ProductAssetTypeEnumOperationFilterInput {
+  and: [ProductAssetTypeEnumOperationFilterInput!]
+  or: [ProductAssetTypeEnumOperationFilterInput!]
+  eq: ProductAssetType @cost(weight: "10")
+  neq: ProductAssetType @cost(weight: "10")
+  in: [ProductAssetType] @cost(weight: "10")
+  nin: [ProductAssetType] @cost(weight: "10")
+}
+
+input ProductAttributeFilterInput {
+  and: [ProductAttributeFilterInput!]
+  or: [ProductAttributeFilterInput!]
+  attributeTemplate: ProductAttributeTemplateFilterInput
+}
+
+input ProductAttributeTemplateFilterInput {
+  and: [ProductAttributeTemplateFilterInput!]
+  or: [ProductAttributeTemplateFilterInput!]
+  grouping: GatewayStringOperationFilterInput
+  name: GatewayStringOperationFilterInput
+  datatype: GatewayStringOperationFilterInput
+}
+
+input ProductClassFilterInput {
+  and: [ProductClassFilterInput!]
+  or: [ProductClassFilterInput!]
+  code: ProductClassStringOperationFilterInput
+  name: ProductClassStringOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input ProductClassStringOperationFilterInput {
+  and: [ProductClassStringOperationFilterInput!]
+  or: [ProductClassStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+  nin: [String] @cost(weight: "10")
+  neq: String @cost(weight: "10")
+}
+
 input ProductFilterInput {
   and: [ProductFilterInput!]
   or: [ProductFilterInput!]
   soldAsStyleCode: ProductStringOperationFilterInput
   styleCode: ProductStringOperationFilterInput
   name: ProductStringOperationFilterInput
+  productClass: ProductClassFilterInput
+  regions: ListRegionFilterTypeFilterInput
+  gender: ListGenderFilterTypeFilterInput
+  type: ProductTypeOperationFilterInput
+}
+
+input ProductImageFilterInput {
+  and: [ProductImageFilterInput!]
+  or: [ProductImageFilterInput!]
+  mediaType: ProductMediaTypeEnumOperationFilterInput
+  product: ProductFilterInput
+  segmentColor: SegmentColorFilterInput
 }
 
 "Restricts the filter operations available when filtering suppliers."
+input ProductJobParentOperationFilterInput {
+  and: [ProductJobParentOperationFilterInput!]
+  or: [ProductJobParentOperationFilterInput!]
+  eq: Int @cost(weight: "10")
+  neq: Int @cost(weight: "10")
+}
+
+input ProductMatchingStyleFilterInput {
+  and: [ProductMatchingStyleFilterInput!]
+  or: [ProductMatchingStyleFilterInput!]
+  type: ProductMatchingStyleTypeEnumOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering by product matching style type."
+input ProductMatchingStyleTypeEnumOperationFilterInput {
+  and: [ProductMatchingStyleTypeEnumOperationFilterInput!]
+  or: [ProductMatchingStyleTypeEnumOperationFilterInput!]
+  eq: ProductMatchingStyleType @cost(weight: "10")
+  neq: ProductMatchingStyleType @cost(weight: "10")
+  in: [ProductMatchingStyleType] @cost(weight: "10")
+  nin: [ProductMatchingStyleType] @cost(weight: "10")
+}
+
+input ProductMatchingStyleVariantFilterInput {
+  and: [ProductMatchingStyleVariantFilterInput!]
+  or: [ProductMatchingStyleVariantFilterInput!]
+  type: ProductMatchingStyleTypeEnumOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering by product media type."
+input ProductMediaTypeEnumOperationFilterInput {
+  and: [ProductMediaTypeEnumOperationFilterInput!]
+  or: [ProductMediaTypeEnumOperationFilterInput!]
+  eq: ProductMediaType @cost(weight: "10")
+  neq: ProductMediaType @cost(weight: "10")
+  in: [ProductMediaType] @cost(weight: "10")
+  nin: [ProductMediaType] @cost(weight: "10")
+}
+
+input ProductSetContentFilterInput {
+  and: [ProductSetContentFilterInput!]
+  or: [ProductSetContentFilterInput!]
+  isVisibleOnQuote: GatewayBoolOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering products."
 input ProductStringOperationFilterInput {
   and: [ProductStringOperationFilterInput!]
   or: [ProductStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+"Restricts the filter operations available when filtering by product type."
+input ProductTypeOperationFilterInput {
+  and: [ProductTypeOperationFilterInput!]
+  or: [ProductTypeOperationFilterInput!]
+  eq: ProductType @cost(weight: "10")
+  in: [ProductType] @cost(weight: "10")
+}
+
+input ProductionMachineFilterInput {
+  and: [ProductionMachineFilterInput!]
+  or: [ProductionMachineFilterInput!]
+  active: GatewayBoolOperationFilterInput
+  name: GatewayStringOperationFilterInput
+  grouping: ProductionMachineGroupStringOperationFilterInput
+  brandingDepartment: BrandingDepartmentFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input ProductionMachineGroupStringOperationFilterInput {
+  and: [ProductionMachineGroupStringOperationFilterInput!]
+  or: [ProductionMachineGroupStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input PromotionFilterInput {
+  and: [PromotionFilterInput!]
+  or: [PromotionFilterInput!]
+  code: PromotionStringOperationFilterInput
+  name: PromotionStringOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering promotions."
+input PromotionStringOperationFilterInput {
+  and: [PromotionStringOperationFilterInput!]
+  or: [PromotionStringOperationFilterInput!]
+  eq: String @cost(weight: "10")
+}
+
+input RegionFilterInput {
+  and: [RegionFilterInput!]
+  or: [RegionFilterInput!]
+  code: RegionStringOperationFilterInput
+  name: GatewayStringOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input RegionStringOperationFilterInput {
+  and: [RegionStringOperationFilterInput!]
+  or: [RegionStringOperationFilterInput!]
   contains: String @cost(weight: "10")
   eq: String @cost(weight: "10")
   in: [String] @cost(weight: "10")
@@ -4031,14 +5159,14 @@ input SalesOrderAssetTypeEnumOperationFilterInput {
   nin: [SalesOrderAssetType] @cost(weight: "10")
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the boolean filter operations available when filtering sales orders."
 input SalesOrderBoolOperationFilterInput {
   and: [SalesOrderBoolOperationFilterInput!]
   or: [SalesOrderBoolOperationFilterInput!]
   eq: Boolean @cost(weight: "10")
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the filter operations available when filtering sales orders by date."
 input SalesOrderDateTimeOperationFilterInput {
   and: [SalesOrderDateTimeOperationFilterInput!]
   or: [SalesOrderDateTimeOperationFilterInput!]
@@ -4050,14 +5178,14 @@ input SalesOrderFilterInput {
   and: [SalesOrderFilterInput!]
   or: [SalesOrderFilterInput!]
   salesOrderNumber: SalesOrderStringOperationFilterInput
-  InvoiceNumber: SalesOrderStringOperationFilterInput
-  CustomerReference: SalesOrderStringOperationFilterInput
+  invoiceNumber: SalesOrderStringOperationFilterInput
+  customerReference: SalesOrderStringOperationFilterInput
   isActive: SalesOrderBoolOperationFilterInput
-  Status: SalesOrderStatusEnumOperationFilterInput
+  status: SalesOrderStatusEnumOperationFilterInput
   orderDate: SalesOrderDateTimeOperationFilterInput
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the filter operations available when filtering sales orders by status."
 input SalesOrderStatusEnumOperationFilterInput {
   and: [SalesOrderStatusEnumOperationFilterInput!]
   or: [SalesOrderStatusEnumOperationFilterInput!]
@@ -4067,10 +5195,56 @@ input SalesOrderStatusEnumOperationFilterInput {
   nin: [SalesOrderStatus] @cost(weight: "10")
 }
 
-"Restricts the filter operations available when filtering suppliers."
+"Restricts the filter operations available when filtering sales orders."
 input SalesOrderStringOperationFilterInput {
   and: [SalesOrderStringOperationFilterInput!]
   or: [SalesOrderStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input SalesPersonFilterInput {
+  and: [SalesPersonFilterInput!]
+  or: [SalesPersonFilterInput!]
+  code: SalesPersonStringOperationFilterInput
+  primaryEmail: SalesPersonStringOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering salespersons."
+input SalesPersonStringOperationFilterInput {
+  and: [SalesPersonStringOperationFilterInput!]
+  or: [SalesPersonStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input SegmentColorFilterInput {
+  and: [SegmentColorFilterInput!]
+  or: [SegmentColorFilterInput!]
+  code: SegmentColorOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering suppliers."
+input SegmentColorOperationFilterInput {
+  and: [SegmentColorOperationFilterInput!]
+  or: [SegmentColorOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
+}
+
+input SegmentSizeFilterInput {
+  and: [SegmentSizeFilterInput!]
+  or: [SegmentSizeFilterInput!]
+  code: SegmentSizeOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering segment sizes."
+input SegmentSizeOperationFilterInput {
+  and: [SegmentSizeOperationFilterInput!]
+  or: [SegmentSizeOperationFilterInput!]
   contains: String @cost(weight: "10")
   eq: String @cost(weight: "10")
   in: [String] @cost(weight: "10")
@@ -4108,12 +5282,37 @@ input ShareFolderInput {
   sharedAccess: SecurityType
 }
 
+input StockProjectionFilterInput {
+  and: [StockProjectionFilterInput!]
+  or: [StockProjectionFilterInput!]
+  openingStockLevel: GatewayIntOperationFilterInput
+  incomingQuantity: GatewayIntOperationFilterInput
+  projectedStockLevel: GatewayIntOperationFilterInput
+  projectedDate: GatewayDateOperationFilterInput
+}
+
 "Input type for linking an artwork tag."
 input TagArtworkInput {
   "The identifier of the artwork."
   artworkId: ID!
   "Gets the list of tag identifiers associated with the entity."
   tagIds: [ID!]!
+}
+
+input TierFilterInput {
+  and: [TierFilterInput!]
+  or: [TierFilterInput!]
+  code: TierStringOperationFilterInput
+  name: TierStringOperationFilterInput
+}
+
+"Restricts the filter operations available when filtering tiers."
+input TierStringOperationFilterInput {
+  and: [TierStringOperationFilterInput!]
+  or: [TierStringOperationFilterInput!]
+  contains: String @cost(weight: "10")
+  eq: String @cost(weight: "10")
+  in: [String] @cost(weight: "10")
 }
 
 "Input type for updating a folder."
@@ -4163,8 +5362,21 @@ input VariantFilterInput {
   or: [VariantFilterInput!]
   sku: ProductStringOperationFilterInput
   code: ProductStringOperationFilterInput
-  SalesHistory: HistoryFilterInput
+  history: HistoryFilterInput
   isNew: GatewayBoolOperationFilterInput
+  isActive: GatewayBoolOperationFilterInput
+  segmentColor: SegmentColorFilterInput
+  segmentSize: SegmentSizeFilterInput
+  product: ProductFilterInput
+  variantECommerceDetail: VariantWebsitePreferenceFilterInput
+  stockProjections: ListStockProjectionFilterTypeFilterInput
+  prices: ListPriceFilterTypeFilterInput
+}
+
+input VariantWebsitePreferenceFilterInput {
+  and: [VariantWebsitePreferenceFilterInput!]
+  or: [VariantWebsitePreferenceFilterInput!]
+  promotion: PromotionFilterInput
 }
 
 enum AddressType {
@@ -4202,6 +5414,17 @@ enum ArtworkStatus {
 enum ArtworkType {
   LOGO
   TEMPLATE
+}
+
+enum BrandingMethodColorType {
+  NO_COLOR
+  FULL_COLOR
+  COLOR_SELECTION
+}
+
+enum ContactStatus {
+  INACTIVE
+  ACTIVE
 }
 
 enum GatewayIdentityType {
@@ -4293,6 +5516,47 @@ enum PaymentType {
   NONE
 }
 
+enum ProductAssetType {
+  BRANDING_GUIDE_STANDARD
+  BRANDING_GUIDE_LOGO24
+  BRANDING_GUIDE_SIMPLE
+  BRANDING_LINE_DRAWING
+  BRANDING_TEMPLATE
+}
+
+enum ProductImageDimensionTemplate {
+  ORIGINAL_HIGH_RES
+  WEB_OPTIMIZED
+  XS_46_45
+  S_151_141
+  M_270_150
+  L_260_250
+  XL_460_350
+}
+
+enum ProductImageSource {
+  INTERNAL
+  EXTERNAL
+}
+
+enum ProductMatchingStyleType {
+  GENDER
+}
+
+enum ProductMediaType {
+  HERO
+  VARIANT_HERO
+  VARIANT
+  ADDITIONAL
+  VIDEO
+}
+
+enum ProductType {
+  GIFTSET
+  PRODUCT
+  SERVICE_ITEM
+}
+
 enum ResultTypeStatus {
   OK
 }
@@ -4336,6 +5600,12 @@ enum StockLevelType {
   COLOR
   VARIANT
   UNKNOWN
+}
+
+enum TextEncoding {
+  UNKNOWN
+  TEXT_PLAIN
+  TEXT_HTML
 }
 
 "The authorize directive."

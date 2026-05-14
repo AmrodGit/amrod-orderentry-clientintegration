@@ -7,24 +7,29 @@ meta {
 
 docs {
   # Get Job Card by Job Card Number
-  
+
   Retrieve a job card using its job card number with complete branding and asset specifications.
-  
+
   ## Use Case
   When you have a job card number from manufacturing or production systems and need all details
   including branding specifications, coloring options, and associated assets.
-  
+
   ## Variables Required
   - `jobCardNumber`: The job card number (e.g., "JOB-001234")
-  
+
+  ## Query Shape
+  The dedicated `jobCardByJobCardNumber` root query has been removed. Lookup is now performed
+  via the paginated `jobCards(where: ...)` query with a `JobCardStringOperationFilterInput { eq }`
+  filter on `jobCardNumber`, requesting `first: 1`. The result is exposed under `nodes[0]`.
+
   ## Expected Response
-  Returns a JobCard object containing:
+  Returns a `JobCardsConnection` whose first node is the matching JobCard, containing:
   - Job card metadata (ID, number, parent sales order, status, creation date)
   - Complete branding details (code, position, logo, colors, dimensions, special colors for foil/silicone/vinyl)
-  - Job card schedule (due dates, lead times)
+  - Job card schedule (actionDate, dueDate, leadTime)
   - Associated assets (name, type, URL)
   - Active status and timestamps
-  
+
   ## Example Usage
   Use this when manufacturing systems or production queries refer to job card numbers.
   Essential for production floor access to branding requirements.
@@ -38,36 +43,40 @@ post {
 
 body:graphql {
   query GetJobCardByNumber($jobCardNumber: String!) {
-    jobCardByJobCardNumber(jobCardNumber: $jobCardNumber) {
-      id
-      jobCardNumber
-      salesOrderNumber
-      status
-      created
-      isActive
-      jobCardBrandingDetail {
-        brandingCode
-        brandingPosition
-        brandingPlacement
-        logo
-        colors
-        brandingSizeWidth
-        brandingSizeHeight
-        foilColor
-        siliconeColor
-        vinylColor
-      }
-      jobCardDate {
-        dueDate
-        internalDueDate
-        leadTime
-        internalLeadTime
-      }
-      jobCardAssets {
+    jobCards(where: { jobCardNumber: { eq: $jobCardNumber } }, first: 1) {
+      totalCount
+      nodes {
         id
-        name
-        type
-        url
+        jobCardNumber
+        salesOrder {
+          salesOrderNumber
+        }
+        status
+        created
+        isActive
+        jobCardBrandingDetail {
+          brandingCode
+          brandingPosition
+          brandingPlacement
+          logo
+          colors
+          brandingSizeWidth
+          brandingSizeHeight
+          foilColor
+          siliconeColor
+          vinylColor
+        }
+        jobCardDate {
+          actionDate
+          dueDate
+          leadTime
+        }
+        jobCardAssets {
+          id
+          name
+          type
+          url
+        }
       }
     }
   }

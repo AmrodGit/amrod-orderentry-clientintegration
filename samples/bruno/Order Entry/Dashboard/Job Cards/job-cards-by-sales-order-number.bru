@@ -24,7 +24,7 @@ docs {
   - Array of job cards containing:
     - Job card metadata (ID, number, status, creation date)
     - Complete branding specifications (code, position, logo, colors, special colors)
-    - Job card schedule (due dates, lead times)
+    - Job card schedule (actionDate, dueDate, leadTime)
     - Associated assets (name, type, URL)
     - Line item details (SKU, quantity to brand)
   
@@ -44,7 +44,7 @@ body:graphql {
     jobCards(
       first: 100
       where: {
-        SalesOrder: {
+        salesOrder: {
           salesOrderNumber: {
             eq: $salesOrderNumber
           }
@@ -78,8 +78,8 @@ body:graphql {
             vinylColor
           }
           jobCardDate {
+            actionDate
             dueDate
-            internalDueDate
             leadTime
           }
           jobCardAssets {

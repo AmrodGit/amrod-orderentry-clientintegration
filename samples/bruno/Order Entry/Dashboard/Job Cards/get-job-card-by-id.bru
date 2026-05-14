@@ -19,9 +19,9 @@ docs {
   
   ## Expected Response
   Returns a JobCard object containing:
-  - Job card metadata (ID, number, sales order reference, creation date)
+  - Job card metadata (ID, number, parent sales order number, creation date)
   - Branding details (code, position, placement, logo, colors, dimensions)
-  - Job card schedule (due dates, lead times, internal due dates)
+  - Job card schedule (actionDate, dueDate, leadTime)
   - Active and status flags
   - Last modified timestamp
   
@@ -40,7 +40,9 @@ body:graphql {
     jobCard(id: $id) {
       id
       jobCardNumber
-      salesOrderNumber
+      salesOrder {
+        salesOrderNumber
+      }
       status
       created
       isActive
@@ -55,10 +57,9 @@ body:graphql {
         brandingSizeHeight
       }
       jobCardDate {
+        actionDate
         dueDate
-        internalDueDate
         leadTime
-        internalLeadTime
       }
     }
   }

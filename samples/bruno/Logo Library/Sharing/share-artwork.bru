@@ -31,10 +31,10 @@ body:graphql {
 body:graphql:vars {
   {
     "input": {
-      "id": "QXJ0d29ya0RldGFpbHM6MzA5MjM4",
+      "artworkId": "QXJ0d29ya0RldGFpbHM6MzA5MjM4",
       "contactIdsShare": [],
       "contactIdsRevoke": [],
-      "customerCodesShare": ["AMR0002"],
+      "customerCodesShare": ["{{CUSTOMER_CODE}}"],
       "customerCodesRevoke": [],
       "sharedAccess": "READ_ONLY"
     }
@@ -50,7 +50,7 @@ docs {
   Use this mutation to grant or revoke access to specific artworks with individual customers or contacts. You can simultaneously share with new parties and revoke from existing ones in a single operation.
   
   ## Variables
-  - **id**: The ID of the artwork to share (required)
+  - **artworkId**: The ID of the artwork to share (required)
   - **contactIdsShare**: Array of contact IDs to grant access to (optional)
   - **contactIdsRevoke**: Array of contact IDs to revoke access from (optional)
   - **customerCodesShare**: Array of customer codes to grant access to (optional)
