@@ -1,7 +1,31 @@
 meta {
   name: Get Credit Note by ID
+  desc: Retrieve a specific credit note by its unique identifier
   type: graphql
   seq: 1
+}
+
+docs {
+  # Get Credit Note by ID
+
+  Retrieve a credit note by its unique identifier.
+
+  ## Use Case
+  When you have a credit note ID and need to fetch its basic details including date, amounts, and asset URI.
+
+  ## Variables Required
+  - `id`: The unique identifier of the credit note (e.g., "CN-001")
+
+  ## Expected Response
+  Returns a CreditNote object containing:
+  - Credit note metadata (ID, number, internal ID)
+  - Date information (creditNoteDate)
+  - Financial information (totalExcl, tax)
+  - Asset URI for accessing the credit note document
+
+  ## Example Usage
+  Use this for quick lookups when you have a credit note ID reference.
+  Suitable for retrieving basic information without line item details.
 }
 
 post {
@@ -11,8 +35,8 @@ post {
 }
 
 body:graphql {
-  query GetCreditNoteById($creditNoteId: ID!) {
-    creditNote(creditNoteId: $creditNoteId) {
+  query GetCreditNoteById($id: ID!) {
+    creditNote(id: $id) {
       id
       creditNoteNumber
       creditNoteDate
@@ -26,29 +50,6 @@ body:graphql {
 
 body:graphql:vars {
   {
-    "creditNoteId": "CN-001"
+    "id": "CN-001"
   }
-}
-
-docs {
-  # Get Credit Note by ID
-  
-  Retrieve a credit note by its unique identifier.
-  
-  ## Use Case
-  When you have a credit note ID and need to fetch its basic details including date, amounts, and asset URI.
-  
-  ## Variables Required
-  - `creditNoteId`: The unique identifier of the credit note (e.g., "CN-001")
-  
-  ## Expected Response
-  Returns a CreditNote object containing:
-  - Credit note metadata (ID, number, internal ID)
-  - Date information (creditNoteDate)
-  - Financial information (totalExcl, tax)
-  - Asset URI for accessing the credit note document
-  
-  ## Example Usage
-  Use this for quick lookups when you have a credit note ID reference.
-  Suitable for retrieving basic information without line item details.
 }

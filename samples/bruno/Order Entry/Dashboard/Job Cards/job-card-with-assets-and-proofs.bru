@@ -7,26 +7,30 @@ meta {
 
 docs {
   # Job Card with Assets and Proofs
-  
+
   Retrieve a complete job card including all associated assets, proofs, and parent sales order information.
-  
+
   ## Use Case
   Access comprehensive job card information for production including design specifications, proof versions,
   and the parent sales order details - all in a single query for efficient production planning.
-  
+
   ## Variables Required
   - `jobCardNumber`: The job card number (e.g., "JOB-001234")
-  
+
+  ## Query Shape
+  Uses `jobCards(where: { jobCardNumber: { eq: $jobCardNumber } }, first: 1)` — the standalone
+  `jobCardByJobCardNumber` root field has been removed from the schema.
+
   ## Expected Response
-  Returns a JobCard with:
+  Returns a `JobCardsConnection` whose first node is the matching JobCard, containing:
   - Job card metadata and status
   - Complete branding specifications
-  - Job card schedule (due dates, lead times)
+  - Job card schedule (actionDate, dueDate, leadTime)
   - Associated assets (files, specifications, designs)
   - Job card proofs with versions and proof options
   - Line item details (SKU, quantity to brand)
   - Parent sales order information (number, reference, status)
-  
+
   ## Example Usage
   Use this for comprehensive production workflows where manufacturing teams need design assets,
   proof documents, quantity information, and parent order context all together.
@@ -40,51 +44,53 @@ post {
 
 body:graphql {
   query GetJobCardWithAssets($jobCardNumber: String!) {
-    jobCardByJobCardNumber(jobCardNumber: $jobCardNumber) {
-      id
-      jobCardNumber
-      salesOrderNumber
-      status
-      created
-      jobCardBrandingDetail {
-        brandingCode
-        brandingPosition
-        logo
-        colors
-        brandingSizeWidth
-        brandingSizeHeight
-      }
-      jobCardDate {
-        dueDate
-        internalDueDate
-        leadTime
-      }
-      jobCardAssets {
+    jobCards(where: { jobCardNumber: { eq: $jobCardNumber } }, first: 1) {
+      totalCount
+      nodes {
         id
-        name
-        type
-        url
-        assetId
-      }
-      jobCardProofs {
-        id
-        url
-        version
-        numberOfOptions
-        jobCardProofOptions {
-          number
-          isRecommended
-          pageRange
-        }
-      }
-      jobCardDetail {
-        sku
-        quantity
-      }
-      salesOrder {
-        salesOrderNumber
-        customerReference
+        jobCardNumber
         status
+        created
+        jobCardBrandingDetail {
+          brandingCode
+          brandingPosition
+          logo
+          colors
+          brandingSizeWidth
+          brandingSizeHeight
+        }
+        jobCardDate {
+          actionDate
+          dueDate
+          leadTime
+        }
+        jobCardAssets {
+          id
+          name
+          type
+          url
+          assetId
+        }
+        jobCardProofs {
+          id
+          url
+          version
+          numberOfOptions
+          jobCardProofOptions {
+            number
+            isRecommended
+            pageRange
+          }
+        }
+        jobCardDetail {
+          sku
+          quantity
+        }
+        salesOrder {
+          salesOrderNumber
+          customerReference
+          status
+        }
       }
     }
   }

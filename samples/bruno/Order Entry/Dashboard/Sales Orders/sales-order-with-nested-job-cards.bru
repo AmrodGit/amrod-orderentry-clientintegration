@@ -7,26 +7,31 @@ meta {
 
 docs {
   # Sales Order with Nested Job Cards
-  
+
   Retrieve a complete sales order including all associated job cards with branding specifications.
-  
+
   ## Use Case
-  Access the full view of an order and all manufacturing jobs created for it, including their 
+  Access the full view of an order and all manufacturing jobs created for it, including their
   branding requirements, positions, logos, and schedule information.
-  
+
   ## Variables Required
   - `salesOrderNumber`: The sales order number (e.g., "SO-2026-001234")
-  
+
+  ## Query Shape
+  Sales order lookup by number now goes through the paginated `salesOrders(where: ...)` query
+  (the standalone `salesOrderBySalesOrderNumber` field has been removed). We request `first: 1`
+  and read the matching record from `nodes[0]`.
+
   ## Expected Response
-  Returns a SalesOrder with:
+  Returns a `SalesOrdersConnection` whose first node is the SalesOrder, including:
   - Order details (ID, number, customer reference, dates, status)
   - Customer and contact information
   - Line items (SKU, quantity, pricing)
-  - Nested jobCards array containing:
-    - Job card metadata (ID, number, status, creation date)
-    - Branding details (code, position, logo, colors)
-    - Job card dates (due dates, lead times)
-  
+  - Nested `jobCards` array containing:
+    - Job card metadata (ID, number, status, creation date, last-modified date)
+    - Branding details (code, position, logo, colors, placement, sizes)
+    - Schedule information (`actionDate`, `dueDate`, `leadTime`)
+
   ## Example Usage
   Use this to display a complete order with all associated manufacturing jobs in a single query,
   reducing the need for multiple API calls. Perfect for order fulfillment dashboards.
@@ -40,45 +45,53 @@ post {
 
 body:graphql {
   query GetSalesOrderWithJobCards($salesOrderNumber: String!) {
-    salesOrderBySalesOrderNumber(salesOrderNumber: $salesOrderNumber) {
-      id
-      salesOrderNumber
-      customerReference
-      orderDate
-      status
-      totalExcl
-      tax
-      customer {
+    salesOrders(where: { salesOrderNumber: { eq: $salesOrderNumber } }, first: 1) {
+      totalCount
+      nodes {
         id
-        name
-        code
-      }
-      contact {
-        fullName
-        emailAddress
-      }
-      salesOrderDetails {
-        sku
-        quantity
-        unitPriceExcl
-        lineTotalExcl
-      }
-      jobCards {
-        id
-        jobCardNumber
+        salesOrderNumber
+        customerReference
+        orderDate
         status
-        created
-        isActive
-        jobCardBrandingDetail {
-          brandingCode
-          brandingPosition
-          logo
-          colors
+        totalExcl
+        tax
+        customer {
+          id
+          name
+          code
         }
-        jobCardDate {
-          dueDate
-          internalDueDate
-          leadTime
+        contact {
+          fullName
+          emailAddress
+        }
+        salesOrderDetails {
+          rowNumber
+          sku
+          quantity
+          unitPriceExcl
+          lineTotalExcl
+        }
+        jobCards {
+          id
+          jobCardNumber
+          status
+          created
+          isActive
+          lastModifiedDate
+          jobCardBrandingDetail {
+            brandingCode
+            brandingPosition
+            brandingPlacement
+            brandingSizeWidth
+            brandingSizeHeight
+            logo
+            colors
+          }
+          jobCardDate {
+            actionDate
+            dueDate
+            leadTime
+          }
         }
       }
     }

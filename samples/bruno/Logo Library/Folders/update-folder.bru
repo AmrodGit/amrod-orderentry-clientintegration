@@ -11,7 +11,7 @@ post {
 }
 
 body:graphql {
-  mutation UpdateArtworkFolder($input: RenameArtworkFolderInput!) {
+  mutation UpdateArtworkFolder($input: UpdateArtworkFolderInput!) {
     updateArtworkFolder(input: $input) {
       errors {
         ... on BadRequestException {
@@ -65,7 +65,7 @@ docs {
   Use this mutation to change the name of a folder. Useful when folder purposes change or for correcting naming issues.
   
   ## Variables
-  - **id**: The ID of the folder to rename (required)
+  - **folderId**: The ID of the folder to rename (required)
   - **name**: The new name for the folder (required, must be unique within parent)
   
   ## Expected Response
