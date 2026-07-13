@@ -19,15 +19,15 @@ The Logo Library supports the following MIME types for Artwork files:
 | Type                     | Description                          | File Extensions |
 |--------------------------|--------------------------------------|------------------|
 | `image/png`              | Portable Network Graphics            | .png            |
-| `image/svg+xml`          | Scalable Vector Graphics              | .svg            |
+| `image/x-seperview`          | Scalable Vector Graphics              | .svg            |
 | `image/jpeg`             | JPEG Image                           | .jpeg |
 | `image/jpg`              | JPEG Image                           | .jpg |
-| `image/tiff`             | Tagged Image File Format             | .tiff, |
+| `image/tiff`             | Tagged Image File Format             | .tiff |
 | `application/pdf`        | Portable Document Format             | .pdf          |
-| `application/postscriptimage/x-eps` | Encapsulated PostScript | .eps |
+| `application/postscript` | Encapsulated PostScript | .eps |
 | `application/x-coreldraw`| CorelDRAW File                       | .cdr |
 | `application/pdf` | Adobe Illustrator File        | .ai |
-| `application/x-photoshop` | Adobe Photoshop File                | .psd |
+| `image/vnd.adobe.photoshop` | Adobe Photoshop File                | .psd |
 | `application/x-freehand` | FreeHand File                       | .fh |
 
 ### Limitations
