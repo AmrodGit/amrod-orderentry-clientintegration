@@ -1,0 +1,40 @@
+query GetJobCardById($id: ID!) {
+  jobCard(id: $id) { id jobCardNumber status created isActive lastModifiedDate salesOrder { salesOrderNumber }
+    jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement logo colors brandingSizeWidth brandingSizeHeight }
+    jobCardDate { actionDate dueDate leadTime }
+  }
+}
+
+query GetJobCardByNumber($jobCardNumber: String!) {
+  jobCards(where: { jobCardNumber: { eq: $jobCardNumber } }, first: 1) { totalCount nodes {
+    id jobCardNumber status created isActive salesOrder { salesOrderNumber customerReference status }
+    jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement logo colors brandingSizeWidth brandingSizeHeight foilColor siliconeColor vinylColor }
+    jobCardDate { actionDate dueDate leadTime } jobCardAssets { id name type url assetId }
+  } }
+}
+
+query GetJobCardWithAssets($jobCardNumber: String!) {
+  jobCards(where: { jobCardNumber: { eq: $jobCardNumber } }, first: 1) { totalCount nodes {
+    id jobCardNumber status created jobCardBrandingDetail { brandingCode brandingPosition logo colors brandingSizeWidth brandingSizeHeight }
+    jobCardDate { actionDate dueDate leadTime } jobCardAssets { id name type url assetId }
+    jobCardProofs { id url version numberOfOptions jobCardProofOptions { number isRecommended pageRange } }
+    jobCardDetail { sku quantity } salesOrder { salesOrderNumber customerReference status }
+  } }
+}
+
+query GetJobCardsBySalesOrderNumber($salesOrderNumber: String!) {
+  jobCards(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
+    totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+    edges { cursor node { id jobCardNumber status created isActive
+      jobCardBrandingDetail { brandingCode brandingPosition logo colors brandingSizeWidth brandingSizeHeight foilColor siliconeColor vinylColor }
+      jobCardDate { actionDate dueDate leadTime } jobCardAssets { name type url } jobCardDetail { sku quantity }
+    } }
+  }
+}
+
+query ListJobCards($first: Int, $after: String, $before: String) {
+  jobCards(first: $first, after: $after, before: $before) {
+    totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+    edges { cursor node { id jobCardNumber status created isActive jobCardBrandingDetail { brandingCode logo } jobCardDate { dueDate leadTime } } }
+  }
+}
