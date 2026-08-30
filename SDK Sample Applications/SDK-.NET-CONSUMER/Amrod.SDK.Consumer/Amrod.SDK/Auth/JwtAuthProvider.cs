@@ -6,6 +6,8 @@ public class JwtAuthProvider : IAuthProvider
 
     public JwtAuthProvider(string token)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(token);
+
         _token = token;
     }
 

@@ -19,6 +19,9 @@ public class AmrodSdk
     public AmrodSdk(
         AmrodSdkOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentException.ThrowIfNullOrWhiteSpace(options.Endpoint);
+
         var client =
             new GraphQlSdkClient(options);
 

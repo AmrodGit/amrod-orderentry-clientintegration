@@ -2,6 +2,9 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Amrod.SDK.Exceptions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amrod.SDK.Auth;
 
@@ -9,6 +12,7 @@ public class OAuthClientCredentialsProvider
     : IAuthProvider
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<OAuthClientCredentialsProvider> _logger;
 
     private readonly string _tokenUrl;
     private readonly string _clientId;
@@ -23,14 +27,23 @@ public class OAuthClientCredentialsProvider
         string tokenUrl,
         string clientId,
         string username,
-        string secret)
+        string secret,
+        ILogger<OAuthClientCredentialsProvider>? logger = null)
     {
+        ArgumentNullException.ThrowIfNull(httpClient);
+        ArgumentException.ThrowIfNullOrWhiteSpace(tokenUrl);
+        ArgumentException.ThrowIfNullOrWhiteSpace(clientId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentException.ThrowIfNullOrWhiteSpace(secret);
+
         _httpClient = httpClient;
 
         _tokenUrl = tokenUrl;
         _clientId = clientId;
         _username = username;
         _secret = secret;
+
+        _logger = logger ?? NullLogger<OAuthClientCredentialsProvider>.Instance;
     }
 
     public async Task<string?> GetAccessTokenAsync()
@@ -46,45 +59,67 @@ public class OAuthClientCredentialsProvider
                 Encoding.UTF8.GetBytes(
                     $"{_username}:{_secret}"));
 
-        Console.WriteLine($"[OAuth] Requesting token from: {_tokenUrl}");
+        _logger.LogDebug("Requesting OAuth token from {TokenUrl}", _tokenUrl);
 
-        var response =
-            await _httpClient.PostAsync(
-                _tokenUrl,
-                new FormUrlEncodedContent(
-                    new Dictionary<string, string>
-                    {
-                        ["grant_type"] =
-                            "client_credentials",
+        HttpResponseMessage response;
 
-                        ["client_id"] =
-                            _clientId,
+        try
+        {
+            response =
+                await _httpClient.PostAsync(
+                    _tokenUrl,
+                    new FormUrlEncodedContent(
+                        new Dictionary<string, string>
+                        {
+                            ["grant_type"] =
+                                "client_credentials",
 
-                        ["client_secret"] =
-                            clientSecret,
+                            ["client_id"] =
+                                _clientId,
 
-                        ["scope"] =
-                            "amrod.integration amrod.gateway"
-                    }));
+                            ["client_secret"] =
+                                clientSecret,
+
+                            ["scope"] =
+                                "amrod.integration amrod.gateway"
+                        }));
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            _logger.LogError(ex, "OAuth token request to {TokenUrl} failed", _tokenUrl);
+            throw new AmrodAuthenticationException("Failed to reach the OAuth token endpoint.", ex);
+        }
 
         var responseContent = await response.Content.ReadAsStringAsync();
-        Console.WriteLine($"[OAuth] Response Status: {response.StatusCode}");
+
+        _logger.LogDebug("OAuth token response status: {StatusCode}", response.StatusCode);
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new InvalidOperationException(
-                $"OAuth token request failed ({response.StatusCode}): {responseContent}");
+            _logger.LogError("OAuth token request failed with status {StatusCode}", response.StatusCode);
+            throw new AmrodAuthenticationException(
+                $"OAuth token request failed ({response.StatusCode}).");
         }
 
-        var token =
-            JsonSerializer.Deserialize<TokenResponse>(
-                responseContent,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        TokenResponse? token;
 
-        if (token == null)
+        try
         {
-            throw new InvalidOperationException(
-                $"Failed to deserialize token response: {responseContent}");
+            token =
+                JsonSerializer.Deserialize<TokenResponse>(
+                    responseContent,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Failed to deserialize OAuth token response");
+            throw new AmrodAuthenticationException("Failed to deserialize the OAuth token response.", ex);
+        }
+
+        if (token is null || string.IsNullOrWhiteSpace(token.AccessToken))
+        {
+            _logger.LogError("OAuth token response did not contain an access token");
+            throw new AmrodAuthenticationException("OAuth token response did not contain an access token.");
         }
 
         _token = token.AccessToken;
@@ -93,7 +128,7 @@ public class OAuthClientCredentialsProvider
             DateTime.UtcNow.AddSeconds(
                 token.ExpiresIn - 60);
 
-        Console.WriteLine($"[OAuth] Token acquired, expires in {token.ExpiresIn} seconds");
+        _logger.LogInformation("OAuth token acquired, expires in {ExpiresIn} seconds", token.ExpiresIn);
 
         return _token;
     }

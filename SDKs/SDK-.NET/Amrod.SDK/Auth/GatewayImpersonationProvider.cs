@@ -20,6 +20,9 @@ public class GatewayImpersonationProvider
         string contactId,
         string customerCode)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(contactId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerCode);
+
         _contactId = contactId;
         _customerCode = customerCode;
     }
