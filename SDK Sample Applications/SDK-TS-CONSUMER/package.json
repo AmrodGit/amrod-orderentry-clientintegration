@@ -4,21 +4,17 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "start": "tsx src/index.ts",
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "preview": "vite preview"
+    "build": "tsc"
   },
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "@amrod/sdk-ts": "file:../../SDKs/SDK-TS",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@types/node": "^26.1.2",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
-    "@vitejs/plugin-react": "^5.0.0",
+    "@types/node": "^24.13.3",
     "tsx": "^4.7.0",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.0"
+    "typescript": "^5.9.2"
   }
 }
