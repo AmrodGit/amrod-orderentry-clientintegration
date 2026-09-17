@@ -380,4 +380,7 @@ The SDK currently executes inline GraphQL strings through `GraphQL.Client`. The 
 ```powershell
 dotnet restore
 dotnet build Amrod.SDK.csproj
+dotnet pack Amrod.SDK.csproj --configuration Release
 ```
+
+The package version and NuGet metadata are declared in `Amrod.SDK.csproj`. GraphQL operation documents are validated against the pinned `schema.graphql` contract by the repository CI workflow.

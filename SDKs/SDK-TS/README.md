@@ -18,6 +18,16 @@ npm install
 npm run build
 ```
 
+To regenerate schema-derived TypeScript types and validate the SDK operation documents:
+
+```powershell
+npm run generate
+npm run validate-schema
+npm run typecheck
+```
+
+Generated schema types are written to `src/generated/schema-types.ts`. The SDK schema is pinned by `schema.sha256`; update that checksum only as part of an intentional schema-contract change.
+
 Reference it from another package using a relative `file:` dependency (there is no published npm package yet):
 
 ```json
