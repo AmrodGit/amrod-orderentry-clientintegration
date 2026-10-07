@@ -4,16 +4,16 @@ namespace Amrod.SDK.Apis;
 
 public class ViewerApi
 {
-    private readonly GraphQlSdkClient _client;
+  private readonly GraphQlSdkClient _client;
 
-    public ViewerApi(GraphQlSdkClient client)
-    {
-        _client = client;
-    }
+  public ViewerApi(GraphQlSdkClient client)
+  {
+    _client = client;
+  }
 
-    public async Task<Viewer> GetViewerAsync(CancellationToken cancellationToken = default)
-    {
-        const string query = """
+  public async Task<Viewer> GetViewerAsync(CancellationToken cancellationToken = default)
+  {
+    const string query = """
         query {
           viewer {
             identity
@@ -44,15 +44,15 @@ public class ViewerApi
         }
         """;
 
-        var response =
-            await _client.ExecuteAsync<
-                ViewerResponse>(query, cancellationToken: cancellationToken).ConfigureAwait(false);
+    var response =
+        await _client.ExecuteAsync<
+            ViewerResponse>(query, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        return response.Viewer;
-    }
+    return response.Viewer;
+  }
 
-    private class ViewerResponse
-    {
-        public Viewer Viewer { get; set; } = null!;
-    }
+  private class ViewerResponse
+  {
+    public Viewer Viewer { get; set; } = null!;
+  }
 }
