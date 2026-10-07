@@ -124,8 +124,18 @@ public class OAuthClientCredentialsProvider
                     }),
                 cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex) when (ex is HttpRequestException || (ex is TaskCanceledException && !cancellationToken.IsCancellationRequested))
+        catch (HttpRequestException ex)
         {
+            _logger.LogError(ex, "OAuth token request to {TokenUrl} failed", _tokenUrl);
+            throw new AmrodAuthenticationException("Failed to reach the OAuth token endpoint.", ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+
             _logger.LogError(ex, "OAuth token request to {TokenUrl} failed", _tokenUrl);
             throw new AmrodAuthenticationException("Failed to reach the OAuth token endpoint.", ex);
         }

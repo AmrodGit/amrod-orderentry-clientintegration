@@ -44,7 +44,21 @@ public class GraphQlSdkClient
                 }
             }
         }
-        catch (Exception ex) when (ex is not AmrodAuthenticationException && (ex is not OperationCanceledException || !cancellationToken.IsCancellationRequested))
+        catch (AmrodAuthenticationException)
+        {
+            throw;
+        }
+        catch (OperationCanceledException ex)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+
+            _logger.LogError(ex, "Failed to acquire access token for endpoint {Endpoint}", _options.Endpoint);
+            throw new AmrodAuthenticationException("Failed to acquire access token.", ex);
+        }
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to acquire access token for endpoint {Endpoint}", _options.Endpoint);
             throw new AmrodAuthenticationException("Failed to acquire access token.", ex);
@@ -88,8 +102,13 @@ public class GraphQlSdkClient
             _logger.LogError(ex, "Network error while calling gateway at {Endpoint}", _options.Endpoint);
             throw new AmrodApiException("Network error while calling the gateway.", innerException: ex);
         }
-        catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+        catch (TaskCanceledException ex)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+
             _logger.LogError(ex, "Gateway request to {Endpoint} timed out", _options.Endpoint);
             throw new AmrodApiException("Gateway request timed out.", innerException: ex);
         }
