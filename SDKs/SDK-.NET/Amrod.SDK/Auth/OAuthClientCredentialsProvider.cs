@@ -46,7 +46,9 @@ public class OAuthClientCredentialsProvider
         _logger = logger ?? NullLogger<OAuthClientCredentialsProvider>.Instance;
     }
 
-    public async Task<string?> GetAccessTokenAsync()
+    public Task<string?> GetAccessTokenAsync() => GetAccessTokenAsync(CancellationToken.None);
+
+    public async Task<string?> GetAccessTokenAsync(CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(_token)
             && DateTime.UtcNow < _expiresAt)
@@ -61,36 +63,9 @@ public class OAuthClientCredentialsProvider
 
         _logger.LogDebug("Requesting OAuth token from {TokenUrl}", _tokenUrl);
 
-        HttpResponseMessage response;
+        using var response = await RequestTokenAsync(clientSecret, cancellationToken).ConfigureAwait(false);
 
-        try
-        {
-            response =
-                await _httpClient.PostAsync(
-                    _tokenUrl,
-                    new FormUrlEncodedContent(
-                        new Dictionary<string, string>
-                        {
-                            ["grant_type"] =
-                                "client_credentials",
-
-                            ["client_id"] =
-                                _clientId,
-
-                            ["client_secret"] =
-                                clientSecret,
-
-                            ["scope"] =
-                                "amrod.integration amrod.gateway"
-                        }));
-        }
-        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
-        {
-            _logger.LogError(ex, "OAuth token request to {TokenUrl} failed", _tokenUrl);
-            throw new AmrodAuthenticationException("Failed to reach the OAuth token endpoint.", ex);
-        }
-
-        var responseContent = await response.Content.ReadAsStringAsync();
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         _logger.LogDebug("OAuth token response status: {StatusCode}", response.StatusCode);
 
@@ -131,6 +106,29 @@ public class OAuthClientCredentialsProvider
         _logger.LogInformation("OAuth token acquired, expires in {ExpiresIn} seconds", token.ExpiresIn);
 
         return _token;
+    }
+
+    private async Task<HttpResponseMessage> RequestTokenAsync(string clientSecret, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _httpClient.PostAsync(
+                _tokenUrl,
+                new FormUrlEncodedContent(
+                    new Dictionary<string, string>
+                    {
+                        ["grant_type"] = "client_credentials",
+                        ["client_id"] = _clientId,
+                        ["client_secret"] = clientSecret,
+                        ["scope"] = "amrod.integration amrod.gateway"
+                    }),
+                cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is HttpRequestException || (ex is TaskCanceledException && !cancellationToken.IsCancellationRequested))
+        {
+            _logger.LogError(ex, "OAuth token request to {TokenUrl} failed", _tokenUrl);
+            throw new AmrodAuthenticationException("Failed to reach the OAuth token endpoint.", ex);
+        }
     }
 
     private sealed class TokenResponse

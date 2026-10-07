@@ -13,7 +13,8 @@ public class SalesOrdersApi
   }
 
   public async Task<SalesOrder?> GetByNumberAsync(
-      string salesOrderNumber)
+      string salesOrderNumber,
+      CancellationToken cancellationToken = default)
   {
     const string query = """
         query GetSalesOrderByNumber($salesOrderNumber: String!) {
@@ -60,7 +61,8 @@ public class SalesOrdersApi
         await _client.ExecuteAsync<
             SalesOrderResponse>(
             query,
-            new { salesOrderNumber });
+            new { salesOrderNumber },
+            cancellationToken).ConfigureAwait(false);
 
     return response
         .SalesOrders
@@ -68,7 +70,7 @@ public class SalesOrdersApi
         .FirstOrDefault();
   }
 
-  public async Task<SalesOrder?> GetByIdAsync(string id)
+  public async Task<SalesOrder?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
   {
     const string query = """
         query GetSalesOrderById($id: ID!) {
@@ -76,11 +78,11 @@ public class SalesOrdersApi
             customer { id name code } contact { fullName emailAddress } }
         }
         """;
-    var response = await _client.ExecuteAsync<SingleSalesOrderResponse>(query, new { id });
+    var response = await _client.ExecuteAsync<SingleSalesOrderResponse>(query, new { id }, cancellationToken).ConfigureAwait(false);
     return response.SalesOrder;
   }
 
-  public Task<SalesOrdersConnection> ListAsync(int? first = 20, string? after = null, string? before = null) =>
+  public Task<SalesOrdersConnection> ListAsync(int? first = 20, string? after = null, string? before = null, CancellationToken cancellationToken = default) =>
       ExecuteConnectionAsync("""
         query ListSalesOrders($first: Int, $after: String, $before: String) {
           salesOrders(first: $first, after: $after, before: $before) {
@@ -88,9 +90,9 @@ public class SalesOrdersApi
             edges { cursor node { id salesOrderNumber customerReference orderDate status totalExcl isPaid } }
           }
         }
-        """, new { first, after, before });
+        """, new { first, after, before }, cancellationToken);
 
-  public async Task<SalesOrder?> GetWithJobCardsAsync(string salesOrderNumber)
+  public async Task<SalesOrder?> GetWithJobCardsAsync(string salesOrderNumber, CancellationToken cancellationToken = default)
   {
     const string query = """
         query GetSalesOrderWithJobCards($salesOrderNumber: String!) {
@@ -104,13 +106,13 @@ public class SalesOrdersApi
           }
         }
         """;
-    var response = await _client.ExecuteAsync<SalesOrderResponse>(query, new { salesOrderNumber });
+    var response = await _client.ExecuteAsync<SalesOrderResponse>(query, new { salesOrderNumber }, cancellationToken).ConfigureAwait(false);
     return response.SalesOrders.Nodes.FirstOrDefault();
   }
 
-  private async Task<SalesOrdersConnection> ExecuteConnectionAsync(string query, object variables)
+  private async Task<SalesOrdersConnection> ExecuteConnectionAsync(string query, object variables, CancellationToken cancellationToken)
   {
-    var response = await _client.ExecuteAsync<ConnectionSalesOrderResponse>(query, variables);
+    var response = await _client.ExecuteAsync<ConnectionSalesOrderResponse>(query, variables, cancellationToken).ConfigureAwait(false);
     return response.SalesOrders ?? new SalesOrdersConnection();
   }
 

@@ -8,19 +8,19 @@ public class OrderEntryApi
 
     public OrderEntryApi(GraphQlSdkClient client) => _client = client;
 
-    public Task<OrderMutationResponse> PlaceOrderAsync(OrderRequest request) =>
-        ExecuteOrderAsync<OrderMutationResponse>(request, request.Options.ValidateOnly);
+    public Task<OrderMutationResponse> PlaceOrderAsync(OrderRequest request, CancellationToken cancellationToken = default) =>
+        ExecuteOrderAsync<OrderMutationResponse>(request, request.Options.ValidateOnly, cancellationToken);
 
-    public Task<PlaceOrderResponse> PlaceOrderAsync(PlaceOrderInput request) =>
-        ExecuteOrderAsync<PlaceOrderResponse>(request, request.Options.ValidateOnly);
+    public Task<PlaceOrderResponse> PlaceOrderAsync(PlaceOrderInput request, CancellationToken cancellationToken = default) =>
+        ExecuteOrderAsync<PlaceOrderResponse>(request, request.Options.ValidateOnly, cancellationToken);
 
-    public Task<OrderMutationResponse> ValidateOrderAsync(OrderRequest request) =>
-        ExecuteOrderAsync<OrderMutationResponse>(request, true);
+    public Task<OrderMutationResponse> ValidateOrderAsync(OrderRequest request, CancellationToken cancellationToken = default) =>
+        ExecuteOrderAsync<OrderMutationResponse>(request, true, cancellationToken);
 
-    public Task<PlaceOrderResponse> ValidateOrderAsync(PlaceOrderInput request) =>
-        ExecuteOrderAsync<PlaceOrderResponse>(request, true);
+    public Task<PlaceOrderResponse> ValidateOrderAsync(PlaceOrderInput request, CancellationToken cancellationToken = default) =>
+        ExecuteOrderAsync<PlaceOrderResponse>(request, true, cancellationToken);
 
-    private Task<TResponse> ExecuteOrderAsync<TResponse>(OrderRequest request, bool validateOnly)
+    private Task<TResponse> ExecuteOrderAsync<TResponse>(OrderRequest request, bool validateOnly, CancellationToken cancellationToken)
     {
         var input = new
         {
@@ -50,10 +50,10 @@ public class OrderEntryApi
           }
         }
         """;
-        return ExecuteAsync<TResponse>(query, new { input });
+        return ExecuteAsync<TResponse>(query, new { input }, cancellationToken);
     }
 
-    private Task<T> ExecuteAsync<T>(string query, object variables) => _client.ExecuteAsync<T>(query, variables);
+    private Task<T> ExecuteAsync<T>(string query, object variables, CancellationToken cancellationToken) => _client.ExecuteAsync<T>(query, variables, cancellationToken);
 }
 
 public class JobCardWorkflowApi
@@ -62,29 +62,29 @@ public class JobCardWorkflowApi
 
     public JobCardWorkflowApi(GraphQlSdkClient client) => _client = client;
 
-    public Task<WorkflowMutationResponse> ApproveAsync(string jobCardNumber, string proofId, int? optionNumber = null) =>
+    public Task<WorkflowMutationResponse> ApproveAsync(string jobCardNumber, string proofId, int? optionNumber = null, CancellationToken cancellationToken = default) =>
         ExecuteAsync("""
         mutation ApproveJobCard($input: ApproveJobCardInput!) {
           approveJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new { input = new { jobCardNumber, proofId, optionNumber } });
+        """, new { input = new { jobCardNumber, proofId, optionNumber } }, cancellationToken);
 
-    public Task<WorkflowMutationResponse> UpdateBrandingAsync(UpdateJobCardBrandingRequest request) =>
+    public Task<WorkflowMutationResponse> UpdateBrandingAsync(UpdateJobCardBrandingRequest request, CancellationToken cancellationToken = default) =>
         ExecuteAsync("""
         mutation UpdateJobCardBrandingInfo($input: UpdateJobCardBrandingInfoInput!) {
           updateJobCardBrandingInfo(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new { input = request });
+        """, new { input = request }, cancellationToken);
 
-    public Task<WorkflowMutationResponse> RequestChangeAsync(RequestJobCardChangeRequest request) =>
+    public Task<WorkflowMutationResponse> RequestChangeAsync(RequestJobCardChangeRequest request, CancellationToken cancellationToken = default) =>
         ExecuteAsync("""
         mutation RequestJobCardChange($input: RequestChangeJobCardInput!) {
           requestChangeJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new { input = request });
+        """, new { input = request }, cancellationToken);
 
-    private Task<WorkflowMutationResponse> ExecuteAsync(string query, object variables) =>
-        _client.ExecuteAsync<WorkflowMutationResponse>(query, variables);
+    private Task<WorkflowMutationResponse> ExecuteAsync(string query, object variables, CancellationToken cancellationToken) =>
+        _client.ExecuteAsync<WorkflowMutationResponse>(query, variables, cancellationToken);
 }
 
 public class OrderMutationResponse

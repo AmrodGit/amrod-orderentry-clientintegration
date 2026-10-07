@@ -8,18 +8,18 @@ public class CreditNotesApi
 
     public CreditNotesApi(GraphQlSdkClient client) => _client = client;
 
-    public async Task<CreditNote?> GetByIdAsync(string id)
+    public async Task<CreditNote?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         const string query = """
         query GetCreditNoteById($id: ID!) {
           creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId }
         }
         """;
-        var response = await _client.ExecuteAsync<CreditNoteResponse>(query, new IdVariables { Id = id });
+        var response = await _client.ExecuteAsync<CreditNoteResponse>(query, new IdVariables { Id = id }, cancellationToken).ConfigureAwait(false);
         return response.CreditNote;
     }
 
-    public async Task<CreditNote?> GetByNumberAsync(string creditNoteNumber)
+    public async Task<CreditNote?> GetByNumberAsync(string creditNoteNumber, CancellationToken cancellationToken = default)
     {
         const string query = """
         query GetCreditNoteByNumber($creditNoteNumber: String!) {
@@ -28,11 +28,11 @@ public class CreditNotesApi
           }
         }
         """;
-        var response = await _client.ExecuteAsync<CreditNotesResponse>(query, new CreditNoteNumberVariables { CreditNoteNumber = creditNoteNumber });
+        var response = await _client.ExecuteAsync<CreditNotesResponse>(query, new CreditNoteNumberVariables { CreditNoteNumber = creditNoteNumber }, cancellationToken).ConfigureAwait(false);
         return response.CreditNotes?.Nodes?.FirstOrDefault();
     }
 
-    public Task<CreditNotesConnection> ListAsync(int? first = 20, string? after = null, string? before = null) =>
+    public Task<CreditNotesConnection> ListAsync(int? first = 20, string? after = null, string? before = null, CancellationToken cancellationToken = default) =>
         ExecuteConnectionAsync("""
         query ListCreditNotes($first: Int, $after: String, $before: String) {
           creditNotes(first: $first, after: $after, before: $before) {
@@ -40,9 +40,9 @@ public class CreditNotesApi
             edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax } }
           }
         }
-        """, new ConnectionVariables { First = first, After = after, Before = before });
+        """, new ConnectionVariables { First = first, After = after, Before = before }, cancellationToken);
 
-    public Task<CreditNotesConnection> GetBySalesOrderNumberAsync(string salesOrderNumber) =>
+    public Task<CreditNotesConnection> GetBySalesOrderNumberAsync(string salesOrderNumber, CancellationToken cancellationToken = default) =>
         ExecuteConnectionAsync("""
         query GetCreditNotesBySalesOrderNumber($salesOrderNumber: String!) {
           creditNotes(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
@@ -50,20 +50,20 @@ public class CreditNotesApi
             edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } } }
           }
         }
-        """, new SalesOrderNumberVariables { SalesOrderNumber = salesOrderNumber });
+        """, new SalesOrderNumberVariables { SalesOrderNumber = salesOrderNumber }, cancellationToken);
 
-    public Task<CreditNotesConnection> GetByDateRangeAsync(string startDate, string endDate) =>
+    public Task<CreditNotesConnection> GetByDateRangeAsync(string startDate, string endDate, CancellationToken cancellationToken = default) =>
         ExecuteConnectionAsync("""
         query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!) {
           creditNotes(first: 100, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
             totalCount nodes { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } }
           }
         }
-        """, new CreditNoteDateRangeVariables { StartDate = startDate, EndDate = endDate });
+        """, new CreditNoteDateRangeVariables { StartDate = startDate, EndDate = endDate }, cancellationToken);
 
-    private async Task<CreditNotesConnection> ExecuteConnectionAsync(string query, object variables)
+    private async Task<CreditNotesConnection> ExecuteConnectionAsync(string query, object variables, CancellationToken cancellationToken)
     {
-        var response = await _client.ExecuteAsync<CreditNotesResponse>(query, variables);
+        var response = await _client.ExecuteAsync<CreditNotesResponse>(query, variables, cancellationToken).ConfigureAwait(false);
         return response.CreditNotes ?? new CreditNotesConnection();
     }
 

@@ -23,7 +23,8 @@ public class GraphQlSdkClient
 
     public async Task<T> ExecuteAsync<T>(
         string query,
-        object? variables = null)
+        object? variables = null,
+        CancellationToken cancellationToken = default)
     {
         using var client = new GraphQLHttpClient(
             _options.Endpoint,
@@ -33,7 +34,7 @@ public class GraphQlSdkClient
         {
             if (_options.AuthProvider is not null)
             {
-                var token = await _options.AuthProvider.GetAccessTokenAsync();
+                var token = await _options.AuthProvider.GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
                 if (!string.IsNullOrWhiteSpace(token))
                 {
                     client.HttpClient.DefaultRequestHeaders.Authorization =
@@ -43,7 +44,7 @@ public class GraphQlSdkClient
                 }
             }
         }
-        catch (Exception ex) when (ex is not AmrodAuthenticationException)
+        catch (Exception ex) when (ex is not AmrodAuthenticationException && (ex is not OperationCanceledException || !cancellationToken.IsCancellationRequested))
         {
             _logger.LogError(ex, "Failed to acquire access token for endpoint {Endpoint}", _options.Endpoint);
             throw new AmrodAuthenticationException("Failed to acquire access token.", ex);
@@ -51,7 +52,7 @@ public class GraphQlSdkClient
 
         if (_options.ImpersonationProvider is not null)
         {
-            var impersonation = await _options.ImpersonationProvider.GetHeaderValueAsync();
+            var impersonation = await _options.ImpersonationProvider.GetHeaderValueAsync(cancellationToken).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(impersonation))
             {
                 client.HttpClient
@@ -74,7 +75,8 @@ public class GraphQlSdkClient
                     {
                         Query = query,
                         Variables = variables
-                    });
+                    },
+                    cancellationToken).ConfigureAwait(false);
         }
         catch (GraphQLHttpRequestException ex)
         {
@@ -86,7 +88,7 @@ public class GraphQlSdkClient
             _logger.LogError(ex, "Network error while calling gateway at {Endpoint}", _options.Endpoint);
             throw new AmrodApiException("Network error while calling the gateway.", innerException: ex);
         }
-        catch (TaskCanceledException ex)
+        catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
         {
             _logger.LogError(ex, "Gateway request to {Endpoint} timed out", _options.Endpoint);
             throw new AmrodApiException("Gateway request timed out.", innerException: ex);

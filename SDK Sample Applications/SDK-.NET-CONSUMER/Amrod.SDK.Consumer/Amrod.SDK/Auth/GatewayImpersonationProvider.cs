@@ -27,7 +27,9 @@ public class GatewayImpersonationProvider
         _customerCode = customerCode;
     }
 
-    public Task<string?> GetHeaderValueAsync()
+    public Task<string?> GetHeaderValueAsync() => GetHeaderValueAsync(CancellationToken.None);
+
+    public Task<string?> GetHeaderValueAsync(CancellationToken cancellationToken)
     {
         var raw =
             $"{_contactId};{_customerCode}";

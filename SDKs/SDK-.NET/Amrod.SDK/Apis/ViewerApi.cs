@@ -11,7 +11,7 @@ public class ViewerApi
         _client = client;
     }
 
-    public async Task<Viewer> GetViewerAsync()
+    public async Task<Viewer> GetViewerAsync(CancellationToken cancellationToken = default)
     {
         const string query = """
         query {
@@ -46,7 +46,7 @@ public class ViewerApi
 
         var response =
             await _client.ExecuteAsync<
-                ViewerResponse>(query);
+                ViewerResponse>(query, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return response.Viewer;
     }

@@ -15,4 +15,6 @@ public class JwtAuthProvider : IAuthProvider
     {
         return Task.FromResult<string?>(_token);
     }
+
+    public Task<string?> GetAccessTokenAsync(CancellationToken cancellationToken) => GetAccessTokenAsync();
 }

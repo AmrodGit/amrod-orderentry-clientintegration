@@ -8,7 +8,7 @@ public class JobCardsApi
 
     public JobCardsApi(GraphQlSdkClient client) => _client = client;
 
-    public async Task<JobCard?> GetByIdAsync(string id)
+    public async Task<JobCard?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         const string query = """
         query GetJobCardById($id: ID!) {
@@ -19,21 +19,21 @@ public class JobCardsApi
           }
         }
         """;
-        var response = await _client.ExecuteAsync<JobCardResponse>(query, new IdVariables { Id = id });
+        var response = await _client.ExecuteAsync<JobCardResponse>(query, new IdVariables { Id = id }, cancellationToken).ConfigureAwait(false);
         return response.JobCard;
     }
 
-    public async Task<JobCard?> GetByNumberAsync(string jobCardNumber)
+    public async Task<JobCard?> GetByNumberAsync(string jobCardNumber, CancellationToken cancellationToken = default)
     {
         var connection = await GetByNumberConnectionAsync(jobCardNumber, """
           jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement logo colors brandingSizeWidth brandingSizeHeight foilColor siliconeColor vinylColor }
           jobCardDate { actionDate dueDate leadTime }
           jobCardAssets { id name type url assetId }
-        """);
+        """, cancellationToken).ConfigureAwait(false);
         return connection.Nodes.FirstOrDefault();
     }
 
-    public async Task<JobCard?> GetWithAssetsAndProofsAsync(string jobCardNumber)
+    public async Task<JobCard?> GetWithAssetsAndProofsAsync(string jobCardNumber, CancellationToken cancellationToken = default)
     {
         var connection = await GetByNumberConnectionAsync(jobCardNumber, """
           jobCardBrandingDetail { brandingCode brandingPosition logo colors brandingSizeWidth brandingSizeHeight }
@@ -42,11 +42,11 @@ public class JobCardsApi
           jobCardProofs { id url version numberOfOptions jobCardProofOptions { number isRecommended pageRange } }
           jobCardDetail { sku quantity }
           salesOrder { salesOrderNumber customerReference status }
-        """);
+        """, cancellationToken).ConfigureAwait(false);
         return connection.Nodes.FirstOrDefault();
     }
 
-    public Task<JobCardsConnection> GetBySalesOrderNumberAsync(string salesOrderNumber) =>
+    public Task<JobCardsConnection> GetBySalesOrderNumberAsync(string salesOrderNumber, CancellationToken cancellationToken = default) =>
         ExecuteConnectionAsync("""
         query GetJobCardsBySalesOrderNumber($salesOrderNumber: String!) {
           jobCards(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
@@ -57,9 +57,9 @@ public class JobCardsApi
             } }
           }
         }
-        """, new SalesOrderNumberVariables { SalesOrderNumber = salesOrderNumber });
+        """, new SalesOrderNumberVariables { SalesOrderNumber = salesOrderNumber }, cancellationToken);
 
-    public Task<JobCardsConnection> ListAsync(int? first = 20, string? after = null, string? before = null) =>
+    public Task<JobCardsConnection> ListAsync(int? first = 20, string? after = null, string? before = null, CancellationToken cancellationToken = default) =>
         ExecuteConnectionAsync("""
         query ListJobCards($first: Int, $after: String, $before: String) {
           jobCards(first: $first, after: $after, before: $before) {
@@ -67,20 +67,20 @@ public class JobCardsApi
             edges { cursor node { id jobCardNumber status created isActive jobCardBrandingDetail { brandingCode logo } jobCardDate { dueDate leadTime } } }
           }
         }
-        """, new ConnectionVariables { First = first, After = after, Before = before });
+        """, new ConnectionVariables { First = first, After = after, Before = before }, cancellationToken);
 
-    private Task<JobCardsConnection> GetByNumberConnectionAsync(string jobCardNumber, string selection) =>
+    private Task<JobCardsConnection> GetByNumberConnectionAsync(string jobCardNumber, string selection, CancellationToken cancellationToken) =>
         ExecuteConnectionAsync($$$"""
         query GetJobCardByNumber($jobCardNumber: String!) {
           jobCards(where: { jobCardNumber: { eq: $jobCardNumber } }, first: 1) {
             totalCount nodes { id jobCardNumber status created isActive salesOrder { salesOrderNumber customerReference status } {{{selection}}} }
           }
         }
-        """, new JobCardNumberVariables { JobCardNumber = jobCardNumber });
+        """, new JobCardNumberVariables { JobCardNumber = jobCardNumber }, cancellationToken);
 
-    private async Task<JobCardsConnection> ExecuteConnectionAsync(string query, object variables)
+    private async Task<JobCardsConnection> ExecuteConnectionAsync(string query, object variables, CancellationToken cancellationToken)
     {
-        var response = await _client.ExecuteAsync<JobCardsResponse>(query, variables);
+        var response = await _client.ExecuteAsync<JobCardsResponse>(query, variables, cancellationToken).ConfigureAwait(false);
         return response.JobCards ?? new JobCardsConnection();
     }
 

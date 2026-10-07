@@ -8,13 +8,13 @@ public class OrderEntryApi
 
     public OrderEntryApi(GraphQlSdkClient client) => _client = client;
 
-    public Task<PlaceOrderResponse> PlaceOrderAsync(PlaceOrderInput input) =>
-      ExecuteOrderAsync(input, input.Options.ValidateOnly);
+    public Task<PlaceOrderResponse> PlaceOrderAsync(PlaceOrderInput input, CancellationToken cancellationToken = default) =>
+      ExecuteOrderAsync(input, input.Options.ValidateOnly, cancellationToken);
 
-    public Task<PlaceOrderResponse> ValidateOrderAsync(PlaceOrderInput input) =>
-      ExecuteOrderAsync(input, true);
+    public Task<PlaceOrderResponse> ValidateOrderAsync(PlaceOrderInput input, CancellationToken cancellationToken = default) =>
+      ExecuteOrderAsync(input, true, cancellationToken);
 
-    private Task<PlaceOrderResponse> ExecuteOrderAsync(PlaceOrderInput input, bool validateOnly)
+    private Task<PlaceOrderResponse> ExecuteOrderAsync(PlaceOrderInput input, bool validateOnly, CancellationToken cancellationToken)
     {
         var variables = new PlaceOrderVariables
         {
@@ -33,10 +33,10 @@ public class OrderEntryApi
           }
         }
         """;
-        return ExecuteAsync<PlaceOrderResponse>(query, variables);
+        return ExecuteAsync<PlaceOrderResponse>(query, variables, cancellationToken);
     }
 
-    private Task<T> ExecuteAsync<T>(string query, object variables) => _client.ExecuteAsync<T>(query, variables);
+    private Task<T> ExecuteAsync<T>(string query, object variables, CancellationToken cancellationToken) => _client.ExecuteAsync<T>(query, variables, cancellationToken);
 }
 
 public class JobCardWorkflowApi
@@ -45,29 +45,29 @@ public class JobCardWorkflowApi
 
     public JobCardWorkflowApi(GraphQlSdkClient client) => _client = client;
 
-    public Task<ApproveJobCardResponse> ApproveAsync(ApproveJobCardInput input) =>
+    public Task<ApproveJobCardResponse> ApproveAsync(ApproveJobCardInput input, CancellationToken cancellationToken = default) =>
         ExecuteAsync<ApproveJobCardResponse>("""
         mutation ApproveJobCard($input: ApproveJobCardInput!) {
           approveJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new ApproveJobCardVariables { Input = input });
+        """, new ApproveJobCardVariables { Input = input }, cancellationToken);
 
-    public Task<UpdateJobCardBrandingResponse> UpdateBrandingAsync(UpdateJobCardBrandingRequest input) =>
+    public Task<UpdateJobCardBrandingResponse> UpdateBrandingAsync(UpdateJobCardBrandingRequest input, CancellationToken cancellationToken = default) =>
       ExecuteAsync<UpdateJobCardBrandingResponse>("""
         mutation UpdateJobCardBrandingInfo($input: UpdateJobCardBrandingInfoInput!) {
           updateJobCardBrandingInfo(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new UpdateJobCardBrandingVariables { Input = input });
+        """, new UpdateJobCardBrandingVariables { Input = input }, cancellationToken);
 
-    public Task<RequestJobCardChangeResponse> RequestChangeAsync(RequestJobCardChangeRequest input) =>
+    public Task<RequestJobCardChangeResponse> RequestChangeAsync(RequestJobCardChangeRequest input, CancellationToken cancellationToken = default) =>
       ExecuteAsync<RequestJobCardChangeResponse>("""
         mutation RequestJobCardChange($input: RequestChangeJobCardInput!) {
           requestChangeJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new RequestJobCardChangeVariables { Input = input });
+        """, new RequestJobCardChangeVariables { Input = input }, cancellationToken);
 
-    private Task<T> ExecuteAsync<T>(string query, object variables) =>
-      _client.ExecuteAsync<T>(query, variables);
+    private Task<T> ExecuteAsync<T>(string query, object variables, CancellationToken cancellationToken) =>
+      _client.ExecuteAsync<T>(query, variables, cancellationToken);
 }
 
 public sealed class PlaceOrderResponse
