@@ -9,7 +9,7 @@ const schemaPath = join(root, "..", "SDK-.NET", "Amrod.SDK", "schema.graphql");
 const lockPath = join(root, "schema.sha256");
 const operationRoot = join(root, "..", "SDK-.NET", "Amrod.SDK", "graphql");
 
-const schemaSource = await readFile(schemaPath, "utf8");
+const schemaSource = (await readFile(schemaPath, "utf8")).replace(/\r\n?/g, "\n");
 const expectedHash = (await readFile(lockPath, "utf8")).trim();
 const actualHash = createHash("sha256").update(schemaSource).digest("hex").toUpperCase();
 
