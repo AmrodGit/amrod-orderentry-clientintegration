@@ -1,0 +1,29 @@
+query GetCreditNoteById($id: ID!) {
+  creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId }
+}
+
+query GetCreditNoteByNumber($creditNoteNumber: String!) {
+  creditNotes(where: { creditNoteNumber: { eq: $creditNoteNumber } }, first: 1) {
+    totalCount nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+  }
+}
+
+query ListCreditNotes($first: Int, $after: String, $before: String) {
+  creditNotes(first: $first, after: $after, before: $before) {
+    totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+    edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax } }
+  }
+}
+
+query GetCreditNotesBySalesOrderNumber($salesOrderNumber: String!) {
+  creditNotes(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
+    totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+    edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } } }
+  }
+}
+
+query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!) {
+  creditNotes(first: 100, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
+    totalCount nodes { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } }
+  }
+}

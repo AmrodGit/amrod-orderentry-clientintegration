@@ -1,0 +1,20 @@
+namespace Amrod.SDK.Auth;
+
+public class JwtAuthProvider : IAuthProvider
+{
+    private readonly string _token;
+
+    public JwtAuthProvider(string token)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(token);
+
+        _token = token;
+    }
+
+    public Task<string?> GetAccessTokenAsync()
+    {
+        return Task.FromResult<string?>(_token);
+    }
+
+    public Task<string?> GetAccessTokenAsync(CancellationToken cancellationToken) => GetAccessTokenAsync();
+}

@@ -1,0 +1,20 @@
+{
+  "name": "sdk-ts-consumer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@amrod/sdk-ts": "file:../../SDKs/SDK-TS",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "tsx": "^4.7.0",
+    "typescript": "^5.9.2"
+  }
+}

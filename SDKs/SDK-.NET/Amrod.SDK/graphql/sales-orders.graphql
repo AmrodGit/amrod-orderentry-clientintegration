@@ -1,0 +1,22 @@
+query GetSalesOrderById($id: ID!) {
+  salesOrder(id: $id) { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
+    customer { id name code } contact { fullName emailAddress } }
+}
+
+query ListSalesOrders($first: Int, $after: String, $before: String) {
+  salesOrders(first: $first, after: $after, before: $before) {
+    totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+    edges { cursor node { id salesOrderNumber customerReference orderDate status totalExcl isPaid } }
+  }
+}
+
+query GetSalesOrderWithJobCards($salesOrderNumber: String!) {
+  salesOrders(where: { salesOrderNumber: { eq: $salesOrderNumber } }, first: 1) { nodes {
+    id salesOrderNumber customerReference orderDate status totalExcl tax customer { id name code }
+    contact { fullName emailAddress } salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
+    jobCards { id jobCardNumber status created isActive lastModifiedDate
+      jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement brandingSizeWidth brandingSizeHeight logo colors }
+      jobCardDate { actionDate dueDate leadTime }
+    }
+  } }
+}

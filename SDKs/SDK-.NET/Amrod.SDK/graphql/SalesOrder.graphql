@@ -1,0 +1,17 @@
+query GetSalesOrderByNumber(
+  $salesOrderNumber: String!
+) {
+  salesOrders(
+    where: {
+      salesOrderNumber: {
+        eq: $salesOrderNumber
+      }
+    }
+    first: 1
+  ) {
+    nodes {
+      id
+      salesOrderNumber
+    }
+  }
+}
