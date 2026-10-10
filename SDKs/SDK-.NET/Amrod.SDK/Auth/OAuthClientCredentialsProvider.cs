@@ -46,9 +46,7 @@ public class OAuthClientCredentialsProvider
         _logger = logger ?? NullLogger<OAuthClientCredentialsProvider>.Instance;
     }
 
-    public Task<string?> GetAccessTokenAsync() => GetAccessTokenAsync(CancellationToken.None);
-
-    public async Task<string?> GetAccessTokenAsync(CancellationToken cancellationToken)
+    public async Task<string?> GetAccessTokenAsync(CancellationToken cancellationToken = default)
     {
         if (!string.IsNullOrWhiteSpace(_token)
             && DateTime.UtcNow < _expiresAt)
