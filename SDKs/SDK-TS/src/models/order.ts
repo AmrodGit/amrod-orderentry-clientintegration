@@ -73,6 +73,7 @@ export interface BrandingDetail {
   logoSizeType?: OrderBrandingLogoSizeType;
   colors?: BrandingColorInput[];
   metadata?: BrandingMetadataInput[];
+  packingInstructions?: string;
   reference?: string;
   specialInstructions?: string;
 }

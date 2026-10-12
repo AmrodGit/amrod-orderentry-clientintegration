@@ -131,7 +131,7 @@ async function run(): Promise<void> {
       details: [
         {
           id: "GROUP-1",
-          items: [{ sku: "SKU-001", quantity: 10, price: 25.0 }],
+          items: [{ sku: "BAG-612-BU", quantity: 10, price: 25.0 }],
         },
       ],
     };

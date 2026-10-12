@@ -4,7 +4,7 @@
 
 ### Overview
 
-Introduces versioned .NET and TypeScript SDK packages for the Order Entry and Logo Library GraphQL APIs. This replaces the previous artwork-focused .NET SDK surface and is a major-version change for SDK consumers.
+Introduces versioned .NET and TypeScript SDK packages for the Order Entry GraphQL API, replacing the previous artwork-focused .NET SDK surface. This is a major-version change for SDK consumers.
 
 ### Added
 

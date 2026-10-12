@@ -78,8 +78,9 @@ interface ApiError {
     requestReference?: string;
 }
 interface MutationResult {
-    result: boolean;
+    result: ResultTypeStatus;
 }
+type ResultTypeStatus = "OK";
 
 interface JobCardSalesOrder {
     salesOrderNumber: string;
@@ -157,9 +158,9 @@ interface SalesOrderCustomer {
     code: string;
 }
 interface SalesOrderContact {
-    fullName: string;
-    emailAddress: string;
-    telephoneNumber: string;
+    fullName: string | null;
+    emailAddress: string | null;
+    telephoneNumber: string | null;
 }
 interface SalesOrderDetail {
     rowNumber: number;
@@ -300,6 +301,7 @@ interface BrandingDetail {
     logoSizeType?: OrderBrandingLogoSizeType;
     colors?: BrandingColorInput[];
     metadata?: BrandingMetadataInput[];
+    packingInstructions?: string;
     reference?: string;
     specialInstructions?: string;
 }
@@ -458,4 +460,4 @@ declare class AmrodSdk {
     constructor(options: SdkOptions);
 }
 
-export { AmrodApiException, AmrodAuthenticationException, AmrodSdk, type ApiError, type ApproveJobCardInput, type AuthProvider, type BrandingColorInput, type BrandingDetail, type BrandingMetadataInput, type CreditNote, type CreditNoteDetail, type CreditNoteEdge, type CreditNotesConnection, type Customer, type CustomerContact, GatewayImpersonationProvider, GraphQlSdkClient, type ImpersonationProvider, type ImpersonationScope, type JobCard, type JobCardAsset, type JobCardBrandingDetail, type JobCardBrandingRequest, type JobCardChangeRequestType, type JobCardDate, type JobCardDetail, type JobCardEdge, type JobCardProof, type JobCardProofOption, type JobCardSalesOrder, type JobCardsConnection, JwtAuthProvider, type Logger, type MutationResult, OAuthClientCredentialsProvider, type OrderBrandingColorType, type OrderBrandingLogoPositionType, type OrderBrandingLogoSizeType, type OrderBrandingResult, type OrderCollection, type OrderCollectionType, type OrderContact, type OrderContactDetail, type OrderContactNotificationDetail, type OrderGroup, type OrderGroupResult, type OrderItem, type OrderLine, type OrderLineResult, type OrderOptions, type OrderResult, type OrderType, type OrderWarning, type PageInfo, type PlaceOrderInput, type PlaceOrderRequest, type PlaceOrderResponse, type RequestJobCardChangeRequest, type SalesOrder, type SalesOrderContact, type SalesOrderCustomer, type SalesOrderDetail, type SalesOrderEdge, type SalesOrdersConnection, type SdkOptions, type UpdateJobCardBrandingRequest, type Viewer, type WorkflowMutationResponse, consoleLogger, noopLogger, toPlaceOrderInput };
+export { AmrodApiException, AmrodAuthenticationException, AmrodSdk, type ApiError, type ApproveJobCardInput, type AuthProvider, type BrandingColorInput, type BrandingDetail, type BrandingMetadataInput, type CreditNote, type CreditNoteDetail, type CreditNoteEdge, type CreditNotesConnection, type Customer, type CustomerContact, GatewayImpersonationProvider, GraphQlSdkClient, type ImpersonationProvider, type ImpersonationScope, type JobCard, type JobCardAsset, type JobCardBrandingDetail, type JobCardBrandingRequest, type JobCardChangeRequestType, type JobCardDate, type JobCardDetail, type JobCardEdge, type JobCardProof, type JobCardProofOption, type JobCardSalesOrder, type JobCardsConnection, JwtAuthProvider, type Logger, type MutationResult, OAuthClientCredentialsProvider, type OrderBrandingColorType, type OrderBrandingLogoPositionType, type OrderBrandingLogoSizeType, type OrderBrandingResult, type OrderCollection, type OrderCollectionType, type OrderContact, type OrderContactDetail, type OrderContactNotificationDetail, type OrderGroup, type OrderGroupResult, type OrderItem, type OrderLine, type OrderLineResult, type OrderOptions, type OrderResult, type OrderType, type OrderWarning, type PageInfo, type PlaceOrderInput, type PlaceOrderRequest, type PlaceOrderResponse, type RequestJobCardChangeRequest, type ResultTypeStatus, type SalesOrder, type SalesOrderContact, type SalesOrderCustomer, type SalesOrderDetail, type SalesOrderEdge, type SalesOrdersConnection, type SdkOptions, type UpdateJobCardBrandingRequest, type Viewer, type WorkflowMutationResponse, consoleLogger, noopLogger, toPlaceOrderInput };

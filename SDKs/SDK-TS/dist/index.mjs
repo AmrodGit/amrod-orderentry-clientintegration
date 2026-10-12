@@ -240,7 +240,8 @@ var SalesOrdersApi = class {
       query GetSalesOrderById($id: ID!) {
         salesOrder(id: $id) {
           id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
-          customer { id name code } contact { fullName emailAddress }
+          customer { id name code } contact { fullName emailAddress telephoneNumber }
+          salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
         }
       }
     `;
@@ -272,8 +273,9 @@ var SalesOrdersApi = class {
     const query = `
       query GetSalesOrderWithJobCards($salesOrderNumber: String!) {
         salesOrders(where: { salesOrderNumber: { eq: $salesOrderNumber } }, first: 1) {
-          nodes { id salesOrderNumber customerReference orderDate status totalExcl tax customer { id name code }
-            contact { fullName emailAddress } salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
+          nodes { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
+            customer { id name code }
+            contact { fullName emailAddress telephoneNumber } salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
             jobCards { id jobCardNumber status created isActive lastModifiedDate
               jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement brandingSizeWidth brandingSizeHeight logo colors }
               jobCardDate { actionDate dueDate leadTime } }
@@ -304,7 +306,7 @@ var CreditNotesApi = class {
   async getById(id) {
     const query = `
       query GetCreditNoteById($id: ID!) {
-        creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId }
+        creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
       }
     `;
     const response = await this.client.execute(
@@ -381,7 +383,7 @@ var JobCardsApi = class {
     const query = `
       query GetJobCardById($id: ID!) {
         jobCard(id: $id) { id jobCardNumber status created isActive lastModifiedDate
-          salesOrder { salesOrderNumber }
+          salesOrder { salesOrderNumber customerReference status }
           jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement logo colors brandingSizeWidth brandingSizeHeight }
           jobCardDate { actionDate dueDate leadTime }
         }

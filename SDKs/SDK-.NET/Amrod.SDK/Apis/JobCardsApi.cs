@@ -13,7 +13,7 @@ public class JobCardsApi
     const string query = """
         query GetJobCardById($id: ID!) {
           jobCard(id: $id) { id jobCardNumber status created isActive lastModifiedDate
-            salesOrder { salesOrderNumber }
+            salesOrder { salesOrderNumber customerReference status }
             jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement logo colors brandingSizeWidth brandingSizeHeight }
             jobCardDate { actionDate dueDate leadTime }
           }

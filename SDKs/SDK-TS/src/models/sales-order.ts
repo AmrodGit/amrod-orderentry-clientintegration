@@ -8,9 +8,9 @@ export interface SalesOrderCustomer {
 }
 
 export interface SalesOrderContact {
-  fullName: string;
-  emailAddress: string;
-  telephoneNumber: string;
+  fullName: string | null;
+  emailAddress: string | null;
+  telephoneNumber: string | null;
 }
 
 export interface SalesOrderDetail {

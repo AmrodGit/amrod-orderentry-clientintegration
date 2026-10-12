@@ -5,12 +5,14 @@ on:
     paths:
       - "SDKs/**"
       - "SDK Sample Applications/**"
+      - "Directory.Packages.props"
       - "docs/sdk-versioning-support.md"
       - ".github/workflows/sdk-validation.yml"
   pull_request:
     paths:
       - "SDKs/**"
       - "SDK Sample Applications/**"
+      - "Directory.Packages.props"
       - "docs/sdk-versioning-support.md"
       - ".github/workflows/sdk-validation.yml"
 

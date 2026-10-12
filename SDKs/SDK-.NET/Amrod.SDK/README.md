@@ -302,7 +302,7 @@ var approval = await sdk.JobCardWorkflow.ApproveAsync(new ApproveJobCardInput
     OptionNumber = 1
 });
 
-bool approved = approval.ResultPayloadType?.Result == true;
+bool approved = approval.ResultPayloadType?.Result == ResultTypeStatus.Ok;
 ```
 
 Update branding information:
@@ -352,7 +352,7 @@ var change = await sdk.JobCardWorkflow.RequestChangeAsync(
     });
 ```
 
-`ApproveJobCardResponse`, `UpdateJobCardBrandingResponse`, and `RequestJobCardChangeResponse` each contain `Errors` and an optional `ResultPayloadType`. A successful workflow mutation has `ResultPayloadType.Result == true`.
+`ApproveJobCardResponse`, `UpdateJobCardBrandingResponse`, and `RequestJobCardChangeResponse` each contain `Errors` and an optional `ResultPayloadType`. A successful workflow mutation has `ResultPayloadType.Result == ResultTypeStatus.Ok`.
 
 ## Errors
 

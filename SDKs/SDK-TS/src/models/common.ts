@@ -17,5 +17,7 @@ export interface ApiError {
 }
 
 export interface MutationResult {
-  result: boolean;
+  result: ResultTypeStatus;
 }
+
+export type ResultTypeStatus = "OK";

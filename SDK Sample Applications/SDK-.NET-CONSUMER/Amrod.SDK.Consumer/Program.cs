@@ -196,7 +196,7 @@ static async Task RunAsync(IConfiguration configuration, ILoggerFactory loggerFa
                         [
                             new OrderLine
                             {
-                                Sku = "SKU-001",
+                                Sku = "BAG-612-BU",
                                 Quantity = 10,
                                 Price = 25.00m
                             }

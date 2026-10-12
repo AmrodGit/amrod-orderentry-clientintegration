@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Amrod.SDK</PackageId>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <Authors>Amrod</Authors>
     <Description>.NET client for the Amrod Order Entry GraphQL API.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

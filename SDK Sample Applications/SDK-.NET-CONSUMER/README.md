@@ -42,8 +42,10 @@ For gateway impersonation, construct `GatewayImpersonationProvider` with the **c
 | `SalesOrders` | `GetByNumberAsync`, `GetByIdAsync`, `ListAsync`, `GetWithJobCardsAsync` | `SalesOrder` or `SalesOrdersConnection` |
 | `CreditNotes` | `GetByIdAsync`, `GetByNumberAsync`, `ListAsync`, `GetBySalesOrderNumberAsync`, `GetByDateRangeAsync` | `CreditNote` or `CreditNotesConnection` |
 | `JobCards` | `GetByIdAsync`, `GetByNumberAsync`, `GetWithAssetsAndProofsAsync`, `GetBySalesOrderNumberAsync`, `ListAsync` | `JobCard` or `JobCardsConnection` |
-| `Orders` | `PlaceOrderAsync`, `ValidateOrderAsync` | `PlaceOrderResponse` or `OrderMutationResponse` |
-| `JobCardWorkflow` | `ApproveAsync`, `UpdateBrandingAsync`, `RequestChangeAsync` | `WorkflowMutationResponse` |
+| `Orders` | `PlaceOrderAsync`, `ValidateOrderAsync` | `PlaceOrderResponse` |
+| `JobCardWorkflow` | `ApproveAsync` | `ApproveJobCardResponse` |
+| `JobCardWorkflow` | `UpdateBrandingAsync` | `UpdateJobCardBrandingResponse` |
+| `JobCardWorkflow` | `RequestChangeAsync` | `RequestJobCardChangeResponse` |
 
 The model classes in `Amrod.SDK.Models` expose the selected fields for these operations, including pagination (`PageInfo` and connection/edge classes), request payloads, order results, warnings, and mutation errors.
 
@@ -130,7 +132,7 @@ Connection results contain `TotalCount`, `Nodes`, `Edges`, and `PageInfo`. Pass 
 
 `RequestChangeAsync` accepts `RequestJobCardChangeRequest`, which has a sales-order number, a change-request type string, and `JobCards`. `BrandingDetailInput` supports `BrandingCode`, `Position`, `LogoPosition`, `Logos`, `LogoSize`, `LogoSizeType`, `Colors`, `Metadata`, `PackingInstructions`, `Reference`, and `SpecialInstructions`.
 
-Each workflow call returns `WorkflowMutationResponse`. Check `Errors`, then use `ResultPayloadType?.Result` for the success flag and `ResultPayloadType?.Status` for the server status.
+Each workflow call returns its operation-specific response type. Check `Errors`, then inspect `ResultPayloadType?.Result` for the server result.
 
 ## Error behavior
 

@@ -8,7 +8,7 @@ export class CreditNotesApi {
   async getById(id: string): Promise<CreditNote | null> {
     const query = `
       query GetCreditNoteById($id: ID!) {
-        creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId }
+        creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
       }
     `;
 

@@ -307,7 +307,7 @@ const approval = await sdk.jobCardWorkflow.approve({
   optionNumber: 1,
 });
 
-const approved = approval.resultPayloadType?.result === true;
+const approved = approval.resultPayloadType?.result === "OK";
 ```
 
 Update branding information:
@@ -347,7 +347,7 @@ const change = await sdk.jobCardWorkflow.requestChange({
 });
 ```
 
-`approve`, `updateBranding`, and `requestChange` all return a `WorkflowMutationResponse` with `errors` and an optional `resultPayloadType`. A successful workflow mutation has `resultPayloadType.result === true`.
+`approve`, `updateBranding`, and `requestChange` all return a `WorkflowMutationResponse` with `errors` and an optional `resultPayloadType`. A successful workflow mutation has `resultPayloadType.result === "OK"`.
 
 ## Errors
 

@@ -75,7 +75,8 @@ public class SalesOrdersApi
     const string query = """
         query GetSalesOrderById($id: ID!) {
           salesOrder(id: $id) { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
-            customer { id name code } contact { fullName emailAddress } }
+            customer { id name code } contact { fullName emailAddress telephoneNumber }
+            salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl } }
         }
         """;
     var response = await _client.ExecuteAsync<SingleSalesOrderResponse>(query, new IdVariables { Id = id }, cancellationToken).ConfigureAwait(false);
@@ -104,8 +105,9 @@ public class SalesOrdersApi
     const string query = """
         query GetSalesOrderWithJobCards($salesOrderNumber: String!) {
           salesOrders(where: { salesOrderNumber: { eq: $salesOrderNumber } }, first: 1) {
-            nodes { id salesOrderNumber customerReference orderDate status totalExcl tax customer { id name code }
-              contact { fullName emailAddress } salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
+            nodes { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
+              customer { id name code }
+              contact { fullName emailAddress telephoneNumber } salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
               jobCards { id jobCardNumber status created isActive lastModifiedDate
                 jobCardBrandingDetail { brandingCode brandingPosition brandingPlacement brandingSizeWidth brandingSizeHeight logo colors }
                 jobCardDate { actionDate dueDate leadTime } }

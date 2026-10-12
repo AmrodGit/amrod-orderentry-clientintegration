@@ -13,6 +13,7 @@ public class GraphQlSdkClient : IDisposable
     private readonly AmrodSdkOptions _options;
     private readonly ILogger<GraphQlSdkClient> _logger;
     private readonly GraphQLHttpClient _client;
+    private readonly SemaphoreSlim _requestLock = new(1, 1);
 
     public GraphQlSdkClient(
         AmrodSdkOptions options)
@@ -29,6 +30,22 @@ public class GraphQlSdkClient : IDisposable
         string query,
         object? variables = null,
         CancellationToken cancellationToken = default)
+    {
+        await _requestLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            return await ExecuteWithHeadersAsync<T>(query, variables, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _requestLock.Release();
+        }
+    }
+
+    private async Task<T> ExecuteWithHeadersAsync<T>(
+        string query,
+        object? variables,
+        CancellationToken cancellationToken)
     {
         try
         {

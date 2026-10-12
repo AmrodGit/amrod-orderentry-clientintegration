@@ -191,6 +191,7 @@ public class BrandingDetail
     public OrderBrandingLogoSizeType? LogoSizeType { get; set; }
     public List<BrandingColorInput>? Colors { get; set; }
     public List<BrandingMetadataInput>? Metadata { get; set; }
+    public string? PackingInstructions { get; set; }
     public string? Reference { get; set; }
     public string? SpecialInstructions { get; set; }
 }
@@ -291,7 +292,13 @@ public class OrderWarning
 
 public sealed class MutationResult
 {
-    public bool Result { get; set; }
+    public ResultTypeStatus Result { get; set; }
+}
+
+[JsonConverter(typeof(GraphQlEnumConverter<ResultTypeStatus>))]
+public enum ResultTypeStatus
+{
+    Ok
 }
 
 public sealed class ApiError

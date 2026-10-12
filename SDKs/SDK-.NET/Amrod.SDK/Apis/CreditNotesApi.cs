@@ -12,7 +12,7 @@ public class CreditNotesApi
   {
     const string query = """
         query GetCreditNoteById($id: ID!) {
-          creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId }
+          creditNote(id: $id) { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
         }
         """;
     var response = await _client.ExecuteAsync<CreditNoteResponse>(query, new IdVariables { Id = id }, cancellationToken).ConfigureAwait(false);
