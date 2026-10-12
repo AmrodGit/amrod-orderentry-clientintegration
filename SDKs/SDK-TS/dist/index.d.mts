@@ -50,9 +50,9 @@ interface ImpersonationScope {
 interface Viewer {
     identity: string;
     identityType: string;
-    customer: Customer;
-    customerContact: CustomerContact;
-    impersonationScope: ImpersonationScope[];
+    customer: Customer | null;
+    customerContact: CustomerContact | null;
+    impersonationScope: ImpersonationScope[] | null;
 }
 
 declare class ViewerApi {
@@ -180,8 +180,8 @@ interface SalesOrder {
     isPaid: boolean;
     isActive: boolean;
     lastModifiedDate?: string;
-    customer: SalesOrderCustomer;
-    contact: SalesOrderContact;
+    customer: SalesOrderCustomer | null;
+    contact: SalesOrderContact | null;
     salesOrderDetails: SalesOrderDetail[];
     jobCards?: JobCard[];
 }
@@ -238,7 +238,7 @@ declare class CreditNotesApi {
     getByNumber(creditNoteNumber: string): Promise<CreditNote | null>;
     list(first?: number, after?: string, before?: string): Promise<CreditNotesConnection>;
     getBySalesOrderNumber(salesOrderNumber: string): Promise<CreditNotesConnection>;
-    getByDateRange(startDate: string, endDate: string): Promise<CreditNotesConnection>;
+    getByDateRange(startDate: string, endDate: string, first?: number, after?: string, before?: string): Promise<CreditNotesConnection>;
     private executeConnection;
 }
 
@@ -281,6 +281,7 @@ interface OrderContactNotificationDetail {
 }
 interface OrderContactDetail {
     notifications: OrderContactNotificationDetail;
+    logo24?: OrderContact;
 }
 interface BrandingColorInput {
     code: string;

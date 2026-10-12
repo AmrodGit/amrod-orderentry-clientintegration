@@ -4,7 +4,7 @@ A TypeScript/Node.js client for the Amrod Order Entry GraphQL API. The SDK provi
 
 ## Requirements
 
-- Node.js 18 or later (for the built-in `fetch`/`URLSearchParams` used by the OAuth provider)
+- Node.js 22 or later (for the built-in `fetch`/`URLSearchParams` used by the OAuth provider)
 - An Amrod GraphQL endpoint
 - A valid access token or OAuth client credentials
 - A customer/contact impersonation scope when required by the gateway

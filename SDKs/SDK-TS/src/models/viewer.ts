@@ -20,7 +20,7 @@ export interface ImpersonationScope {
 export interface Viewer {
   identity: string;
   identityType: string;
-  customer: Customer;
-  customerContact: CustomerContact;
-  impersonationScope: ImpersonationScope[];
+  customer: Customer | null;
+  customerContact: CustomerContact | null;
+  impersonationScope: ImpersonationScope[] | null;
 }

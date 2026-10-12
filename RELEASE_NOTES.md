@@ -1,5 +1,21 @@
 # Release Notes
 
+## Version [2.0.0] - Unreleased
+
+### Overview
+
+Introduces versioned .NET and TypeScript SDK packages for the Order Entry and Logo Library GraphQL APIs. This replaces the previous artwork-focused .NET SDK surface and is a major-version change for SDK consumers.
+
+### Added
+
+- .NET 8 and TypeScript 5 SDKs with authentication, impersonation, order, sales-order, credit-note, job-card, and viewer APIs.
+- SDK consumer applications and CI validation for package builds, schema generation, and type checking.
+
+### Migration
+
+- Update consumers to the new `Amrod.SDK` or `@amrod/sdk-ts` package APIs; existing Logo Library SDK APIs are not part of this release.
+- The TypeScript SDK requires Node.js 22 or later.
+
 ## Version [1.0.0] - March 6, 2026
 
 ### Overview

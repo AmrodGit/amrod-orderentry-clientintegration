@@ -9,17 +9,20 @@ import {
 export class JobCardWorkflowApi {
   constructor(private client: GraphQlSdkClient) {}
 
-  approve(input: ApproveJobCardInput): Promise<WorkflowMutationResponse> {
+  async approve(input: ApproveJobCardInput): Promise<WorkflowMutationResponse> {
     const query = `
       mutation ApproveJobCard($input: ApproveJobCardInput!) {
         approveJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
       }
     `;
 
-    return this.client.execute<WorkflowMutationResponse>(query, { input });
+    const response = await this.client.execute<{
+      approveJobCard: WorkflowMutationResponse;
+    }>(query, { input });
+    return response.approveJobCard;
   }
 
-  updateBranding(
+  async updateBranding(
     input: UpdateJobCardBrandingRequest
   ): Promise<WorkflowMutationResponse> {
     const query = `
@@ -28,10 +31,13 @@ export class JobCardWorkflowApi {
       }
     `;
 
-    return this.client.execute<WorkflowMutationResponse>(query, { input });
+    const response = await this.client.execute<{
+      updateJobCardBrandingInfo: WorkflowMutationResponse;
+    }>(query, { input });
+    return response.updateJobCardBrandingInfo;
   }
 
-  requestChange(
+  async requestChange(
     input: RequestJobCardChangeRequest
   ): Promise<WorkflowMutationResponse> {
     const query = `
@@ -40,6 +46,9 @@ export class JobCardWorkflowApi {
       }
     `;
 
-    return this.client.execute<WorkflowMutationResponse>(query, { input });
+    const response = await this.client.execute<{
+      requestChangeJobCard: WorkflowMutationResponse;
+    }>(query, { input });
+    return response.requestChangeJobCard;
   }
 }

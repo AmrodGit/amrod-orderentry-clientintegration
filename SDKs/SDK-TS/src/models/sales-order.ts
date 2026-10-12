@@ -33,8 +33,8 @@ export interface SalesOrder {
   isPaid: boolean;
   isActive: boolean;
   lastModifiedDate?: string;
-  customer: SalesOrderCustomer;
-  contact: SalesOrderContact;
+  customer: SalesOrderCustomer | null;
+  contact: SalesOrderContact | null;
   salesOrderDetails: SalesOrderDetail[];
   jobCards?: JobCard[];
 }

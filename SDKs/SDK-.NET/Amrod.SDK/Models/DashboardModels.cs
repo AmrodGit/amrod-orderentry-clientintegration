@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Amrod.SDK.Models;
@@ -120,12 +121,11 @@ public class PlaceOrderInput
 public class OrderOptions
 {
     public bool ValidateOnly { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderType OrderType { get; set; } = OrderType.Standard;
     public bool? ApplyInclusiveBranding { get; set; }
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(GraphQlEnumConverter<OrderType>))]
 public enum OrderType
 {
     Standard,
@@ -135,12 +135,11 @@ public enum OrderType
 
 public class OrderCollection
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderCollectionType CollectionType { get; set; }
     public string? BranchCode { get; set; }
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(GraphQlEnumConverter<OrderCollectionType>))]
 public enum OrderCollectionType
 {
     CollectionHeadOffice,
@@ -151,6 +150,7 @@ public enum OrderCollectionType
 public class OrderContactDetail
 {
     public OrderContactNotificationDetail Notifications { get; set; } = new();
+    public OrderContact? Logo24 { get; set; }
 }
 
 public class OrderContactNotificationDetail
@@ -185,11 +185,9 @@ public class BrandingDetail
 {
     public string BrandingCode { get; set; } = "";
     public string Position { get; set; } = "";
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderBrandingLogoPositionType? LogoPosition { get; set; }
     public List<string>? Logos { get; set; }
     public decimal? LogoSize { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderBrandingLogoSizeType? LogoSizeType { get; set; }
     public List<BrandingColorInput>? Colors { get; set; }
     public List<BrandingMetadataInput>? Metadata { get; set; }
@@ -197,7 +195,7 @@ public class BrandingDetail
     public string? SpecialInstructions { get; set; }
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(GraphQlEnumConverter<OrderBrandingLogoPositionType>))]
 public enum OrderBrandingLogoPositionType
 {
     TopLeft,
@@ -211,7 +209,7 @@ public enum OrderBrandingLogoPositionType
     BottomRight
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(GraphQlEnumConverter<OrderBrandingLogoSizeType>))]
 public enum OrderBrandingLogoSizeType
 {
     Width,
@@ -221,11 +219,10 @@ public enum OrderBrandingLogoSizeType
 public class BrandingColorInput
 {
     public string Code { get; set; } = "";
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderBrandingColorType Type { get; set; }
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(GraphQlEnumConverter<OrderBrandingColorType>))]
 public enum OrderBrandingColorType
 {
     None,
@@ -325,12 +322,11 @@ public class UpdateJobCardBrandingRequest
 public class RequestJobCardChangeRequest
 {
     public string SalesOrderNumber { get; set; } = "";
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public JobCardChangeRequestType ChangeRequestType { get; set; } = JobCardChangeRequestType.CustomerRequest;
     public List<JobCardBrandingRequest> JobCards { get; set; } = [];
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(GraphQlEnumConverter<JobCardChangeRequestType>))]
 public enum JobCardChangeRequestType
 {
     CustomerRequest,
@@ -390,4 +386,14 @@ public sealed class CreditNoteDateRangeVariables
 {
     public string StartDate { get; set; } = "";
     public string EndDate { get; set; } = "";
+    public int? First { get; set; }
+    public string? After { get; set; }
+    public string? Before { get; set; }
+}
+
+public sealed class GraphQlEnumConverter<TEnum> : JsonStringEnumConverter<TEnum>
+    where TEnum : struct, Enum
+{
+    public GraphQlEnumConverter()
+        : base(JsonNamingPolicy.SnakeCaseUpper) { }
 }

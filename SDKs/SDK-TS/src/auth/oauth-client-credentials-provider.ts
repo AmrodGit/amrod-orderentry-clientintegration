@@ -118,4 +118,3 @@ export class OAuthClientCredentialsProvider implements AuthProvider {
     return this.token;
   }
 }
-

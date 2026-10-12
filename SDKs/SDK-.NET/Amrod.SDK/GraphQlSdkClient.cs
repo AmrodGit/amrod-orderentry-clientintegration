@@ -8,15 +8,19 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amrod.SDK;
 
-public class GraphQlSdkClient
+public class GraphQlSdkClient : IDisposable
 {
     private readonly AmrodSdkOptions _options;
     private readonly ILogger<GraphQlSdkClient> _logger;
+    private readonly GraphQLHttpClient _client;
 
     public GraphQlSdkClient(
         AmrodSdkOptions options)
     {
         _options = options;
+        _client = new GraphQLHttpClient(
+            _options.Endpoint,
+            new SystemTextJsonSerializer());
         _logger = options.LoggerFactory?.CreateLogger<GraphQlSdkClient>()
             ?? NullLogger<GraphQlSdkClient>.Instance;
     }
@@ -26,22 +30,15 @@ public class GraphQlSdkClient
         object? variables = null,
         CancellationToken cancellationToken = default)
     {
-        using var client = new GraphQLHttpClient(
-            _options.Endpoint,
-            new SystemTextJsonSerializer());
-
         try
         {
             if (_options.AuthProvider is not null)
             {
                 var token = await _options.AuthProvider.GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
-                if (!string.IsNullOrWhiteSpace(token))
-                {
-                    client.HttpClient.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue(
-                            "Bearer",
-                            token);
-                }
+                _client.HttpClient.DefaultRequestHeaders.Authorization =
+                    string.IsNullOrWhiteSpace(token)
+                        ? null
+                        : new AuthenticationHeaderValue("Bearer", token);
             }
         }
         catch (AmrodAuthenticationException)
@@ -66,15 +63,38 @@ public class GraphQlSdkClient
 
         if (_options.ImpersonationProvider is not null)
         {
-            var impersonation = await _options.ImpersonationProvider.GetHeaderValueAsync(cancellationToken).ConfigureAwait(false);
+            string? impersonation;
+            try
+            {
+                impersonation = await _options.ImpersonationProvider.GetHeaderValueAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (AmrodAuthenticationException)
+            {
+                throw;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to acquire impersonation header for endpoint {Endpoint}", _options.Endpoint);
+                throw new AmrodAuthenticationException("Failed to acquire impersonation header.", ex);
+            }
+
+            _client.HttpClient.DefaultRequestHeaders.Remove("x-gateway-impersonate");
             if (!string.IsNullOrWhiteSpace(impersonation))
             {
-                client.HttpClient
+                _client.HttpClient
                     .DefaultRequestHeaders
-                    .Add(
+                    .TryAddWithoutValidation(
                         "x-gateway-impersonate",
                         impersonation);
             }
+        }
+        else
+        {
+            _client.HttpClient.DefaultRequestHeaders.Remove("x-gateway-impersonate");
         }
 
         GraphQLResponse<T> response;
@@ -84,7 +104,7 @@ public class GraphQlSdkClient
             _logger.LogDebug("Sending GraphQL request to {Endpoint}", _options.Endpoint);
 
             response =
-                await client.SendQueryAsync<T>(
+                await _client.SendQueryAsync<T>(
                     new GraphQLRequest
                     {
                         Query = query,
@@ -127,4 +147,6 @@ public class GraphQlSdkClient
 
         return response.Data;
     }
+
+    public void Dispose() => _client.Dispose();
 }

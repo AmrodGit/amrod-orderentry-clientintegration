@@ -14,13 +14,24 @@ public class OrderEntryApi
   public Task<PlaceOrderResponse> ValidateOrderAsync(PlaceOrderInput input, CancellationToken cancellationToken = default) =>
     ExecuteOrderAsync(input, true, cancellationToken);
 
-  private Task<PlaceOrderResponse> ExecuteOrderAsync(PlaceOrderInput input, bool validateOnly, CancellationToken cancellationToken)
+  private async Task<PlaceOrderResponse> ExecuteOrderAsync(PlaceOrderInput input, bool validateOnly, CancellationToken cancellationToken)
   {
     var variables = new PlaceOrderVariables
     {
-      Input = input
+      Input = new PlaceOrderInput
+      {
+        OrderNumber = input.OrderNumber,
+        Options = new OrderOptions
+        {
+          ValidateOnly = validateOnly,
+          OrderType = input.Options.OrderType,
+          ApplyInclusiveBranding = input.Options.ApplyInclusiveBranding
+        },
+        Collection = input.Collection,
+        Contact = input.Contact,
+        Details = input.Details
+      }
     };
-    variables.Input.Options.ValidateOnly = validateOnly;
 
     const string query = """
         mutation PlaceOrder($input: PlaceOrderInput!) {
@@ -33,10 +44,14 @@ public class OrderEntryApi
           }
         }
         """;
-    return ExecuteAsync<PlaceOrderResponse>(query, variables, cancellationToken);
+    var response = await _client.ExecuteAsync<PlaceOrderData>(query, variables, cancellationToken).ConfigureAwait(false);
+    return response.PlaceOrder;
   }
 
-  private Task<T> ExecuteAsync<T>(string query, object variables, CancellationToken cancellationToken) => _client.ExecuteAsync<T>(query, variables, cancellationToken);
+  private sealed class PlaceOrderData
+  {
+    public PlaceOrderResponse PlaceOrder { get; set; } = null!;
+  }
 }
 
 public class JobCardWorkflowApi
@@ -45,29 +60,50 @@ public class JobCardWorkflowApi
 
   public JobCardWorkflowApi(GraphQlSdkClient client) => _client = client;
 
-  public Task<ApproveJobCardResponse> ApproveAsync(ApproveJobCardInput input, CancellationToken cancellationToken = default) =>
-      ExecuteAsync<ApproveJobCardResponse>("""
+  public async Task<ApproveJobCardResponse> ApproveAsync(ApproveJobCardInput input, CancellationToken cancellationToken = default)
+  {
+    var response = await _client.ExecuteAsync<ApproveJobCardData>("""
         mutation ApproveJobCard($input: ApproveJobCardInput!) {
           approveJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new ApproveJobCardVariables { Input = input }, cancellationToken);
+        """, new ApproveJobCardVariables { Input = input }, cancellationToken).ConfigureAwait(false);
+    return response.ApproveJobCard;
+  }
 
-  public Task<UpdateJobCardBrandingResponse> UpdateBrandingAsync(UpdateJobCardBrandingRequest input, CancellationToken cancellationToken = default) =>
-    ExecuteAsync<UpdateJobCardBrandingResponse>("""
+  public async Task<UpdateJobCardBrandingResponse> UpdateBrandingAsync(UpdateJobCardBrandingRequest input, CancellationToken cancellationToken = default)
+  {
+    var response = await _client.ExecuteAsync<UpdateJobCardBrandingData>("""
         mutation UpdateJobCardBrandingInfo($input: UpdateJobCardBrandingInfoInput!) {
           updateJobCardBrandingInfo(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new UpdateJobCardBrandingVariables { Input = input }, cancellationToken);
+        """, new UpdateJobCardBrandingVariables { Input = input }, cancellationToken).ConfigureAwait(false);
+    return response.UpdateJobCardBrandingInfo;
+  }
 
-  public Task<RequestJobCardChangeResponse> RequestChangeAsync(RequestJobCardChangeRequest input, CancellationToken cancellationToken = default) =>
-    ExecuteAsync<RequestJobCardChangeResponse>("""
+  public async Task<RequestJobCardChangeResponse> RequestChangeAsync(RequestJobCardChangeRequest input, CancellationToken cancellationToken = default)
+  {
+    var response = await _client.ExecuteAsync<RequestJobCardChangeData>("""
         mutation RequestJobCardChange($input: RequestChangeJobCardInput!) {
           requestChangeJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
         }
-        """, new RequestJobCardChangeVariables { Input = input }, cancellationToken);
+        """, new RequestJobCardChangeVariables { Input = input }, cancellationToken).ConfigureAwait(false);
+    return response.RequestChangeJobCard;
+  }
 
-  private Task<T> ExecuteAsync<T>(string query, object variables, CancellationToken cancellationToken) =>
-    _client.ExecuteAsync<T>(query, variables, cancellationToken);
+  private sealed class ApproveJobCardData
+  {
+    public ApproveJobCardResponse ApproveJobCard { get; set; } = null!;
+  }
+
+  private sealed class UpdateJobCardBrandingData
+  {
+    public UpdateJobCardBrandingResponse UpdateJobCardBrandingInfo { get; set; } = null!;
+  }
+
+  private sealed class RequestJobCardChangeData
+  {
+    public RequestJobCardChangeResponse RequestChangeJobCard { get; set; } = null!;
+  }
 }
 
 public sealed class PlaceOrderResponse

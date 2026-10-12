@@ -4,7 +4,7 @@ A Node.js console sample that consumes the [Amrod TypeScript SDK](../../SDKs/SDK
 
 ## Requirements
 
-- Node.js 18 or later
+- Node.js 22 or later
 - An Amrod GraphQL endpoint
 - OAuth client credentials
 - The [`@amrod/sdk-ts`](../../SDKs/SDK-TS) package built (`npm run build` in `SDKs/SDK-TS`)

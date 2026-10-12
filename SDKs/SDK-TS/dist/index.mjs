@@ -65,7 +65,22 @@ var GraphQlSdkClient = class {
         { cause: err }
       );
     }
-    const impersonation = await this.options.impersonationProvider?.getImpersonationHeader();
+    let impersonation;
+    try {
+      impersonation = await this.options.impersonationProvider?.getImpersonationHeader() ?? void 0;
+    } catch (err) {
+      if (err instanceof AmrodAuthenticationException || err instanceof Error && err.name === "AbortError") {
+        throw err;
+      }
+      this.logger.error(
+        `Failed to acquire impersonation header for endpoint ${this.options.endpoint}`,
+        err
+      );
+      throw new AmrodAuthenticationException(
+        "Failed to acquire impersonation header.",
+        { cause: err }
+      );
+    }
     const client = new GraphQLClient(
       this.options.endpoint,
       {
@@ -240,7 +255,14 @@ var SalesOrdersApi = class {
       query ListSalesOrders($first: Int, $after: String, $before: String) {
         salesOrders(first: $first, after: $after, before: $before) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-          edges { cursor node { id salesOrderNumber customerReference orderDate status totalExcl isPaid } }
+          nodes { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
+            customer { id name code } contact { fullName emailAddress telephoneNumber }
+            salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
+          }
+          edges { cursor node { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
+            customer { id name code } contact { fullName emailAddress telephoneNumber }
+            salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
+          } }
         }
       }
     `;
@@ -307,7 +329,8 @@ var CreditNotesApi = class {
       query ListCreditNotes($first: Int, $after: String, $before: String) {
         creditNotes(first: $first, after: $after, before: $before) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax } }
+          nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
         }
       }
     `;
@@ -318,21 +341,24 @@ var CreditNotesApi = class {
       query GetCreditNotesBySalesOrderNumber($salesOrderNumber: String!) {
         creditNotes(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } } }
+          nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
         }
       }
     `;
     return this.executeConnection(query, { salesOrderNumber });
   }
-  async getByDateRange(startDate, endDate) {
+  async getByDateRange(startDate, endDate, first = 100, after, before) {
     const query = `
-      query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!) {
-        creditNotes(first: 100, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
-          totalCount nodes { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } }
+      query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!, $first: Int, $after: String, $before: String) {
+        creditNotes(first: $first, after: $after, before: $before, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
+          totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+          nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
         }
       }
     `;
-    return this.executeConnection(query, { startDate, endDate });
+    return this.executeConnection(query, { startDate, endDate, first, after, before });
   }
   async executeConnection(query, variables) {
     const response = await this.client.execute(query, variables);
@@ -397,6 +423,10 @@ var JobCardsApi = class {
       query GetJobCardsBySalesOrderNumber($salesOrderNumber: String!) {
         jobCards(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+          nodes { id jobCardNumber status created isActive lastModifiedDate
+            jobCardBrandingDetail { brandingCode brandingPosition logo colors brandingSizeWidth brandingSizeHeight foilColor siliconeColor vinylColor }
+            jobCardDate { actionDate dueDate leadTime } jobCardAssets { name type url } jobCardDetail { sku quantity }
+          }
           edges { cursor node { id jobCardNumber status created isActive
             jobCardBrandingDetail { brandingCode brandingPosition logo colors brandingSizeWidth brandingSizeHeight foilColor siliconeColor vinylColor }
             jobCardDate { actionDate dueDate leadTime } jobCardAssets { name type url } jobCardDetail { sku quantity }
@@ -411,6 +441,7 @@ var JobCardsApi = class {
       query ListJobCards($first: Int, $after: String, $before: String) {
         jobCards(first: $first, after: $after, before: $before) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+          nodes { id jobCardNumber status created isActive jobCardBrandingDetail { brandingCode logo } jobCardDate { dueDate leadTime } }
           edges { cursor node { id jobCardNumber status created isActive jobCardBrandingDetail { brandingCode logo } jobCardDate { dueDate leadTime } } }
         }
       }
@@ -467,17 +498,18 @@ var OrderEntryApi = class {
   validateOrder(request) {
     return this.executeOrder(toPlaceOrderInput(request), true);
   }
-  executeOrder(input, validateOnly) {
+  async executeOrder(input, validateOnly) {
     const variables = {
       input: {
         ...input,
         options: { ...input.options, validateOnly }
       }
     };
-    return this.client.execute(
+    const response = await this.client.execute(
       PLACE_ORDER_MUTATION,
       variables
     );
+    return response.placeOrder;
   }
 };
 
@@ -487,29 +519,32 @@ var JobCardWorkflowApi = class {
     this.client = client;
   }
   client;
-  approve(input) {
+  async approve(input) {
     const query = `
       mutation ApproveJobCard($input: ApproveJobCardInput!) {
         approveJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
       }
     `;
-    return this.client.execute(query, { input });
+    const response = await this.client.execute(query, { input });
+    return response.approveJobCard;
   }
-  updateBranding(input) {
+  async updateBranding(input) {
     const query = `
       mutation UpdateJobCardBrandingInfo($input: UpdateJobCardBrandingInfoInput!) {
         updateJobCardBrandingInfo(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
       }
     `;
-    return this.client.execute(query, { input });
+    const response = await this.client.execute(query, { input });
+    return response.updateJobCardBrandingInfo;
   }
-  requestChange(input) {
+  async requestChange(input) {
     const query = `
       mutation RequestJobCardChange($input: RequestChangeJobCardInput!) {
         requestChangeJobCard(input: $input) { errors { __typename ... on ConflictException { message } } resultPayloadType { result } }
       }
     `;
-    return this.client.execute(query, { input });
+    const response = await this.client.execute(query, { input });
+    return response.requestChangeJobCard;
   }
 };
 
@@ -548,7 +583,7 @@ var GatewayImpersonationProvider = class {
   }
 };
 
-// src/auth/oath-client-credentials-provider.ts
+// src/auth/oauth-client-credentials-provider.ts
 var OAuthClientCredentialsProvider = class {
   constructor(tokenUrl, clientId, username, secret, logger) {
     this.tokenUrl = tokenUrl;

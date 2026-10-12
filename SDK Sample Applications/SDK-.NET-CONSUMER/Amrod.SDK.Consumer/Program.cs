@@ -63,7 +63,7 @@ static async Task RunAsync(IConfiguration configuration, ILoggerFactory loggerFa
             secret,
             loggerFactory.CreateLogger<OAuthClientCredentialsProvider>());
 
-    var sdk = new AmrodSdk(
+    using var sdk = new AmrodSdk(
         new AmrodSdkOptions
         {
             Endpoint = graphQlUrl,
@@ -95,13 +95,15 @@ static async Task RunAsync(IConfiguration configuration, ILoggerFactory loggerFa
     Console.WriteLine();
     Console.WriteLine("Impersonation Scope:");
 
-    if (viewer.ImpersonationScope.Count == 0)
+    var impersonationScopes = viewer.ImpersonationScope ?? [];
+
+    if (impersonationScopes.Count == 0)
     {
         Console.WriteLine("  (No impersonation scope available)");
         return;
     }
 
-    foreach (var scope in viewer.ImpersonationScope)
+    foreach (var scope in impersonationScopes)
     {
         Console.WriteLine($"  Customer: {scope.Code} - {scope.Name}");
 
@@ -112,10 +114,17 @@ static async Task RunAsync(IConfiguration configuration, ILoggerFactory loggerFa
         }
     }
 
-    var firstScope = viewer.ImpersonationScope.First();
-    var firstContact = firstScope.CustomerContacts.First();
+    var firstScope = impersonationScopes.FirstOrDefault(scope => scope.CustomerContacts.Count > 0);
 
-    var sdkWithImpersonation =
+    if (firstScope is null)
+    {
+        Console.WriteLine("  (No impersonation contacts available)");
+        return;
+    }
+
+    var firstContact = firstScope.CustomerContacts[0];
+
+    using var sdkWithImpersonation =
         new AmrodSdk(
             new AmrodSdkOptions
             {
@@ -157,13 +166,13 @@ static async Task RunAsync(IConfiguration configuration, ILoggerFactory loggerFa
                 SalesOrderNumber = "CUSTOMER-ORDER-0001",
                 Options = new OrderOptions
                 {
-                    OrderType = "STANDARD",
+                    OrderType = OrderType.Standard,
                     ValidateOnly = false,
                     ApplyInclusiveBranding = false
                 },
                 Collection = new OrderCollection
                 {
-                    CollectionType = "COLLECTION_HEAD_OFFICE"
+                    CollectionType = OrderCollectionType.CollectionHeadOffice
                 },
                 Contact = new OrderContactDetail
                 {

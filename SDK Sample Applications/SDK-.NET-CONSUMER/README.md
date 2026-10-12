@@ -1,6 +1,6 @@
 # Amrod .NET SDK Consumer
 
-This repository is a .NET 8 console sample with a self-contained implementation of the Amrod GraphQL SDK. The SDK source is in `Amrod.SDK.Consumer/Amrod.SDK`; it is compiled into the sample project and has no project dependency on `C:\Projects\SDK-.NET`.
+This repository is a .NET 8 console sample that references the Amrod GraphQL SDK project at `SDKs/SDK-.NET/Amrod.SDK`.
 
 ## Requirements
 

@@ -37,7 +37,8 @@ public class CreditNotesApi
         query ListCreditNotes($first: Int, $after: String, $before: String) {
           creditNotes(first: $first, after: $after, before: $before) {
             totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-            edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax } }
+            nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+            edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
           }
         }
         """, new ConnectionVariables { First = first, After = after, Before = before }, cancellationToken);
@@ -47,19 +48,34 @@ public class CreditNotesApi
         query GetCreditNotesBySalesOrderNumber($salesOrderNumber: String!) {
           creditNotes(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
             totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-            edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } } }
+            nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+            edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
           }
         }
         """, new SalesOrderNumberVariables { SalesOrderNumber = salesOrderNumber }, cancellationToken);
 
-  public Task<CreditNotesConnection> GetByDateRangeAsync(string startDate, string endDate, CancellationToken cancellationToken = default) =>
+  public Task<CreditNotesConnection> GetByDateRangeAsync(
+      string startDate,
+      string endDate,
+      CancellationToken cancellationToken = default) =>
+      GetByDateRangeAsync(startDate, endDate, 100, cancellationToken: cancellationToken);
+
+  public Task<CreditNotesConnection> GetByDateRangeAsync(
+      string startDate,
+      string endDate,
+      int? first,
+      string? after = null,
+      string? before = null,
+      CancellationToken cancellationToken = default) =>
       ExecuteConnectionAsync("""
-        query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!) {
-          creditNotes(first: 100, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
-            totalCount nodes { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } }
+        query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!, $first: Int, $after: String, $before: String) {
+          creditNotes(first: $first, after: $after, before: $before, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
+            totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+            nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+            edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
           }
         }
-        """, new CreditNoteDateRangeVariables { StartDate = startDate, EndDate = endDate }, cancellationToken);
+        """, new CreditNoteDateRangeVariables { StartDate = startDate, EndDate = endDate, First = first, After = after, Before = before }, cancellationToken);
 
   private async Task<CreditNotesConnection> ExecuteConnectionAsync(string query, object variables, CancellationToken cancellationToken)
   {

@@ -45,7 +45,8 @@ export class CreditNotesApi {
       query ListCreditNotes($first: Int, $after: String, $before: String) {
         creditNotes(first: $first, after: $after, before: $before) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax } }
+          nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
         }
       }
     `;
@@ -60,7 +61,8 @@ export class CreditNotesApi {
       query GetCreditNotesBySalesOrderNumber($salesOrderNumber: String!) {
         creditNotes(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } } }
+          nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
         }
       }
     `;
@@ -70,17 +72,22 @@ export class CreditNotesApi {
 
   async getByDateRange(
     startDate: string,
-    endDate: string
+    endDate: string,
+    first = 100,
+    after?: string,
+    before?: string
   ): Promise<CreditNotesConnection> {
     const query = `
-      query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!) {
-        creditNotes(first: 100, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
-          totalCount nodes { id creditNoteNumber creditNoteDate totalExcl tax creditNoteDetails { sku quantity } }
+      query GetCreditNotesByDateRange($startDate: DateTime!, $endDate: DateTime!, $first: Int, $after: String, $before: String) {
+        creditNotes(first: $first, after: $after, before: $before, where: { creditNoteDate: { gte: $startDate, lte: $endDate } }) {
+          totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+          nodes { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } }
+          edges { cursor node { id creditNoteNumber creditNoteDate totalExcl tax assetUri internalId creditNoteDetails { sku quantity } } }
         }
       }
     `;
 
-    return this.executeConnection(query, { startDate, endDate });
+    return this.executeConnection(query, { startDate, endDate, first, after, before });
   }
 
   private async executeConnection(

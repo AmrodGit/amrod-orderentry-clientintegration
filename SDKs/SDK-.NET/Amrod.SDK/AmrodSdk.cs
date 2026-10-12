@@ -2,8 +2,10 @@ using Amrod.SDK.Apis;
 
 namespace Amrod.SDK;
 
-public class AmrodSdk
+public class AmrodSdk : IDisposable
 {
+    private readonly GraphQlSdkClient _client;
+
     public ViewerApi Viewer { get; }
 
     public SalesOrdersApi SalesOrders { get; }
@@ -22,18 +24,19 @@ public class AmrodSdk
         ArgumentNullException.ThrowIfNull(options);
         ArgumentException.ThrowIfNullOrWhiteSpace(options.Endpoint);
 
-        var client =
-            new GraphQlSdkClient(options);
+        _client = new GraphQlSdkClient(options);
 
         Viewer =
-            new ViewerApi(client);
+            new ViewerApi(_client);
 
         SalesOrders =
-            new SalesOrdersApi(client);
+            new SalesOrdersApi(_client);
 
-        CreditNotes = new CreditNotesApi(client);
-        JobCards = new JobCardsApi(client);
-        Orders = new OrderEntryApi(client);
-        JobCardWorkflow = new JobCardWorkflowApi(client);
+        CreditNotes = new CreditNotesApi(_client);
+        JobCards = new JobCardsApi(_client);
+        Orders = new OrderEntryApi(_client);
+        JobCardWorkflow = new JobCardWorkflowApi(_client);
     }
+
+    public void Dispose() => _client.Dispose();
 }

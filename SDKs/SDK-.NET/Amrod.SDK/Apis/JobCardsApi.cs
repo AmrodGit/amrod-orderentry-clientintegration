@@ -51,6 +51,10 @@ public class JobCardsApi
         query GetJobCardsBySalesOrderNumber($salesOrderNumber: String!) {
           jobCards(first: 100, where: { salesOrder: { salesOrderNumber: { eq: $salesOrderNumber } } }) {
             totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+            nodes { id jobCardNumber status created isActive lastModifiedDate
+              jobCardBrandingDetail { brandingCode brandingPosition logo colors brandingSizeWidth brandingSizeHeight foilColor siliconeColor vinylColor }
+              jobCardDate { actionDate dueDate leadTime } jobCardAssets { name type url } jobCardDetail { sku quantity }
+            }
             edges { cursor node { id jobCardNumber status created isActive
               jobCardBrandingDetail { brandingCode brandingPosition logo colors brandingSizeWidth brandingSizeHeight foilColor siliconeColor vinylColor }
               jobCardDate { actionDate dueDate leadTime } jobCardAssets { name type url } jobCardDetail { sku quantity }
@@ -64,6 +68,7 @@ public class JobCardsApi
         query ListJobCards($first: Int, $after: String, $before: String) {
           jobCards(first: $first, after: $after, before: $before) {
             totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+            nodes { id jobCardNumber status created isActive jobCardBrandingDetail { brandingCode logo } jobCardDate { dueDate leadTime } }
             edges { cursor node { id jobCardNumber status created isActive jobCardBrandingDetail { brandingCode logo } jobCardDate { dueDate leadTime } } }
           }
         }

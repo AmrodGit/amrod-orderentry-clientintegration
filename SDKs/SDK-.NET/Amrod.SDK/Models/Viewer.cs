@@ -33,17 +33,9 @@ public class Viewer
 
     public string IdentityType { get; set; } = "";
 
-    public Customer Customer { get; set; } = null!;
+    public Customer? Customer { get; set; }
 
-    public CustomerContact CustomerContact
-    {
-        get;
-        set;
-    } = null!;
+    public CustomerContact? CustomerContact { get; set; }
 
-    public List<ImpersonationScope> ImpersonationScope
-    {
-        get;
-        set;
-    } = [];
+    public List<ImpersonationScope>? ImpersonationScope { get; set; }
 }

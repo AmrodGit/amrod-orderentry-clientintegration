@@ -51,6 +51,7 @@ export interface OrderContactNotificationDetail {
 
 export interface OrderContactDetail {
   notifications: OrderContactNotificationDetail;
+  logo24?: OrderContact;
 }
 
 export interface BrandingColorInput {

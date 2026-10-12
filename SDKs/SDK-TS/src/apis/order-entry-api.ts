@@ -29,7 +29,7 @@ export class OrderEntryApi {
     return this.executeOrder(toPlaceOrderInput(request), true);
   }
 
-  private executeOrder(
+  private async executeOrder(
     input: PlaceOrderInput,
     validateOnly: boolean
   ): Promise<PlaceOrderResponse> {
@@ -40,9 +40,10 @@ export class OrderEntryApi {
       },
     };
 
-    return this.client.execute<PlaceOrderResponse>(
+    const response = await this.client.execute<{ placeOrder: PlaceOrderResponse }>(
       PLACE_ORDER_MUTATION,
       variables
     );
+    return response.placeOrder;
   }
 }

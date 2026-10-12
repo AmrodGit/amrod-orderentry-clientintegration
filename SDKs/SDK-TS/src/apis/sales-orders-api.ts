@@ -91,7 +91,14 @@ export class SalesOrdersApi {
       query ListSalesOrders($first: Int, $after: String, $before: String) {
         salesOrders(first: $first, after: $after, before: $before) {
           totalCount pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
-          edges { cursor node { id salesOrderNumber customerReference orderDate status totalExcl isPaid } }
+          nodes { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
+            customer { id name code } contact { fullName emailAddress telephoneNumber }
+            salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
+          }
+          edges { cursor node { id salesOrderNumber customerReference orderDate status totalExcl tax balanceOutstanding isPaid isActive lastModifiedDate
+            customer { id name code } contact { fullName emailAddress telephoneNumber }
+            salesOrderDetails { rowNumber sku quantity unitPriceExcl lineTotalExcl }
+          } }
         }
       }
     `;
@@ -140,4 +147,3 @@ export class SalesOrdersApi {
     );
   }
 }
-

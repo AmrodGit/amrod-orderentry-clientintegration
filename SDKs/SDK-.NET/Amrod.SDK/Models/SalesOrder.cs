@@ -20,17 +20,9 @@ public class SalesOrder
 
     public string LastModifiedDate { get; set; } = "";
 
-    public SalesOrderCustomer Customer
-    {
-        get;
-        set;
-    } = null!;
+    public SalesOrderCustomer? Customer { get; set; }
 
-    public SalesOrderContact Contact
-    {
-        get;
-        set;
-    } = null!;
+    public SalesOrderContact? Contact { get; set; }
 
     public List<SalesOrderDetail> SalesOrderDetails
     {

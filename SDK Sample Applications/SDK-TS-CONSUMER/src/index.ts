@@ -53,12 +53,14 @@ async function run(): Promise<void> {
   console.log();
   console.log("Impersonation Scope:");
 
-  if (viewer.impersonationScope.length === 0) {
+  const impersonationScopes = viewer.impersonationScope ?? [];
+
+  if (impersonationScopes.length === 0) {
     console.log("  (No impersonation scope available)");
     return;
   }
 
-  for (const scope of viewer.impersonationScope) {
+  for (const scope of impersonationScopes) {
     console.log(`  Customer: ${scope.code} - ${scope.name}`);
 
     for (const contact of scope.customerContacts) {
@@ -68,7 +70,15 @@ async function run(): Promise<void> {
     }
   }
 
-  const firstScope = viewer.impersonationScope[0];
+  const firstScope = impersonationScopes.find(
+    (scope) => scope.customerContacts.length > 0
+  );
+
+  if (!firstScope) {
+    console.log("  (No impersonation contacts available)");
+    return;
+  }
+
   const firstContact = firstScope.customerContacts[0];
 
   const sdkWithImpersonation = new AmrodSdk({

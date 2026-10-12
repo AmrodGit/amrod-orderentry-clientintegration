@@ -46,10 +46,29 @@ export class GraphQlSdkClient {
       );
     }
 
-    const impersonation =
-      await this.options
-        .impersonationProvider
-        ?.getImpersonationHeader();
+    let impersonation: string | undefined;
+    try {
+      impersonation =
+        await this.options
+          .impersonationProvider
+          ?.getImpersonationHeader() ?? undefined;
+    } catch (err) {
+      if (
+        err instanceof AmrodAuthenticationException ||
+        (err instanceof Error && err.name === "AbortError")
+      ) {
+        throw err;
+      }
+
+      this.logger.error(
+        `Failed to acquire impersonation header for endpoint ${this.options.endpoint}`,
+        err
+      );
+      throw new AmrodAuthenticationException(
+        "Failed to acquire impersonation header.",
+        { cause: err }
+      );
+    }
 
     const client = new GraphQLClient(
       this.options.endpoint,
@@ -114,4 +133,3 @@ export class GraphQlSdkClient {
     }
   }
 }
-

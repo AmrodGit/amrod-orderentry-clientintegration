@@ -33,7 +33,7 @@ export * from "./auth/auth-provider";
 export * from "./auth/impersonation-provider";
 export * from "./auth/jwt-auth-provider";
 export * from "./auth/gateway-impersonation-provider";
-export * from "./auth/oath-client-credentials-provider";
+export * from "./auth/oauth-client-credentials-provider";
 export * from "./models/viewer";
 export * from "./models/sales-order";
 export * from "./models/job-card";
