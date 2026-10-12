@@ -134,4 +134,4 @@ Each workflow call returns `WorkflowMutationResponse`. Check `Errors`, then use 
 
 ## Error behavior
 
-Transport-level GraphQL errors cause `GraphQlSdkClient.ExecuteAsync` to throw `InvalidOperationException`. Business and validation errors for order and workflow mutations are returned in their response `Errors` collections.
+Transport-level GraphQL errors cause `GraphQlSdkClient.ExecuteAsync` to throw `AmrodApiException`. Business and validation errors for order and workflow mutations are returned in their response `Errors` collections.
