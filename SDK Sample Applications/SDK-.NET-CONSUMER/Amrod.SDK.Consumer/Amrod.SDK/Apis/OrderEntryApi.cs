@@ -20,7 +20,7 @@ public class OrderEntryApi
     public Task<PlaceOrderResponse> ValidateOrderAsync(PlaceOrderInput request, CancellationToken cancellationToken = default) =>
         ExecuteOrderAsync<PlaceOrderResponse>(request, true, cancellationToken);
 
-    private Task<TResponse> ExecuteOrderAsync<TResponse>(OrderRequest request, bool validateOnly, CancellationToken cancellationToken)
+    private async Task<TResponse> ExecuteOrderAsync<TResponse>(OrderRequest request, bool validateOnly, CancellationToken cancellationToken)
     {
         var input = new
         {
@@ -50,10 +50,16 @@ public class OrderEntryApi
           }
         }
         """;
-        return ExecuteAsync<TResponse>(query, new { input }, cancellationToken);
+        var response = await ExecuteAsync<PlaceOrderResponseEnvelope<TResponse>>(query, new { input }, cancellationToken);
+        return response.PlaceOrder;
     }
 
     private Task<T> ExecuteAsync<T>(string query, object variables, CancellationToken cancellationToken) => _client.ExecuteAsync<T>(query, variables, cancellationToken);
+
+    private sealed class PlaceOrderResponseEnvelope<TResponse>
+    {
+        public TResponse PlaceOrder { get; set; } = default!;
+    }
 }
 
 public class JobCardWorkflowApi
