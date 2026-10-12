@@ -14,6 +14,9 @@ on:
       - "docs/sdk-versioning-support.md"
       - ".github/workflows/sdk-validation.yml"
 
+permissions:
+  contents: read
+
 jobs:
   dotnet:
     runs-on: ubuntu-latest
